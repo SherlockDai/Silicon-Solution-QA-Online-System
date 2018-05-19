@@ -1,0 +1,23 @@
+<div class="login-page">
+  <div class="form-container">
+    <div class="form">
+      <img src="../../assets/images/logo.PNG" class="logo">
+      <form class="register-form" [class.fade-out-form] = "toggle">
+        <input type="email" placeholder="email address"/>
+        <input type="password" placeholder="password"/>
+        <input type="password" placeholder="confirm password"/>
+        <button>create</button>
+        <p class="message">Already registered? <a href="#" (click)="changeForm()">Sign In</a></p>
+      </form>
+      <form class="login-form" [class.fade-out-form] = "!toggle">
+        <input type="email" placeholder="username"/>
+        <input type="password" placeholder="password"/>
+        <button routerLink="/home">login</button>
+        <p class="message">Not registered? <a href="#" (click)="changeForm()">Create an account</a></p>
+        <p class="message">Forget password? <a href="#">Find password</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+
