@@ -43,6 +43,16 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+a:link, a:visited, a:active{
+    color: black;
+    text-decoration: none
+}
+
+a:hover{
+    color: #E99C67;
+    text-decoration: none;
+}
+
 .team-info{
     flex: 1;
 }
@@ -67,6 +77,7 @@
     margin: 0;
     padding-top: 20px;
 }
+
 
 .team-intro p{
     color: black;
@@ -204,5 +215,38 @@ input{
     float:left;
     width: 60%;
     height: 100%;
-    background-image: url("../../assets/images/img-5-main.PNG")
+    background-image: url("../../assets/images/img-5-main.png")
+}
+
+/*--------- for small screen device below ------------*/
+
+@media only screen and (max-width: 1353px) {
+    .btn-group{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 830px){
+    .team-intro h1{
+        color: black;
+        font-size: 3em;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding-top: 20px;
+    }
+    .title{
+        color: black;
+        font-weight: bolder;
+        font-size: 1em;
+        margin-bottom: 0;
+        padding: 0 15px 0 15px;
+    }
+    
+    .description{
+        color: black;
+        font-size: 0.75em;
+        font-weight: lighter;
+        margin-top: 0;
+        padding: 0 15px 0 15px;
+    }
 }
