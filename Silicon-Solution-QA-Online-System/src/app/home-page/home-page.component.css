@@ -3,13 +3,20 @@
     height: 100%;
 }
 
+.landing-page-box{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
 .navi-container{
     width: 100%;
-    height: 9em;
+    height: 10%;
+    padding: 1em 0em 1em 0em;
 }
 
 .logo-home{
-    width: 30%;
+    height: 100%;
     vertical-align: middle;
     display: inline-block;
 }
@@ -22,9 +29,180 @@
     
 }
 
+
 .btn-group button{
     float: right;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    background-color: transparent;
+    border-width: 0;
+    font-size: 1em;
+    padding-right: 3em;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.team-info{
+    flex: 1;
+}
+
+.team-intro{
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: #E99C67;
+    text-align:center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.team-intro h1{
+    color: black;
+    font-size: 5em;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding-top: 20px;
+}
+
+.team-intro p{
+    color: black;
+    font-size: 1.4em;
+    font-weight: lighter;
+    margin-top: 0.5em;
+}
+
+input{
+    background-color: black;
+    color: white;
+    border-width: 0;
+    text-align: center;
+    margin: auto;
+    width: 9em;
+    height: 3em;
+    margin: 0 15px 0 15px;
+    
+}
+
+.team-img{
+    float:right;
+    width: 50%;
+    height: 100%;
+    background-image: url("../../assets/images/img-1-main.PNG")
+}
+
+.parallax{
+    /* Set a specific height */
+    min-height: 100px; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.station-info{
+    height: 400px;
+    width: 100%;
+}
+
+.station-info-text-wrap{
+    float: left;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title{
+    color: black;
+    font-weight: bolder;
+    font-size: 2em;
+    margin-bottom: 0;
+    padding: 0 15px 0 15px;
+}
+
+.description{
+    color: black;
+    font-size: 1.5em;
+    font-weight: lighter;
+    margin-top: 0;
+    padding: 0 15px 0 15px;
+}
+
+.station-info-img{
+    float:right;
+    width: 60%;
+    height: 100%;
+    background-image: url("../../assets/images/img-2-main.PNG")
+}
+
+.test-status{
+    height: 500px;
+    width: 100%;
+}
+
+.test-status-text-wrap{
+    float: right;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.test-status-img{
+    float:left;
+    width: 60%;
+    height: 100%;
+    background-image: url("../../assets/images/img-3-main.jpg")
+}
+
+.bookkeeping-info{
+    height: 400px;
+    width: 100%;
+}
+
+.bookkeeping-info-text-wrap{
+    float: left;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookkeeping-info-img{
+    float:right;
+    width: 60%;
+    height: 100%;
+    background-image: url("../../assets/images/img-4-main.jpg")
+}
+
+.document-manuals{
+    height: 500px;
+    width: 100%;
+}
+
+.document-manuals-text-wrap{
+    float: right;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.document-manuals-img{
+    float:left;
+    width: 60%;
+    height: 100%;
+    background-image: url("../../assets/images/img-5-main.PNG")
 }
