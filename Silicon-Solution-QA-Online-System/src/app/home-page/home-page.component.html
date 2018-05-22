@@ -1,15 +1,16 @@
 <div class="home-page">
   <div class="landing-page-box">
-    <div class="navi-container">
+    <div class="navi-container"  [@flyInOut]="'in'" (@flyInOut.done)="showUp($event)">
         <img class="logo-home" src="../../assets/images/logo-home.png"/>
         <div class="btn-group">
+          <button><a href="javascript:void(0)" (click)="goBack()">Logout</a></button>
           <button><a pageScroll href="#document-manuals">Doc & Manuals</a></button>
           <button><a pageScroll href="#bookkeeping-info">Bookkeeping</a></button>
           <button><a pageScroll href="#test-status">Test Status</a></button>
           <button><a pageScroll href="#station-info">Station Info</a></button>
         </div>
     </div>
-    <div class="team-info">
+    <div class="team-info" [@showUp] = "state">
       <div class="team-intro">
         <h1>
           THE <br/>
