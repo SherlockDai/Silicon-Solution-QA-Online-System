@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { routerTransition } from './router.animations';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +7,18 @@ import { routerTransition } from './router.animations';
   styleUrls: ['./app.component.css'],
   //animations:[ routerTransition ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   /**getState(outlet){
     return outlet.activatedRouteData.state;
   }**/
+  constructor(private router: Router) { }
+  ngOnInit() {
+    this.router.events.subscribe((evt) => {
+        if (!(evt instanceof NavigationEnd)) {
+            return;
+        }
+        window.scrollTo(0, 0)
+    });
+}
+
 }

@@ -60,6 +60,10 @@
     text-decoration: none;
   }
 
+  .loading-gif{
+    width: 100%;
+  }
+
   @keyframes transit-out{
       from {
           display: block;

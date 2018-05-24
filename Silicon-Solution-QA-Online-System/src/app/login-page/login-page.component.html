@@ -4,15 +4,17 @@
       <img src="../../assets/images/logo.PNG" class="logo">
       <form class="register-form" [class.fade-out-form] = "toggle">
         <input type="email" placeholder="email address"/>
+        <input type="text" placeholder="username"/>
         <input type="password" placeholder="password"/>
         <input type="password" placeholder="confirm password"/>
         <button>create</button>
         <p class="message">Already registered? <a href="javascript:void(0)" (click)="changeForm()">Sign In</a></p>
       </form>
       <form class="login-form" [class.fade-out-form] = "!toggle">
-        <input type="email" placeholder="username"/>
-        <input type="password" placeholder="password"/>
-        <button routerLink="/home">login</button>
+        <input name="username" type="email" placeholder="username" #username/>
+        <input name="password" type="password" placeholder="password" #password/>
+        <button *ngIf="!loading" (click)="login(username.value, password.value)" class="btn">login</button>
+        <img *ngIf="loading" class="loading-gif" src="../../assets/images/loading.gif"/>
         <p class="message">Not registered? <a href="javascript:void(0)" (click)="changeForm()">Create an account</a></p>
         <p class="message">Forget password? <a href="javascript:void(0)">Find password</a></p>
       </form>

@@ -24,9 +24,8 @@
 .btn-group{
     width:70%;
     height: 100%;
-    display: inline-block;
-    vertical-align: middle;
-    
+    display: block;
+    float: right;
 }
 
 
