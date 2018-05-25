@@ -15,7 +15,9 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './in-memory-data.service';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
-  MatTableModule, MatInputModule, MatPaginatorModule } from "@angular/material";
+  MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
+  MatBottomSheetModule, MatListModule } from "@angular/material";
+import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 
 @NgModule({
   declarations: [
@@ -23,9 +25,13 @@ import { MatButtonModule, MatCheckboxModule, MatSelectModule,
     LoginPageComponent,
     HomePageComponent,
     NotFoundPageComponent,
-    StationInfoSysComponent
+    StationInfoSysComponent,
+    BottomSheetComponent
   ],
   imports: [
+    MatListModule,
+    MatBottomSheetModule,
+    MatSlideToggleModule,
     MatPaginatorModule,
     MatInputModule,
     MatTableModule,
@@ -46,6 +52,7 @@ import { MatButtonModule, MatCheckboxModule, MatSelectModule,
       InMemoryDataService, { dataEncapsulation: false, delay: 1000 }
     )
   ],
+  entryComponents:[BottomSheetComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

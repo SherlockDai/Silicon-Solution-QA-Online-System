@@ -1,10 +1,11 @@
 
-<div class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
+<div class="navbar navbar-dark bg-dark p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><i-home></i-home>Silicon Solution QA Team</a>
-    <a class="nav-link" href="javascript:void(0)">Favorites</a>
-    <a class="nav-link" href="javascript:void(0)">Favorites</a>
-    <a class="nav-link" href="javascript:void(0)">Logout</a>
-
+    <div class="navbar-btn-group">
+      <a class="nav-link" href="\">Full list</a>
+      <a class="nav-link" href="javascript:void(0)">Favorites</a>
+      <a class="nav-link" href="javascript:void(0)">Logout</a>
+    </div>
 </div>
 
   <div class="table-container">
@@ -14,9 +15,12 @@
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
           </mat-form-field>
           <div class="btn-group">
+              <button mat-button><i-plus-square></i-plus-square>Add</button>
+              <button mat-icon-button><i-refresh-ccw></i-refresh-ccw></button>
+              <mat-slide-toggle>Auto refresh</mat-slide-toggle>
               <mat-form-field>
                   <mat-select placeholder="Sort By">
-                    <mat-option *ngFor="let key of keys" [value]="key">
+                    <mat-option *ngFor="let key of displayedColumns" [value]="key">
                       {{ key }}
                     </mat-option>
                   </mat-select>
@@ -66,7 +70,7 @@
             </ng-container>
         
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openBottomSheet()"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>

@@ -1,11 +1,17 @@
 import { NgModule } from '@angular/core';
-import { IconCamera, IconHeart, IconGithub, IconHome } from 'angular-feather';
+import { IconCamera, IconHeart, IconGithub, IconHome, 
+  IconPlusSquare, IconRefreshCcw, IconEdit, IconTrash2, IconInfo } from 'angular-feather';
  
 const icons = [
   IconCamera,
   IconHeart,
   IconGithub,
-  IconHome
+  IconHome,
+  IconPlusSquare,
+  IconRefreshCcw,
+  IconEdit,
+  IconTrash2,
+  IconInfo
 ];
  
 @NgModule({

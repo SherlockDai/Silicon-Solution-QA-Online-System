@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {MatTableDataSource, MatBottomSheet} from '@angular/material';
+import { BottomSheetComponent } from "../bottom-sheet/bottom-sheet.component";
+
 @Component({
   selector: 'app-station-info-sys',
   templateUrl: './station-info-sys.component.html',
@@ -9,7 +11,7 @@ export class StationInfoSysComponent implements OnInit {
   orders: string[];
   displayedColumns: string[];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-  constructor() { 
+  constructor(private bottomSheet: MatBottomSheet) { 
     this.displayedColumns = ["Vender", "Chipset", "Devices", "Timestamp"];
     this.orders = ["DESCENDING", "ASCENDING"]
    }
@@ -19,6 +21,12 @@ export class StationInfoSysComponent implements OnInit {
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
+
+  openBottomSheet(): void {
+    this.bottomSheet.open(BottomSheetComponent);
+  }
+
+
 
   ngOnInit() {
   }
