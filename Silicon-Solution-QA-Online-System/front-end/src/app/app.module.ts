@@ -18,6 +18,7 @@ import { MatButtonModule, MatCheckboxModule, MatSelectModule,
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
   MatBottomSheetModule, MatListModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
+import { StationFormPageComponent } from './station-form-page/station-form-page.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
     HomePageComponent,
     NotFoundPageComponent,
     StationInfoSysComponent,
-    BottomSheetComponent
+    BottomSheetComponent,
+    StationFormPageComponent
   ],
   imports: [
     MatListModule,
