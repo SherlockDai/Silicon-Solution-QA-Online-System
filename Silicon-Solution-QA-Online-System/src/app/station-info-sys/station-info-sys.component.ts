@@ -1,38 +1,45 @@
 import { Component, OnInit } from '@angular/core';
+import {MatTableDataSource} from '@angular/material';
 @Component({
   selector: 'app-station-info-sys',
   templateUrl: './station-info-sys.component.html',
   styleUrls: ['./station-info-sys.component.css']
 })
 export class StationInfoSysComponent implements OnInit {
-  keys: string[];
   orders: string[];
-  displayedColumns = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
+  displayedColumns: string[];
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
   constructor() { 
-    this.keys = ["VENDER", "CHIPSET", "DEVICES", "TIMESTAMP"];
+    this.displayedColumns = ["Vender", "Chipset", "Devices", "Timestamp"];
     this.orders = ["DESCENDING", "ASCENDING"]
    }
+
+   applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+  }
 
   ngOnInit() {
   }
 }
-export interface PeriodicElement {
-  name: string;
+export interface StationInfoBrief {
   position: number;
-  weight: number;
-  symbol: string;
+  vender: string;
+  chipset: number;
+  device: number;
+  timestamp: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+const ELEMENT_DATA: StationInfoBrief[] = [
+  {position: 1, vender: 'Brcm', chipset: 4357, device: 1, timestamp: "12/2/2017"},
+  {position: 2, vender: 'Brcm', chipset: 4324, device: 4, timestamp: "11/2/2017"},
+  {position: 3, vender: 'MRVL', chipset: 4313, device: 6, timestamp: "10/2/2017"},
+  {position: 4, vender: 'MRVL', chipset: 4355, device: 2, timestamp: "9/2/2017"},
+  {position: 5, vender: 'Brcm', chipset: 4335, device: 3, timestamp: "8/2/2017"},
+  {position: 6, vender: 'MRVL', chipset: 4356, device: 4, timestamp: "7/2/2017"},
+  {position: 7, vender: 'SISO', chipset: 3355, device: 1, timestamp: "6/2/2017"},
+  {position: 8, vender: 'SISO', chipset: 4345, device: 2, timestamp: "5/2/2017"},
+  {position: 9, vender: 'SISO', chipset: 4865, device: 3, timestamp: "4/2/2017"},
+  {position: 10, vender: 'SISO', chipset: 3245, device: 4, timestamp: "3/2/2017"},
 ];

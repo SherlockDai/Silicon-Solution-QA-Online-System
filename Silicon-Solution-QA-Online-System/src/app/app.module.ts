@@ -14,7 +14,8 @@ import { HttpClientModule }    from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './in-memory-data.service';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule, MatCheckboxModule, MatSelectModule, MatTableModule } from "@angular/material";
+import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
+  MatTableModule, MatInputModule, MatPaginatorModule } from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,8 @@ import { MatButtonModule, MatCheckboxModule, MatSelectModule, MatTableModule } f
     StationInfoSysComponent
   ],
   imports: [
+    MatPaginatorModule,
+    MatInputModule,
     MatTableModule,
     MatButtonModule,
     MatCheckboxModule,

@@ -12,23 +12,14 @@
   align-items: baseline;
 }
 
-.navbar .form-control {
-  padding: .75rem 1rem;
-  border-width: 0;
-  border-radius: 0;
+.navbar{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 }
 
-.form-control-dark {
-  color: #fff;
-  background-color: rgba(255, 255, 255, .1);
-  border-color: rgba(255, 255, 255, .1);
-}
-
-.form-control-dark:focus {
-  color: black;
-  background-color: white;
-  border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.466);
+.nav-link{
+  color: white;
 }
 
 i-home{
@@ -36,6 +27,7 @@ i-home{
   top:2px;
   right: 1px;
 }
+
 
 /*
  * Utilities
@@ -47,14 +39,18 @@ i-home{
  * Table
  */
 .table-container{
+  width: 100%;
+  height: 100%;
   background-color: #ff8f3f;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
 }
 
 .card{
   z-index: 1;
+  min-height: 50%;
   background: rgba(255, 255, 255);
   margin: auto;
   padding: 45px;
@@ -69,6 +65,7 @@ i-home{
 
 .table-nav{
   width: 100%;
+  padding: 0 1em 0 1em;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -84,5 +81,13 @@ mat-form-field{
 }
 
 table{
+  display: relative;
   width: 100%;
+  text-align: center;
+}
+
+.mat-header-cell{
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
 }
