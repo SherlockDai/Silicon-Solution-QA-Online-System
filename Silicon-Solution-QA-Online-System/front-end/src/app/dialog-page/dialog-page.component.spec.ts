@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StationFormPageComponent } from './station-form-page.component';
+import { DialogPageComponent } from './dialog-page.component';
 
 describe('StationFormPageComponent', () => {
-  let component: StationFormPageComponent;
-  let fixture: ComponentFixture<StationFormPageComponent>;
+  let component: DialogPageComponent;
+  let fixture: ComponentFixture<DialogPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StationFormPageComponent ]
+      declarations: [ DialogPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StationFormPageComponent);
+    fixture = TestBed.createComponent(DialogPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

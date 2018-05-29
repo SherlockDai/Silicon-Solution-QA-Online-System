@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource, MatBottomSheet} from '@angular/material';
+import {MatTableDataSource, MatBottomSheet, MatDialog, MatDialogRef, getMatIconFailedToSanitizeLiteralError} from '@angular/material';
 import { BottomSheetComponent } from "../bottom-sheet/bottom-sheet.component";
-
+import { DialogPageComponent } from "../dialog-page/dialog-page.component";
+import { QaSysService } from "../qa-sys.service";
+import { StationInfoBrief } from "../brief-station";
 @Component({
   selector: 'app-station-info-sys',
   templateUrl: './station-info-sys.component.html',
@@ -10,44 +12,55 @@ import { BottomSheetComponent } from "../bottom-sheet/bottom-sheet.component";
 export class StationInfoSysComponent implements OnInit {
   orders: string[];
   displayedColumns: string[];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
-  constructor(private bottomSheet: MatBottomSheet) { 
+  dataSource: MatTableDataSource<StationInfoBrief>;
+  loadingInfo = false;
+  constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
+    private qaSysService:QaSysService) { 
     this.displayedColumns = ["Vender", "Chipset", "Devices", "Timestamp"];
     this.orders = ["DESCENDING", "ASCENDING"]
    }
 
+   //filter function
    applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
 
+  //table cell click listener, open bottom sheet
   openBottomSheet(): void {
-    this.bottomSheet.open(BottomSheetComponent);
+    let bottomSHeetRef = this.bottomSheet.open(BottomSheetComponent);
+
+    bottomSHeetRef.afterDismissed().subscribe(result => {
+      if(result){
+        this.loadingInfo = true;
+        this.openDialog(result);
+      }
+    })
+  }
+
+  //bottom sheet click listener, open dialog
+  openDialog(action: string): void{
+    let dialogRef;
+    this.qaSysService.getStation().subscribe(
+      response => {
+        this.loadingInfo = false;
+        dialogRef = this.dialog.open(DialogPageComponent, {
+          data: {
+            station: response,
+            action: action
+          }
+        })
+      }
+    )
   }
 
 
 
   ngOnInit() {
+    this.qaSysService.getAllStation().subscribe(
+      data => this.dataSource = new MatTableDataSource(data)
+    )
   }
 }
-export interface StationInfoBrief {
-  position: number;
-  vender: string;
-  chipset: number;
-  device: number;
-  timestamp: string;
-}
 
-const ELEMENT_DATA: StationInfoBrief[] = [
-  {position: 1, vender: 'Brcm', chipset: 4357, device: 1, timestamp: "12/2/2017"},
-  {position: 2, vender: 'Brcm', chipset: 4324, device: 4, timestamp: "11/2/2017"},
-  {position: 3, vender: 'MRVL', chipset: 4313, device: 6, timestamp: "10/2/2017"},
-  {position: 4, vender: 'MRVL', chipset: 4355, device: 2, timestamp: "9/2/2017"},
-  {position: 5, vender: 'Brcm', chipset: 4335, device: 3, timestamp: "8/2/2017"},
-  {position: 6, vender: 'MRVL', chipset: 4356, device: 4, timestamp: "7/2/2017"},
-  {position: 7, vender: 'SISO', chipset: 3355, device: 1, timestamp: "6/2/2017"},
-  {position: 8, vender: 'SISO', chipset: 4345, device: 2, timestamp: "5/2/2017"},
-  {position: 9, vender: 'SISO', chipset: 4865, device: 3, timestamp: "4/2/2017"},
-  {position: 10, vender: 'SISO', chipset: 3245, device: 4, timestamp: "3/2/2017"},
-];

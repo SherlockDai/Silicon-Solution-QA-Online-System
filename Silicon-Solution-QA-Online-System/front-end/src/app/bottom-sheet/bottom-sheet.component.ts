@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material';
 
 @Component({
@@ -11,6 +11,10 @@ export class BottomSheetComponent implements OnInit {
   constructor(private bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>) { }
 
   ngOnInit() {
+  }
+
+  openLink(input: string): void{
+    this.bottomSheetRef.dismiss(input);
   }
 
 }

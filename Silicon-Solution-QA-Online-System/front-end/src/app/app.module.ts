@@ -16,9 +16,9 @@ import { InMemoryDataService }  from './in-memory-data.service';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
-  MatBottomSheetModule, MatListModule } from "@angular/material";
+  MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
-import { StationFormPageComponent } from './station-form-page/station-form-page.component';
+import { DialogPageComponent } from './dialog-page/dialog-page.component';
 
 @NgModule({
   declarations: [
@@ -28,9 +28,11 @@ import { StationFormPageComponent } from './station-form-page/station-form-page.
     NotFoundPageComponent,
     StationInfoSysComponent,
     BottomSheetComponent,
-    StationFormPageComponent
+    DialogPageComponent
   ],
   imports: [
+    MatProgressBarModule,
+    MatDialogModule,
     MatListModule,
     MatBottomSheetModule,
     MatSlideToggleModule,
@@ -54,7 +56,7 @@ import { StationFormPageComponent } from './station-form-page/station-form-page.
       InMemoryDataService, { dataEncapsulation: false, delay: 1000 }
     )
   ],
-  entryComponents:[BottomSheetComponent],
+  entryComponents:[BottomSheetComponent, DialogPageComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

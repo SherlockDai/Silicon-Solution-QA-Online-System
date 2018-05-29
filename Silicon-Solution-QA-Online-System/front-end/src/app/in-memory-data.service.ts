@@ -1,6 +1,7 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { User } from "./user";
 import { Station } from "./station";
+import { StationInfoBrief } from "./brief-station";
 
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
@@ -18,10 +19,11 @@ export class InMemoryDataService implements InMemoryDbService {
     var blob = new Blob([byteArray], {type: 'image/png'});
     let stations: Station[] = [
       {
-      vender: "Brcm",
-      chipset: 4357,
-      device: 4,
-      detail_info:{
+        id:"0",
+        vender: "Brcm",
+        chipset: 4357,
+        device: 4,
+        timestamp: "12/12/2012",
         DUT_name: "4357",
         DUT_HW_version: "B1 ES5.3",
         DUT_WIFI_FW_version: "IGUANA_REL_13_10_452_13_PEGASUSE_MURATA_MM_PCIE_Mfgtest_Binary",
@@ -29,18 +31,23 @@ export class InMemoryDataService implements InMemoryDbService {
         DUT_username: "root",
         DUT_password: "Brcm1234",
         external_power_supply: "3.6 Volts, 2A current, DC power supply for all DUTs",
-        DUT_connection_picture: blob,
-        additional_comments: `D1: 87-90(Use COM90)
-                              D2: 77-80(Use COM80)
-                              D3: 61-64(Use COM64)
-                              D4: 21-24(Use COM24)
-                              D5: 69-72(Use COM72)
-                              D6: 65-68(Use COM68)
-                              D7: 81-84(Use COM84)
-                              D8: 5-8(Use COM8)`
-        }
+        DUT_connection_picture: base64,
+        additional_comments: `D1: 87-90(Use COM90) D2: 77-80(Use COM80) D3: 61-64(Use COM64) D4: 21-24(Use COM24) D5: 69-72(Use COM72) D6: 65-68(Use COM68) D7: 81-84(Use COM84) D8: 5-8(Use COM8)`
       }
     ];
-    return {users};
+
+    let briefStations: StationInfoBrief[] = [
+      {position: 1, vender: 'Brcm', chipset: 4357, device: 1, timestamp: "12/2/2017"},
+      {position: 2, vender: 'Brcm', chipset: 4324, device: 4, timestamp: "11/2/2017"},
+      {position: 3, vender: 'MRVL', chipset: 4313, device: 6, timestamp: "10/2/2017"},
+      {position: 4, vender: 'MRVL', chipset: 4355, device: 2, timestamp: "9/2/2017"},
+      {position: 5, vender: 'Brcm', chipset: 4335, device: 3, timestamp: "8/2/2017"},
+      {position: 6, vender: 'MRVL', chipset: 4356, device: 4, timestamp: "7/2/2017"},
+      {position: 7, vender: 'SISO', chipset: 3355, device: 1, timestamp: "6/2/2017"},
+      {position: 8, vender: 'SISO', chipset: 4345, device: 2, timestamp: "5/2/2017"},
+      {position: 9, vender: 'SISO', chipset: 4865, device: 3, timestamp: "4/2/2017"},
+      {position: 10, vender: 'SISO', chipset: 3245, device: 4, timestamp: "3/2/2017"},
+    ];
+    return {users, briefStations, stations};
   }
 }

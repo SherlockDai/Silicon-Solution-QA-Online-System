@@ -1,0 +1,69 @@
+<mat-dialog-content>
+  <p class="row">
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>ID</mat-label>
+      <input matInput placeholder="ID" value="{{station['vender']}} - {{station['chipset']}} - {{station['device']}}" disabled>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>Vender Name</mat-label>
+      <input matInput placeholder="Vender Name" [(ngModel)]="station['vender']" [disabled] = "readOnly">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>Chipset Number</mat-label>
+      <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" [disabled] = "readOnly">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>Device Number</mat-label>
+      <input matInput placeholder="Device Number"  [(ngModel)]="station['device']" [disabled] = "readOnly">
+    </mat-form-field>
+  </p>
+  <p class="row">
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>DUT Name</mat-label>
+      <input matInput placeholder="DUT Name"  [(ngModel)]="station['DUT_name']" [disabled] = "readOnly">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>DUT HW version</mat-label>
+      <input matInput placeholder="DUT HW version"  [(ngModel)]="station['DUT_HW_version']" [disabled] = "readOnly">
+    </mat-form-field>
+  </p>
+  <p class="row">
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>DUT WIFI FW version</mat-label>
+      <input matInput placeholder="DUT WIFI FW version"  [(ngModel)]="station['DUT_WIFI_FW_version']" [disabled] = "readOnly">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>DUT BT HCD File</mat-label>
+      <input matInput placeholder="DUT BT HCD File"  [(ngModel)]="station['DUT_BT_HCD_file']" [disabled] = "readOnly">
+    </mat-form-field>
+  </p>
+  <p class="row">
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>DUT Username</mat-label>
+      <input matInput placeholder=">DUT Username" [(ngModel)]="station['DUT_username']" [disabled] = "readOnly">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>DUT Password</mat-label>
+      <input matInput placeholder="DUT Password" [(ngModel)]="station['DUT_password']" [disabled] = "readOnly">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>External Power Supply</mat-label>
+      <input matInput placeholder="External Power Supply" [(ngModel)]="station['external_power_supply']" [disabled] = "readOnly">
+    </mat-form-field>
+  </p>
+  <p class="row">
+    <mat-form-field appearance="outline" class="col">
+      <mat-label>Additional Comment</mat-label>
+      <textarea matInput placeholder="Additional Comment" [(ngModel)]="station['additional_comments']" [disabled] = "readOnly"></textarea>
+    </mat-form-field>
+  </p>
+  <p class="row">
+    <input type="file" class="col" *ngIf="!readOnly">
+    <img class="col" *ngIf="imagePath && readOnly" [src]="imagePath">
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="!readOnly">
+    <button mat-raised-button	>Save</button>
+    <button mat-button>Cancel</button>
+</mat-dialog-actions>
+

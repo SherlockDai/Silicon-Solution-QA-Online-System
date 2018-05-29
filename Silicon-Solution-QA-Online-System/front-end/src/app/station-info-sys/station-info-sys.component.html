@@ -10,6 +10,8 @@
 
   <div class="table-container">
     <div class="card w-75 p-0 mat-elevation-z8">
+      <mat-progress-bar mode="indeterminate" *ngIf="!dataSource"></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loadingInfo"></mat-progress-bar>
       <div class="table-nav">
           <mat-form-field>
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
@@ -34,7 +36,7 @@
               </mat-form-field>
           </div>
       </div>
-      <table mat-table [dataSource]="dataSource" cdkScrollable>
+      <table mat-table [dataSource]="dataSource" cdkScrollable  *ngIf="dataSource">
 
           <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
