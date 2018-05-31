@@ -3,7 +3,7 @@ export class Station {
     vender: string;
     chipset: number;
     device: number;
-    timestamp: string;
+    timestamp: Date;
     DUT_name: string;
     DUT_HW_version: string;
     DUT_WIFI_FW_version: string;

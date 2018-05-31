@@ -3,7 +3,7 @@
     <div class="navi-container"  [@flyInOut]="'in'" (@flyInOut.done)="showUp($event)">
         <img class="logo-home" src="../../assets/images/logo-home.png"/>
         <div class="btn-group">
-          <button><a href="javascript:void(0)" (click)="goBack()">Logout</a></button>
+          <button><a href="javascript:void(0)" routerLink="/login">Logout</a></button>
           <button><a pageScroll href="#document-manuals">Doc & Manuals</a></button>
           <button><a pageScroll href="#bookkeeping-info">Bookkeeping</a></button>
           <button><a pageScroll href="#test-status">Test Status</a></button>

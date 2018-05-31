@@ -1,34 +1,34 @@
 
 <div class="navbar navbar-dark bg-dark p-0 shadow">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><i-home></i-home>Silicon Solution QA Team</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" routerLink="/home"><i-home></i-home>Silicon Solution QA Team</a>
     <div class="navbar-btn-group">
-      <a class="nav-link" href="\">Full list</a>
-      <a class="nav-link" href="javascript:void(0)">Favorites</a>
-      <a class="nav-link" href="javascript:void(0)">Logout</a>
+      <a class="nav-link" href="javascript:void(0)" (click)="showFullList()">Full list</a>
+      <a class="nav-link" href="javascript:void(0)" (click)="showFavoriteList()">Favorites</a>
+      <a class="nav-link" href="javascript:void(0)" routerLink="/lgoin">Logout</a>
     </div>
 </div>
 
   <div class="table-container">
+    <mat-progress-bar mode="indeterminate" *ngIf="!dataSource"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" *ngIf="loadingInfo"></mat-progress-bar>
     <div class="card w-75 p-0 mat-elevation-z8">
-      <mat-progress-bar mode="indeterminate" *ngIf="!dataSource"></mat-progress-bar>
-      <mat-progress-bar mode="indeterminate" *ngIf="loadingInfo"></mat-progress-bar>
       <div class="table-nav">
           <mat-form-field>
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
           </mat-form-field>
           <div class="btn-group">
-              <button mat-button><i-plus-square></i-plus-square>Add</button>
+              <button mat-button (click)="onInsertion(event)"><i-plus-square></i-plus-square>Add</button>
               <button mat-icon-button><i-refresh-ccw></i-refresh-ccw></button>
               <mat-slide-toggle>Auto refresh</mat-slide-toggle>
               <mat-form-field>
-                  <mat-select placeholder="Sort By">
-                    <mat-option *ngFor="let key of displayedColumns" [value]="key">
+                  <mat-select placeholder="Sort By" (selectionChange)="onSortChange($event.value.toLowerCase())">
+                    <mat-option *ngFor="let key of displayedColumns" [value]="key" >
                       {{ key }}
                     </mat-option>
                   </mat-select>
               </mat-form-field>
               <mat-form-field>
-                  <mat-select placeholder="Order By">
+                  <mat-select placeholder="Order By" (selectionChange)="onOrderChange($event.value)" [disabled]="!canSort">
                     <mat-option *ngFor="let order of orders" [value]="order">
                       {{ order }}
                     </mat-option>
@@ -36,13 +36,13 @@
               </mat-form-field>
           </div>
       </div>
-      <table mat-table [dataSource]="dataSource" cdkScrollable  *ngIf="dataSource">
+      <table mat-table [dataSource]="dataSource"  *ngIf="dataSource">
 
           <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
         
           <!-- Position Column -->
-          <ng-container matColumnDef="position">
+          <ng-container matColumnDef="Position">
             <th mat-header-cell *matHeaderCellDef> No. </th>
             <td mat-cell *matCellDef="let element"> {{element.position}} </td>
           </ng-container>
@@ -60,7 +60,7 @@
           </ng-container>
         
           <!-- Symbol Column -->
-          <ng-container matColumnDef="Devices">
+          <ng-container matColumnDef="Device">
             <th mat-header-cell *matHeaderCellDef> Devices </th>
             <td mat-cell *matCellDef="let element"> {{element.device}} </td>
           </ng-container>
@@ -68,11 +68,11 @@
            <!-- Symbol Column -->
            <ng-container matColumnDef="Timestamp">
               <th mat-header-cell *matHeaderCellDef> Timestamp </th>
-              <td mat-cell *matCellDef="let element"> {{element.timestamp}} </td>
+              <td mat-cell *matCellDef="let element"> {{element.timestamp | date:"MM/dd/yy" }}</td>
             </ng-container>
         
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openBottomSheet()"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="openBottomSheet(row)"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>

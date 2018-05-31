@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   trigger,
   state,
   style,
   animate,
   transition
-} from '@angular/animations';
+} from '@angular/animations'
 
 import { QaSysService } from "../qa-sys.service";
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { User } from "../user";
 import {Router} from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
@@ -32,7 +33,7 @@ import {Router} from '@angular/router';
     ])
   ]
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, OnDestroy {
 
   //declare toggle which control the display of registration and login page
   toggle: boolean;
@@ -40,6 +41,7 @@ export class LoginPageComponent implements OnInit {
   state: String;
   //decalre loading which controls the loading spinner
   loading: boolean;
+  private ngUnsubscribe: Subject<any> = new Subject();
   changeForm(){
     this.toggle = !this.toggle;
   }
@@ -63,7 +65,7 @@ export class LoginPageComponent implements OnInit {
   login(username: string, password:string):void{
     this.loading = true;
     
-    this.qaSysService.login(username, password)
+    this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(user => this.checkInfo(username, password, user));
   }
 
@@ -80,4 +82,8 @@ export class LoginPageComponent implements OnInit {
     this.loading = false;
   }
 
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 }

@@ -19,7 +19,7 @@ export class DialogPageComponent implements OnInit {
       this.station = data["station"];
       this.imagePath = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' 
                  + this.station['DUT_connection_picture']);
-      this.readOnly = data["action"] == "update" ? false : true;
+      this.readOnly = data["action"] == "detail" ? true : false;
     }
 
   ngOnInit() {

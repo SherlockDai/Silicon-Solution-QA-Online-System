@@ -3,5 +3,5 @@ export interface StationInfoBrief {
   vender: string;
   chipset: number;
   device: number;
-  timestamp: string;
+  timestamp: Date;
 }

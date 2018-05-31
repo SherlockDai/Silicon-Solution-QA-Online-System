@@ -133,7 +133,6 @@ mat-form-field{
 
 table{
   width: 100%;
-  height: 75%;
   text-align: center;
   overflow: hidden;
 }
@@ -152,4 +151,9 @@ table tr:hover td {
 
 mat-paginator{
   height: 9%;
+}
+
+button{
+  border: none;
+  outline: none;
 }

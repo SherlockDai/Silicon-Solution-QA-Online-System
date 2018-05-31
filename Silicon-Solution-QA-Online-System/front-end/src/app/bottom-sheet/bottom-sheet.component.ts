@@ -1,5 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { MatBottomSheetRef } from '@angular/material';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-bottom-sheet',
@@ -8,13 +8,22 @@ import { MatBottomSheetRef } from '@angular/material';
 })
 export class BottomSheetComponent implements OnInit {
 
-  constructor(private bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>) { }
+  //boolean that indicates whether the current table is full table or favorite table
+  private isFullList: boolean = true;
+
+  constructor(private bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
+      this.isFullList = data['isFullList'];
+    }
 
   ngOnInit() {
   }
 
   openLink(input: string): void{
-    this.bottomSheetRef.dismiss(input);
+    this.bottomSheetRef.dismiss({
+      action: input,
+      row: this.data['record']
+    });
   }
 
 }

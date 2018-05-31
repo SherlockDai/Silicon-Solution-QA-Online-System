@@ -16,7 +16,8 @@ import { InMemoryDataService }  from './in-memory-data.service';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
-  MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule } from "@angular/material";
+  MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule,
+  MatSortModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
 
@@ -31,6 +32,7 @@ import { DialogPageComponent } from './dialog-page/dialog-page.component';
     DialogPageComponent
   ],
   imports: [
+    MatSortModule,
     MatProgressBarModule,
     MatDialogModule,
     MatListModule,

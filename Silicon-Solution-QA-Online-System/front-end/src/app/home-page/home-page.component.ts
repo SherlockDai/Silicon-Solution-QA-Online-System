@@ -32,17 +32,12 @@ export class HomePageComponent implements OnInit {
   //declare state to store the state of the team info
   state:String;
 
-  constructor(private location: Location) { 
+  constructor() { 
     //initialize the state to down in order to hide the team info at the begining 
     this.state = 'down';
   }
 
   ngOnInit() { }
-
-  //function that route back to the previous page
-  goBack(): void {
-    this.location.back();
-  }
 
   //function that change the state to up in order to show up the team info
   showUp(): void{
