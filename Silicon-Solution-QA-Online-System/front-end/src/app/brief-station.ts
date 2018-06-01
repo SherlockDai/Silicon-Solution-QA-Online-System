@@ -1,5 +1,5 @@
 export interface StationInfoBrief {
-  position: number;
+  id: string;
   vender: string;
   chipset: number;
   device: number;

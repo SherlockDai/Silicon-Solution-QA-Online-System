@@ -31,6 +31,8 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   private favoriteStations: StationInfoBrief[] = [];
   //boolean that identify the current datasource
   private isFullList: boolean = true;
+  //localstorage that stores users' favorite stations
+  private localStorage = window.localStorage;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
     private qaSysService:QaSysService) { 
@@ -137,14 +139,20 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   }
 
   addToFavorite(station: StationInfoBrief):void {
+    //update favorite list
     this.favoriteStations.push(station);
     this.favoriateDataSource.data = this.favoriteStations;
+    //update local storage
+    this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
   }
 
   deleteFromFavorite(station: StationInfoBrief):void{
+    //update favorite list
     let index = this.favoriteStations.indexOf(station);
     this.favoriteStations.splice(index);
     this.favoriateDataSource.data = this.favoriteStations;
+    //update local storage
+    this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
   }
 
   showFullList():void{
@@ -162,7 +170,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
         this.fullDataSource = new MatTableDataSource(data);
-        this.favoriateDataSource = new MatTableDataSource();
+        this.favoriateDataSource = new MatTableDataSource(JSON.parse(this.localStorage.getItem('favoriteStation')));
         this.dataSource = this.fullDataSource;
       }
     )

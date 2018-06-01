@@ -37,16 +37,16 @@ export class InMemoryDataService implements InMemoryDbService {
     ];
 
     let briefStations: StationInfoBrief[] = [
-      {position: 1, vender: 'Brcm', chipset: 4357, device: 1, timestamp: new Date("12/2/2017")},
-      {position: 2, vender: 'Brcm', chipset: 4324, device: 4, timestamp: new Date("11/2/2017")},
-      {position: 3, vender: 'MRVL', chipset: 4313, device: 6, timestamp: new Date("10/2/2017")},
-      {position: 4, vender: 'MRVL', chipset: 4355, device: 2, timestamp: new Date("9/2/2017")},
-      {position: 5, vender: 'Brcm', chipset: 4335, device: 3, timestamp: new Date("8/2/2017")},
-      {position: 6, vender: 'MRVL', chipset: 4356, device: 4, timestamp: new Date("7/2/2017")},
-      {position: 7, vender: 'SISO', chipset: 3355, device: 1, timestamp: new Date("6/2/2017")},
-      {position: 8, vender: 'SISO', chipset: 4345, device: 2, timestamp: new Date("5/2/2017")},
-      {position: 9, vender: 'SISO', chipset: 4865, device: 3, timestamp: new Date("4/2/2017")},
-      {position: 10, vender: 'SISO', chipset: 3245, device: 4, timestamp: new Date("3/2/2017")},
+      {id: 'Brcm-4357-1', vender: 'Brcm', chipset: 4357, device: 1, timestamp: new Date("12/2/2017")},
+      {id: 'Brcm-4324-4', vender: 'Brcm', chipset: 4324, device: 4, timestamp: new Date("11/2/2017")},
+      {id: 'MRVL-4313-6', vender: 'MRVL', chipset: 4313, device: 6, timestamp: new Date("10/2/2017")},
+      {id: 'MRVL-4355-2', vender: 'MRVL', chipset: 4355, device: 2, timestamp: new Date("9/2/2017")},
+      {id: 'Brcm-4335-3', vender: 'Brcm', chipset: 4335, device: 3, timestamp: new Date("8/2/2017")},
+      {id: 'MRVL-4356-4', vender: 'MRVL', chipset: 4356, device: 4, timestamp: new Date("7/2/2017")},
+      {id: 'SISO-3355-1', vender: 'SISO', chipset: 3355, device: 1, timestamp: new Date("6/2/2017")},
+      {id: 'SISO-4345-2', vender: 'SISO', chipset: 4345, device: 2, timestamp: new Date("5/2/2017")},
+      {id: 'SISO-4865-3', vender: 'SISO', chipset: 4865, device: 3, timestamp: new Date("4/2/2017")},
+      {id: 'SISO-3245-4', vender: 'SISO', chipset: 3245, device: 4, timestamp: new Date("3/2/2017")},
     ];
     return {users, briefStations, stations};
   }
