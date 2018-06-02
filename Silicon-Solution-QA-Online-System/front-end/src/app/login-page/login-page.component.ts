@@ -41,6 +41,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   state: String;
   //decalre loading which controls the loading spinner
   loading: boolean;
+  //decalre user to store the user's information
+  user: User;
+
   private ngUnsubscribe: Subject<any> = new Subject();
   changeForm(){
     this.toggle = !this.toggle;
@@ -66,18 +69,16 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.loading = true;
     
     this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(user => this.checkInfo(username, password, user));
+      .subscribe(result => this.checkInfo(result));
   }
 
-  checkInfo(username: string, password: string, returnedUser: User){
-    if(username.toLowerCase() !== returnedUser.username.toLowerCase()){
-      console.log("username failed");
-    }
-    else if(password !== returnedUser.password){
-    console.log("pwd failed");
+  checkInfo(result: JSON){
+    if(result["result"] == true){
+      this.user = result["user"];
+      this.router.navigate(['/home']);
     }
     else{
-      this.router.navigate(['/home']);
+      
     }
     this.loading = false;
   }

@@ -11,24 +11,26 @@ import { Station } from "./station";
 })
 export class QaSysService {
   //the login api url
-  private loginUrl = "api/users/?username="
+  private loginUrl = "http://localhost:3000/userInfo"
   private allStationUrl = "api/briefStations/"
   private stationUrl = "api/stations/?id="
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+    })
+  };
 
   constructor(
     private http:HttpClient,
     private messageService: MessageService) { }
 
-  login(username:string, password:string): Observable<User>{
-    let reg: string = username;
-    return this.http.get<User>(this.loginUrl + reg).pipe(
-      map(users => users[0]),
-      tap(h => {
-        const outcome = h ? `fetched` : `did not find`;
-        this.log(`${outcome} hero id=${username}`) 
-      }),
-      catchError(this.handleError<User>(`login username=${username}`))
-    );;
+  login(username:string, password:string): Observable<JSON>{
+    let data = {
+      username: username.toLowerCase(),
+      password: password
+    }
+    let jsonData = JSON.stringify(data)
+    return this.http.post<JSON>(this.loginUrl, data, this.httpOptions);
   }
 
   getAllStation(): Observable<StationInfoBrief[]>{

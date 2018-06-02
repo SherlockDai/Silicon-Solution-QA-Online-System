@@ -149,7 +149,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   deleteFromFavorite(station: StationInfoBrief):void{
     //update favorite list
     let index = this.favoriteStations.indexOf(station);
-    this.favoriteStations.splice(index);
+    this.favoriteStations.splice(index, 1);
     this.favoriateDataSource.data = this.favoriteStations;
     //update local storage
     this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));

@@ -1,0 +1,25 @@
+{
+  "name": "silicon-solution-online-system",
+  "version": "1.0.0",
+  "description": "The back-end system build on Node.js and MongoDB that supports the front-end Angular6 App",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongodb": "^3.1.0-beta4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SherlockDai/Silicon-Solution-QA-Online-System/tree/master/Silicon-Solution-QA-Online-System/back-end"
+  },
+  "keywords": [
+    "back-end",
+    "Litepoint",
+    "Teradyne"
+  ],
+  "author": "DerekDai",
+  "license": "ISC"
+}

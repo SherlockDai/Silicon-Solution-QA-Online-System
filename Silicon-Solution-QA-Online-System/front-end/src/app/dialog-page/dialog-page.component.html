@@ -2,7 +2,7 @@
   <p class="row">
     <mat-form-field appearance="outline" class="col">
       <mat-label>ID</mat-label>
-      <input matInput placeholder="ID" value="{{station['vender']}} - {{station['chipset']}} - {{station['device']}}" disabled>
+      <input matInput placeholder="ID" value="{{station['vender']}}-{{station['chipset']}}-{{station['device']}}UP" disabled>
     </mat-form-field>
     <mat-form-field appearance="outline" class="col">
       <mat-label>Vender Name</mat-label>
@@ -14,7 +14,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" class="col">
       <mat-label>Device Number</mat-label>
-      <input matInput placeholder="Device Number"  [(ngModel)]="station['device']" [readonly] = "readOnly">
+      <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" [readonly] = "readOnly">
     </mat-form-field>
   </p>
   <p class="row">
