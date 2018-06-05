@@ -1,10 +1,26 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const multiparty = require('multiparty');
+
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function(req, file, callback){
+    callback(null, "./uploads");
+  },
+  filename: function(req, file, callback) {
+    callback(null, Date.now()+file.originalname);
+  }
+});
+const upload = multer({storage: storage}).single('DUT_connection_picture');
 
 const port = 3000;
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://localhost:27017/Silicon-Solution-Online-System-DB";
+
+const userCollection = "userInfo"
+const stationCollection = "stationInfo"
+
 var dbo
 
 app.use(bodyParser.json());
@@ -37,14 +53,14 @@ MongoClient.connect(url,  { useNewUrlParser: true },  function(err, db) {
 });
 
 app.get('/', function (req, res) {
-  res.send('Hello World');
+  res.send('Developing');
 })
 
 
 app.post("/userInfo", function(request, response){
   console.log(request.body);
   var query = {username: request.body["username"]};
-  dbo.collection("userInfo").findOne(query, function(err, result){
+  dbo.collection(userCollection).findOne(query, function(err, result){
     if(err) throw err;
     console.log(result);
     if(result == null){
@@ -57,6 +73,23 @@ app.post("/userInfo", function(request, response){
     else{
       response.send({result: false, reason: "password"});
     }
+  })
+})
+
+app.get('/allStationInfo',  function(request, response){
+  dbo.collection(stationCollection).find({},{id: 1, vender: 1, chipset: 1, device: 1, timestamp: 1}).toArray(function(err, result){
+    if(err) throw err;
+    console.log(result);
+    response.send(result);
+  })
+})
+
+app.post('/addStation', function(request, response){
+  upload(request, response, function(err){
+    if(err){
+      return response.end("Error");
+    }
+    response.end("uploaded")
   })
 })
 

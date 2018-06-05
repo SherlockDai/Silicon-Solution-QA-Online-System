@@ -58,12 +58,12 @@
     </mat-form-field>
   </p>
   <p class="row">
-    <input type="file" class="col" *ngIf="!readOnly">
-    <img class="col" *ngIf="imagePath && readOnly" [src]="imagePath">
+    <input type="file" class="col" *ngIf="!readOnly" (change)="onFileChange($event)">
   </p>
+  <img class="row" *ngIf="imagePath" [src]="imagePath">
 </mat-dialog-content>
 <mat-dialog-actions *ngIf="!readOnly">
-    <button mat-raised-button	>Save</button>
+    <button mat-raised-button	(click)="onSubmit($event)">Save</button>
     <button mat-button>Cancel</button>
 </mat-dialog-actions>
 

@@ -11,6 +11,6 @@ export class Station {
     DUT_username: string;
     DUT_password: string;
     external_power_supply: string;
-    DUT_connection_picture: string;
+    DUT_connection_picture: File;
     additional_comments: string;
   }

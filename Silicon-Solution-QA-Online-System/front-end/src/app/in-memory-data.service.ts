@@ -31,7 +31,7 @@ export class InMemoryDataService implements InMemoryDbService {
         DUT_username: "root",
         DUT_password: "Brcm1234",
         external_power_supply: "3.6 Volts, 2A current, DC power supply for all DUTs",
-        DUT_connection_picture: base64,
+        DUT_connection_picture: null,
         additional_comments: `D1: 87-90(Use COM90) D2: 77-80(Use COM80) D3: 61-64(Use COM64) D4: 21-24(Use COM24) D5: 69-72(Use COM72) D6: 65-68(Use COM68) D7: 81-84(Use COM84) D8: 5-8(Use COM8)`
       }
     ];
