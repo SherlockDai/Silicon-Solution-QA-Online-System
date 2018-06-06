@@ -15,6 +15,8 @@ export class QaSysService {
   private allStationUrl = "http://localhost:3000/allStationInfo"
   private addStationUrl = "http://localhost:3000/addStation"
   private getStationUrl = "http://localhost:3000/getStation"
+  private deleteStationUrl = "http://localhost:3000/deleteStation"
+  private updateStationUrl = "http://localhost:3000/updateStation"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
@@ -41,10 +43,12 @@ export class QaSysService {
   getStation(station: StationInfoBrief): Observable<Station>{
     return this.http.post<Station>(this.getStationUrl, station, this.httpOptions).pipe(map(response => {
       response.timestamp = new Date(response.timestamp);
-      if(response.DUT_connection_picture){
-      }
       return response;
     }));
+  }
+
+  deleteStation(station: StationInfoBrief): Observable<Boolean>{
+    return this.http.post<Boolean>(this.deleteStationUrl, station, this.httpOptions);
   }
 
   addStation(station: Station): Observable<JSON>{
@@ -67,6 +71,29 @@ export class QaSysService {
     headers.delete('Content-Type');
     let options = { headers: headers };
     return this.http.post<JSON>(this.addStationUrl, formData, options);
+  }
+
+  updateStation(prevInfo: StationInfoBrief, station: Station): Observable<JSON>{
+    let formData = new FormData();
+    formData.append("prevId", prevInfo.id)
+    formData.append("id", station.id);
+    formData.append("vender", station.vender);
+    formData.append("chipset", station.chipset);
+    formData.append("device", station.device);
+    formData.append("timestamp", station.timestamp.toDateString())
+    formData.append("DUT_name", station.DUT_name);
+    formData.append("DUT_HW_version", station.DUT_HW_version);
+    formData.append("DUT_WIFI_FW_version", station.DUT_WIFI_FW_version);
+    formData.append("DUT_BT_HCD_file", station.DUT_BT_HCD_file);
+    formData.append("DUT_username", station.DUT_username);
+    formData.append("DUT_password", station.DUT_password);
+    formData.append("external_power_supply", station.external_power_supply);
+    formData.append("additional_comments", station.additional_comments);
+    formData.append("DUT_connection_picture", station.DUT_connection_picture);
+    let headers = new HttpHeaders();
+    headers.delete('Content-Type');
+    let options = { headers: headers };
+    return this.http.post<JSON>(this.updateStationUrl, formData, options);
   }
 
   /** Log a HeroService message with the MessageService */

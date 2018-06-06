@@ -12,7 +12,6 @@ import { StationInfoSysComponent } from './station-info-sys/station-info-sys.com
 import { IconsModule } from './icons/icons.module';
 import { HttpClientModule }    from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
@@ -53,12 +52,6 @@ import { DialogPageComponent } from './dialog-page/dialog-page.component';
     BrowserAnimationsModule,
     IconsModule,
     HttpClientModule,
-    // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
-    // and returns simulated server responses.
-    // Remove it when a real server is ready to receive requests.
-    //HttpClientInMemoryWebApiModule.forRoot(
-    //  InMemoryDataService, { dataEncapsulation: false, delay: 1000 }
-    //)
   ],
   entryComponents:[BottomSheetComponent, DialogPageComponent],
   providers: [],

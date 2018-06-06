@@ -68,11 +68,11 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           this.addToFavorite(result['row']);
         }
         else if(result['action'] == "unfavorite"){
-          this.deleteFromFavorite(result['row'])
+          this.deleteFromFavorite(result['row']);
         }
         //todo delete the corresponding station if the user press the delete button
         else if(result['action'] == "delete"){
-          
+          this.deleteFromTable(result['row']);
         }
       }
     })
@@ -87,13 +87,16 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         dialogRef = this.dialog.open(DialogPageComponent, {
           data: {
             station: response,
-            action: action
+            action: action,
+            prevInfo: selectedRecord
           }
         })
         dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
           if(result){
-            //add the returned new station to the station list
-            this.fullDataSource.data
+            let prevData = this.fullDataSource.data;
+            let index = prevData.indexOf(result.prevInfo);
+            prevData[index] = result.newInfo;
+            this.fullDataSource.data = prevData;
           }
         })
       }
@@ -114,15 +117,8 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
       if(result){
         //add the returned new station to the station list
-        let newBriefStation: StationInfoBrief = {
-          id: result['id'],
-          vender: result['vender'],
-          chipset: result['chipset'],
-          device: result['device'],
-          timestamp: result['timestamp']
-        };
         let prevData = this.fullDataSource.data;
-        prevData.push(newBriefStation);
+        prevData.push(result);
         this.fullDataSource.data = prevData;
       }
     })
@@ -174,6 +170,21 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.favoriateDataSource.data = this.favoriteStations;
     //update local storage
     this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
+  }
+
+  deleteFromTable(station: StationInfoBrief):void {
+    this.qaSysService.deleteStation(station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      result => {
+        if (result){
+          //remove the station from the list
+          let prevData = this.fullDataSource.data;
+          let index = prevData.indexOf(station);
+          if(index > -1)
+            prevData.splice(index, 1);
+          this.fullDataSource.data = prevData;
+        }
+      }
+    )
   }
 
   showFullList():void{

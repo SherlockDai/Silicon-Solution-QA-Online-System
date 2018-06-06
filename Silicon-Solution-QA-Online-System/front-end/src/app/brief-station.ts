@@ -1,7 +1,7 @@
 export interface StationInfoBrief {
   id: string;
   vender: string;
-  chipset: number;
-  device: number;
+  chipset: string;
+  device: string;
   timestamp: Date;
 }
