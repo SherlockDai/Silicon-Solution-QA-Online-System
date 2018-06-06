@@ -61,7 +61,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         //open dialog if the user press update or detail info button
         if(result['action'] == "update" || result['action'] == "detail"){
           this.loadingInfo = true;
-          this.openDialog(result['action']);
+          this.openDialog(result['action'], result['row']);
         }
         //add the corresponding station into the favorite list
         else if(result['action'] == "favorite"){
@@ -72,22 +72,28 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         }
         //todo delete the corresponding station if the user press the delete button
         else if(result['action'] == "delete"){
-
+          
         }
       }
     })
   }
 
   //bottom sheet click listener, open dialog
-  openDialog(action: string): void{
+  openDialog(action: string, selectedRecord: StationInfoBrief): void{
     let dialogRef;
-    this.qaSysService.getStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getStation(selectedRecord).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       response => {
         this.loadingInfo = false;
         dialogRef = this.dialog.open(DialogPageComponent, {
           data: {
             station: response,
             action: action
+          }
+        })
+        dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+          if(result){
+            //add the returned new station to the station list
+            this.fullDataSource.data
           }
         })
       }
@@ -105,6 +111,21 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         }
       }
     );
+    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+      if(result){
+        //add the returned new station to the station list
+        let newBriefStation: StationInfoBrief = {
+          id: result['id'],
+          vender: result['vender'],
+          chipset: result['chipset'],
+          device: result['device'],
+          timestamp: result['timestamp']
+        };
+        let prevData = this.fullDataSource.data;
+        prevData.push(newBriefStation);
+        this.fullDataSource.data = prevData;
+      }
+    })
 
   }
 

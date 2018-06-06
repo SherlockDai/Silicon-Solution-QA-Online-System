@@ -21,6 +21,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
       this.station = data["station"];
       this.readOnly = data["action"] == "detail" ? true : false;
+      this.imagePath = "data:image/png;base64," + data["station"].DUT_connection_picture;
     }
 
   onFileChange(event):void {
@@ -39,7 +40,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP';
     this.qaSysService.addStation(this.station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       response => {
-        console.log(response);
+        if(response){
+          this.dialogRef.close(this.station)
+        }
       }
     )
   }

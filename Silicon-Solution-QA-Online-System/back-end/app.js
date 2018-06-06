@@ -58,7 +58,6 @@ app.get('/', function (req, res) {
 
 
 app.post("/userInfo", function(request, response){
-  console.log(request.body);
   var query = {username: request.body["username"]};
   dbo.collection(userCollection).findOne(query, function(err, result){
     if(err) throw err;
@@ -77,21 +76,72 @@ app.post("/userInfo", function(request, response){
 })
 
 app.get('/allStationInfo',  function(request, response){
-  dbo.collection(stationCollection).find({},{id: 1, vender: 1, chipset: 1, device: 1, timestamp: 1}).toArray(function(err, result){
+  dbo.collection(stationCollection).find({},{_id: 0, id: 1, vender: 1, chipset: 1, device: 1, timestamp: 1}).toArray(function(err, result){
     if(err) throw err;
-    console.log(result);
     response.send(result);
   })
 })
 
-app.post('/addStation', function(request, response){
+/* app.post('/addStation', function(request, response){
   upload(request, response, function(err){
     if(err){
       return response.end("Error");
     }
     response.end("uploaded")
   })
+}) */
+
+app.post('/addStation', function(request, response){
+  let form = new multiparty.Form();
+  let station = {};
+
+  form.on('error', function(err){
+    console.log("Error parsing form" + err.stack);
+  });
+
+  form.on('part', function(part){
+    if(part.filename){
+      chunks = [];
+      part.on("data", function(chunk){
+        chunks.push(chunk);
+      })
+
+      part.on("end", function(){
+        station[part.name] = Buffer.concat(chunks)
+      })
+    }
+  })
+
+  form.on('field', function(name, value){
+    station[name] = value;
+  })
+
+  form.on('close', function(){
+    //handle the final station info when every thing is loaded especially the picture
+    //now store all the info in database
+    dbo.collection(stationCollection).insertOne(station, function(err, result){
+      if (err) {
+        response.send(false);
+        throw err;
+      }
+      if (result.result.ok && result.result.ok == 1)
+        response.send(true);
+      else 
+      response.send(false);
+    })
+  })
+
+  form.parse(request);
+
 })
+
+app.post('/getStation', function(request, response){
+  let query = {id: request.body["id"]};
+  dbo.collection(stationCollection).findOne(query, function(err, result){
+    if (err) throw err;
+    response.send(result);
+  })
+});
 
 
 var server = app.listen(port, function () {

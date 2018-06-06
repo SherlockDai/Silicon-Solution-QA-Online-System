@@ -1,8 +1,8 @@
 export class Station {
     id: string;
     vender: string;
-    chipset: number;
-    device: number;
+    chipset: string;
+    device: string;
     timestamp: Date;
     DUT_name: string;
     DUT_HW_version: string;
@@ -11,6 +11,6 @@ export class Station {
     DUT_username: string;
     DUT_password: string;
     external_power_supply: string;
-    DUT_connection_picture: File;
+    DUT_connection_picture: Blob;
     additional_comments: string;
   }

@@ -14,7 +14,7 @@ export class QaSysService {
   private loginUrl = "http://localhost:3000/userInfo"
   private allStationUrl = "http://localhost:3000/allStationInfo"
   private addStationUrl = "http://localhost:3000/addStation"
-  private stationUrl = "api/stations/?id="
+  private getStationUrl = "http://localhost:3000/getStation"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
@@ -35,22 +35,25 @@ export class QaSysService {
   }
 
   getAllStation(): Observable<StationInfoBrief[]>{
-    return this.http.get<StationInfoBrief[]>(this.allStationUrl)
+    return this.http.get<StationInfoBrief[]>(this.allStationUrl);
   }
 
-  getStation(): Observable<Station>{
-    //todo pass id 
-    return this.http.get<Station>(this.stationUrl + "0").pipe(
-      map(station => station[0])
-    );
+  getStation(station: StationInfoBrief): Observable<Station>{
+    return this.http.post<Station>(this.getStationUrl, station, this.httpOptions).pipe(map(response => {
+      response.timestamp = new Date(response.timestamp);
+      if(response.DUT_connection_picture){
+      }
+      return response;
+    }));
   }
 
-  addStation(station: Station): Observable<StationInfoBrief>{
+  addStation(station: Station): Observable<JSON>{
     let formData = new FormData();
     formData.append("id", station.id);
     formData.append("vender", station.vender);
-    formData.append("chipset", station.chipset.toString());
-    formData.append("device", station.device.toString());
+    formData.append("chipset", station.chipset);
+    formData.append("device", station.device);
+    formData.append("timestamp", station.timestamp.toDateString())
     formData.append("DUT_name", station.DUT_name);
     formData.append("DUT_HW_version", station.DUT_HW_version);
     formData.append("DUT_WIFI_FW_version", station.DUT_WIFI_FW_version);
@@ -63,7 +66,7 @@ export class QaSysService {
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
-    return this.http.post<Station>(this.addStationUrl, formData, options);
+    return this.http.post<JSON>(this.addStationUrl, formData, options);
   }
 
   /** Log a HeroService message with the MessageService */

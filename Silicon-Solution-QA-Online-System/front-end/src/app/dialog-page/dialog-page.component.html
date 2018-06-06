@@ -19,6 +19,11 @@
   </p>
   <p class="row">
     <mat-form-field appearance="outline" class="col">
+      <input matInput [matDatepicker]="myDatepicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['timestamp']">
+      <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #myDatepicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="col">
       <mat-label>DUT Name</mat-label>
       <input matInput placeholder="DUT Name"  [(ngModel)]="station['DUT_name']" [readonly] = "readOnly">
     </mat-form-field>
