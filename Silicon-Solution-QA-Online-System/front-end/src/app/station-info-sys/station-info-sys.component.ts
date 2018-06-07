@@ -8,10 +8,11 @@ import { StationInfoBrief } from "../brief-station";
 import {  Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Station } from '../station';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-station-info-sys',
   templateUrl: './station-info-sys.component.html',
-  styleUrls: ['./station-info-sys.component.css']
+  styleUrls: ['./station-info-sys.component.css'],
 })
 export class StationInfoSysComponent implements OnInit, OnDestroy {
   orders: string[];
@@ -92,11 +93,19 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           }
         })
         dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+          //only update action return result
           if(result){
-            let prevData = this.fullDataSource.data;
-            let index = prevData.indexOf(result.prevInfo);
-            prevData[index] = result.newInfo;
-            this.fullDataSource.data = prevData;
+            let newData = this.fullDataSource.data;
+            let index = newData.indexOf(result.prevInfo);
+            newData[index] = result.newInfo;
+            this.fullDataSource.data = newData;
+            //update the favorite as well if applied
+            if(this.favoriateDataSource){
+              newData = this.favoriateDataSource.data;
+              index = newData.indexOf(result.prevInfo);
+              newData[index] = result.newInfo;
+              this.favoriateDataSource.data = newData;
+            }
           }
         })
       }
@@ -117,9 +126,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
       if(result){
         //add the returned new station to the station list
-        let prevData = this.fullDataSource.data;
-        prevData.push(result);
-        this.fullDataSource.data = prevData;
+        let newData = this.fullDataSource.data;
+        newData.push(result);
+        this.fullDataSource.data = newData;
       }
     })
 
@@ -177,11 +186,15 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
       result => {
         if (result){
           //remove the station from the list
-          let prevData = this.fullDataSource.data;
-          let index = prevData.indexOf(station);
+          let newData = this.fullDataSource.data;
+          let index = newData.indexOf(station);
           if(index > -1)
-            prevData.splice(index, 1);
-          this.fullDataSource.data = prevData;
+            newData.splice(index, 1);
+          this.fullDataSource.data = newData;
+          //remove it from favorite if applied
+          if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(station) != -1){
+            this.deleteFromFavorite(station);
+          }
         }
       }
     )
@@ -195,6 +208,29 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   showFavoriteList():void{
     this.dataSource = this.favoriateDataSource;
     this.isFullList = false;
+  }
+
+  onRefresh(event):void {
+    this.loadingInfo = true;
+    this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      data => {
+        //update the full table is easy
+        this.fullDataSource = new MatTableDataSource(data)
+        //update the favorite table takes time
+        if (this.favoriateDataSource){
+          let prevIds = []
+          let newData = []
+          this.favoriateDataSource.data.forEach(station => prevIds.push(station.id));
+          data.forEach(station => {
+            if (prevIds.indexOf(station.id) != -1){
+              newData.push(station);
+            }
+          })
+          this.favoriateDataSource.data = newData;
+        }
+        this.loadingInfo = false;
+      }
+    )
   }
 
   ngOnInit() {
