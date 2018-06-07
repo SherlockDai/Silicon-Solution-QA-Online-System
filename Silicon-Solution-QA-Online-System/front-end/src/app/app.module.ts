@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
   MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule,
-  MatSortModule, MatDatepickerModule, MatNativeDateModule } from "@angular/material";
+  MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSnackBarModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
 
@@ -31,6 +31,7 @@ import { DialogPageComponent } from './dialog-page/dialog-page.component';
     DialogPageComponent
   ],
   imports: [
+    MatSnackBarModule,
     MatNativeDateModule,
     MatDatepickerModule,
     MatSortModule,

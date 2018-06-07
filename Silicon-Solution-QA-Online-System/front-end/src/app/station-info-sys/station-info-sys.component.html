@@ -18,8 +18,8 @@
           </mat-form-field>
           <div class="btn-group">
               <button mat-button (click)="onInsertion(event)"><i-plus-square></i-plus-square>Add</button>
-              <button mat-icon-button (click)="onRefresh($event)"><i-refresh-ccw></i-refresh-ccw></button>
-              <mat-slide-toggle>Auto refresh</mat-slide-toggle>
+              <button mat-icon-button (click)="onRefresh()"><i-refresh-ccw></i-refresh-ccw></button>
+              <mat-slide-toggle (change)="onAutoFreshChange($event)" >Auto refresh</mat-slide-toggle>
               <mat-form-field>
                   <mat-select placeholder="Sort By" (selectionChange)="onSortChange($event.value.toLowerCase())">
                     <mat-option *ngFor="let key of displayedColumns" [value]="key" >

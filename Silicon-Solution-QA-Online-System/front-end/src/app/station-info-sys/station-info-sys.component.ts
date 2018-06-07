@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource, MatBottomSheet, MatDialog, 
-  MatDialogRef, getMatIconFailedToSanitizeLiteralError} from '@angular/material';
+  MatDialogRef, getMatIconFailedToSanitizeLiteralError, MatSnackBar} from '@angular/material';
 import { BottomSheetComponent } from "../bottom-sheet/bottom-sheet.component";
 import { DialogPageComponent } from "../dialog-page/dialog-page.component";
 import { QaSysService } from "../qa-sys.service";
 import { StationInfoBrief } from "../brief-station";
-import {  Subject } from 'rxjs';
+import {  Subject, Subscription, Observable, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Station } from '../station';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -34,9 +34,11 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   private isFullList: boolean = true;
   //localstorage that stores users' favorite stations
   private localStorage = window.localStorage;
+  //timer which is a observable subscriber with a interval
+  private timer: Subscription;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
-    private qaSysService:QaSysService) { 
+    private qaSysService:QaSysService, public snackBar: MatSnackBar) { 
     this.displayedColumns = ["Position", "Vender", "Chipset", "Device", "Timestamp"];
     this.orders = [ "ASCENDING", "DESCENDING"]
    }
@@ -106,6 +108,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
               newData[index] = result.newInfo;
               this.favoriateDataSource.data = newData;
             }
+            this.snackBar.open("Station is updated!", "Dismiss", {
+              duration: 2000
+            });
           }
         })
       }
@@ -129,6 +134,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         let newData = this.fullDataSource.data;
         newData.push(result);
         this.fullDataSource.data = newData;
+        this.snackBar.open("Station is added!", "Dismiss", {
+          duration: 2000
+        });
       }
     })
 
@@ -170,6 +178,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.favoriateDataSource.data = this.favoriteStations;
     //update local storage
     this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
+    this.snackBar.open("Station is now in Favorite list!", "Dismiss", {
+      duration: 2000
+    });
   }
 
   deleteFromFavorite(station: StationInfoBrief):void{
@@ -179,6 +190,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.favoriateDataSource.data = this.favoriteStations;
     //update local storage
     this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
+    this.snackBar.open("Station is removed from Favorite List!", "Dismiss", {
+      duration: 2000
+    });
   }
 
   deleteFromTable(station: StationInfoBrief):void {
@@ -195,6 +209,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(station) != -1){
             this.deleteFromFavorite(station);
           }
+          this.snackBar.open("Station is deleted!", "Dismiss", {
+            duration: 2000
+          });
         }
       }
     )
@@ -210,7 +227,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.isFullList = false;
   }
 
-  onRefresh(event):void {
+  onRefresh():void {
     this.loadingInfo = true;
     this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
@@ -229,8 +246,23 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           this.favoriateDataSource.data = newData;
         }
         this.loadingInfo = false;
+        this.snackBar.open("Table refreshed!", "Dismiss", {
+          duration: 2000
+        });
       }
     )
+  }
+
+  onAutoFreshChange(event):void {
+    if(event.checked){
+      //set up the timer
+      this.timer = interval(5 * 1000).subscribe( () => {
+        this.onRefresh();
+      })
+    }
+    else{
+      this.timer.unsubscribe();
+    }
   }
 
   ngOnInit() {
