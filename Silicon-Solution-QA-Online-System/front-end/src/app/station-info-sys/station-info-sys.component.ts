@@ -18,6 +18,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   orders: string[];
   displayedColumns: string[];
   dataSource: MatTableDataSource<StationInfoBrief>;
+  pageDataSource: MatTableDataSource<StationInfoBrief>;
   fullDataSource: MatTableDataSource<StationInfoBrief>;
   favoriateDataSource: MatTableDataSource<StationInfoBrief>;
   loadingInfo = false;
@@ -36,6 +37,11 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   private localStorage = window.localStorage;
   //timer which is a observable subscriber with a interval
   private timer: Subscription;
+  //store the page info
+  private currentPage = 0;
+  private pageSize = 5;
+  private array: any;
+  private pageLength = 0;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
     private qaSysService:QaSysService, public snackBar: MatSnackBar) { 
@@ -137,6 +143,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         this.snackBar.open("Station is added!", "Dismiss", {
           duration: 2000
         });
+        this.iterator();
       }
     })
 
@@ -155,9 +162,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
 
   sortData():void{
     if(this.order === "ASCENDING")
-    this.fullDataSource.data = this.fullDataSource.data.sort(this.dynamicSort(this.sortBase))
+    this.dataSource.data = this.dataSource.data.sort(this.dynamicSort(this.sortBase))
     else
-    this.fullDataSource.data = this.fullDataSource.data.sort(this.dynamicSort("-" + this.sortBase))
+    this.dataSource.data = this.dataSource.data.sort(this.dynamicSort("-" + this.sortBase))
   }
 
   dynamicSort(property) {
@@ -193,6 +200,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.snackBar.open("Station is removed from Favorite List!", "Dismiss", {
       duration: 2000
     });
+    this.iterator();
   }
 
   deleteFromTable(station: StationInfoBrief):void {
@@ -212,6 +220,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           this.snackBar.open("Station is deleted!", "Dismiss", {
             duration: 2000
           });
+          this.iterator();
         }
       }
     )
@@ -220,11 +229,17 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   showFullList():void{
     this.dataSource = this.fullDataSource;
     this.isFullList = true;
+    this.currentPage = 0;
+    this.pageLength = this.dataSource.data.length;
+    this.iterator();
   }
 
   showFavoriteList():void{
     this.dataSource = this.favoriateDataSource;
     this.isFullList = false;
+    this.currentPage = 0;
+    this.pageLength = this.dataSource.data.length;
+    this.iterator();
   }
 
   onRefresh():void {
@@ -245,6 +260,8 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           })
           this.favoriateDataSource.data = newData;
         }
+        this.currentPage = 0;
+        this.iterator();
         this.loadingInfo = false;
         this.snackBar.open("Table refreshed!", "Dismiss", {
           duration: 2000
@@ -265,6 +282,19 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     }
   }
 
+  public handlePage(e: any) {
+    this.currentPage = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.iterator();
+  }
+
+  private iterator() {
+    const end = (this.currentPage + 1) * this.pageSize;
+    const start = this.currentPage * this.pageSize;
+    const part = this.dataSource.data.slice(start, end);
+    this.pageDataSource.data = part;
+  }
+
   ngOnInit() {
     //ngOnInit is a better place to fetch data rather than constructor https://angular.io/guide/lifecycle-hooks
     this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
@@ -272,6 +302,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         this.fullDataSource = new MatTableDataSource(data);
         this.favoriateDataSource = new MatTableDataSource(JSON.parse(this.localStorage.getItem('favoriteStation')));
         this.dataSource = this.fullDataSource;
+        this.pageLength = this.dataSource.data.length;
+        this.pageDataSource = new MatTableDataSource();
+        this.iterator();
       }
     )
   }

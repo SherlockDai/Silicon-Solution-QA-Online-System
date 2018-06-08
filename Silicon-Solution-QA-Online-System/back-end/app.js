@@ -147,7 +147,7 @@ app.post('/deleteStation', function(request, response){
   })
 })
 
-app.post('/updateStation', function(request, response){
+app.post('/node updateStation', function(request, response){
   let form = new multiparty.Form();
   let station = {};
   let prevStationId = "";
