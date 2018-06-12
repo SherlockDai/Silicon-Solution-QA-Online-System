@@ -112,9 +112,12 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
             if(this.favoriateDataSource){
               newData = this.favoriateDataSource.data;
               index = newData.indexOf(result.prevInfo);
-              newData[index] = result.newInfo;
-              this.favoriateDataSource.data = newData;
+              if(index > -1){
+                newData[index] = result.newInfo;
+                this.favoriateDataSource.data = newData;
+              }
             }
+            this.updatePage();
             this.snackBar.open("Station is updated!", "Dismiss", {
               duration: 2000
             });

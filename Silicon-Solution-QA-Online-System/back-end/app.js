@@ -117,7 +117,7 @@ app.post('/addStation', function(request, response){
 
 app.post('/getStation', function(request, response){
   let query = {id: request.body["id"]};
-  dbo.collection(stationCollection).findOne(query, function(err, result){
+  dbo.collection(stationCollection).findOne(query, {fields:{_id: 0}}, function(err, result){
     if (err) throw err;
 /*     if(result.DUT_connection_picture){
       let buffer = result.DUT_connection_picture.buffer;
@@ -147,7 +147,7 @@ app.post('/deleteStation', function(request, response){
   })
 })
 
-app.post('/node updateStation', function(request, response){
+app.post('/updateStation', function(request, response){
   let form = new multiparty.Form();
   let station = {};
   let prevStationId = "";
@@ -162,7 +162,7 @@ app.post('/node updateStation', function(request, response){
         chunks.push(chunk);
       })
 
-      part.on("end", function(chunks){
+      part.on("end", function(){
         station[part.name] = Buffer.concat(chunks)
       })
     }

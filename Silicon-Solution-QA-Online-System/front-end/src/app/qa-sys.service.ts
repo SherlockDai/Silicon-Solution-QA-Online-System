@@ -84,6 +84,9 @@ export class QaSysService {
         if (property == "creationTime" || property == "updateTime"){
           formData.append(property, station[property].toDateString());
         }
+        else if (property == "tester"){
+          formData.append(property, JSON.stringify(station[property]));
+        }
         else{
           formData.append(property, station[property]);
         }

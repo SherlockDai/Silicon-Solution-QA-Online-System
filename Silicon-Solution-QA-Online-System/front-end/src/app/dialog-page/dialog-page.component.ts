@@ -107,8 +107,9 @@ onChangeSheet(event):void {
 
   ngOnInit() {
     if(this.station['DUT_connection_picture'] && this.station['DUT_connection_picture'] != null){
-      let file = this.dataURLtoFile("data:image/png;base64," + this.station.DUT_connection_picture, this.station.id + ".png");
+      let file = this.dataURLtoFile("data:image/png;base64," + this.station.DUT_connection_picture, this.station.id + "_DUT_connection_picture.png");
       this.station.DUT_connection_picture = file;
+      this.station.station_picture = this.dataURLtoFile("data:image/png;base64," + this.station.station_picture, this.station.id + "_station_picture.png");
     }
     
   }
