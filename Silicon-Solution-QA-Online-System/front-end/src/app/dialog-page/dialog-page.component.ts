@@ -12,10 +12,12 @@ import { StationInfoBrief } from "../brief-station";
   styleUrls: ['./dialog-page.component.css']
 })
 export class DialogPageComponent implements OnInit, OnDestroy {
-  imagePath: SafeResourceUrl;
+  stationImagePath: SafeResourceUrl;
+  DUTImagePath: SafeResourceUrl;
   station: Station;
   readOnly: boolean;
   private ngUnsubscribe: Subject<any> = new Subject();
+  private selectedSheet = "general";
   constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, 
       private _sanitizer: DomSanitizer, private qaSysService:QaSysService ) {
@@ -23,7 +25,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       this.readOnly = data["action"] == "detail" ? true : false;
       if(this.station.DUT_connection_picture)
         //now the picture attr stores base64 we will convert it to File object in onInit
-        this.imagePath ="data:image/png;base64," + this.station.DUT_connection_picture;
+        this.DUTImagePath ="data:image/png;base64," + this.station.DUT_connection_picture;
+      if(this.station.station_picture)
+        this.stationImagePath = "data:image/png;base64," + this.station.station_picture;
     }
 
   onFileChange(event):void {
@@ -32,9 +36,15 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = () => {
-        this.imagePath = reader.result;
+        if(this.selectedSheet == "general"){
+          this.stationImagePath = reader.result
+          this.station.station_picture = file;
+        }
+        else if (this.selectedSheet == "dut"){
+          this.DUTImagePath = reader.result;
+          this.station.DUT_connection_picture = file;
+        }
        };
-      this.station.DUT_connection_picture = file;
     }
   }
 
@@ -49,7 +59,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               vender: this.station['vender'],
               chipset: this.station['chipset'],
               device: this.station['device'],
-              timestamp: this.station['timestamp']
+              timestamp: this.station['creationTime']
             };
             this.dialogRef.close(newBriefStation)
           }
@@ -65,7 +75,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               vender: this.station['vender'],
               chipset: this.station['chipset'],
               device: this.station['device'],
-              timestamp: this.station['timestamp']
+              timestamp: this.station['creationTime']
             };
             this.dialogRef.close({prevInfo: this.data.prevInfo, newInfo: newBriefStation})
           }
@@ -81,6 +91,18 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         u8arr[n] = bstr.charCodeAt(n);
     }
     return new File([u8arr], filename, {type:mime});
+}
+
+addTester(event):void {
+  this.station.tester.push("");
+}
+
+changeTester(event, index):void {
+  this.station.tester[index] = event.target.value;
+}
+
+onChangeSheet(event):void {
+  this.selectedSheet = event.value;
 }
 
   ngOnInit() {

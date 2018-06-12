@@ -81,7 +81,7 @@ app.post('/addStation', function(request, response){
 
   form.on('part', function(part){
     if(part.filename){
-      chunks = [];
+      let chunks = [];
       part.on("data", function(chunk){
         chunks.push(chunk);
       })
@@ -157,12 +157,12 @@ app.post('/node updateStation', function(request, response){
 
   form.on('part', function(part){
     if(part.filename){
-      chunks = [];
+      let chunks = [];
       part.on("data", function(chunk){
         chunks.push(chunk);
       })
 
-      part.on("end", function(){
+      part.on("end", function(chunks){
         station[part.name] = Buffer.concat(chunks)
       })
     }

@@ -53,7 +53,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
    applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.fullDataSource.filter = filterValue;
+    this.pageDataSource.filter = filterValue;
   }
 
   //table cell click listener, open bottom sheet
@@ -98,7 +98,8 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
             station: response,
             action: action,
             prevInfo: selectedRecord
-          }
+          },
+          autoFocus: false
         })
         dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
           //only update action return result
@@ -143,7 +144,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         this.snackBar.open("Station is added!", "Dismiss", {
           duration: 2000
         });
-        this.iterator();
+        this.updatePage();
       }
     })
 
@@ -162,9 +163,9 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
 
   sortData():void{
     if(this.order === "ASCENDING")
-    this.dataSource.data = this.dataSource.data.sort(this.dynamicSort(this.sortBase))
+    this.pageDataSource.data = this.pageDataSource.data.sort(this.dynamicSort(this.sortBase))
     else
-    this.dataSource.data = this.dataSource.data.sort(this.dynamicSort("-" + this.sortBase))
+    this.pageDataSource.data = this.pageDataSource.data.sort(this.dynamicSort("-" + this.sortBase))
   }
 
   dynamicSort(property) {
@@ -200,7 +201,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.snackBar.open("Station is removed from Favorite List!", "Dismiss", {
       duration: 2000
     });
-    this.iterator();
+    this.updatePage();
   }
 
   deleteFromTable(station: StationInfoBrief):void {
@@ -220,26 +221,26 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           this.snackBar.open("Station is deleted!", "Dismiss", {
             duration: 2000
           });
-          this.iterator();
+          this.updatePage();
         }
       }
     )
   }
 
   showFullList():void{
-    this.dataSource = this.fullDataSource;
     this.isFullList = true;
     this.currentPage = 0;
+    this.updateDataSource()
     this.pageLength = this.dataSource.data.length;
-    this.iterator();
+    this.updatePage();
   }
 
   showFavoriteList():void{
-    this.dataSource = this.favoriateDataSource;
     this.isFullList = false;
     this.currentPage = 0;
+    this.updateDataSource()
     this.pageLength = this.dataSource.data.length;
-    this.iterator();
+    this.updatePage();
   }
 
   onRefresh():void {
@@ -261,13 +262,23 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           this.favoriateDataSource.data = newData;
         }
         this.currentPage = 0;
-        this.iterator();
+        this.updateDataSource()
+        this.updatePage();
         this.loadingInfo = false;
         this.snackBar.open("Table refreshed!", "Dismiss", {
           duration: 2000
         });
       }
     )
+  }
+
+  updateDataSource():void {
+    if(this.isFullList){
+      this.dataSource = this.fullDataSource;
+    }
+    else{
+      this.dataSource = this.favoriateDataSource;
+    }
   }
 
   onAutoFreshChange(event):void {
@@ -285,10 +296,10 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   public handlePage(e: any) {
     this.currentPage = e.pageIndex;
     this.pageSize = e.pageSize;
-    this.iterator();
+    this.updatePage();
   }
 
-  private iterator() {
+  private updatePage() {
     const end = (this.currentPage + 1) * this.pageSize;
     const start = this.currentPage * this.pageSize;
     const part = this.dataSource.data.slice(start, end);
@@ -300,11 +311,12 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
         this.fullDataSource = new MatTableDataSource(data);
-        this.favoriateDataSource = new MatTableDataSource(JSON.parse(this.localStorage.getItem('favoriteStation')));
+        let favoriteData = this.localStorage.getItem('favoriteStation') || "[]";
+        this.favoriateDataSource = new MatTableDataSource(JSON.parse(favoriteData));
         this.dataSource = this.fullDataSource;
         this.pageLength = this.dataSource.data.length;
         this.pageDataSource = new MatTableDataSource();
-        this.iterator();
+        this.updatePage();
       }
     )
   }

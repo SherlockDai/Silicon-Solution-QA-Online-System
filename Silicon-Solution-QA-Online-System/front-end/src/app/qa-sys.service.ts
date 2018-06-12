@@ -41,8 +41,12 @@ export class QaSysService {
   }
 
   getStation(station: StationInfoBrief): Observable<Station>{
-    return this.http.post<Station>(this.getStationUrl, station, this.httpOptions).pipe(map(response => {
-      response.timestamp = new Date(response.timestamp);
+    return this.http.post<any>(this.getStationUrl, station, this.httpOptions).pipe(map(response => {
+      //since formdata can only pass string, we fetched the date string from date object, now we need to convert it back
+      response.creationTime = new Date(response.creationTime);
+      response.updateTime = new Date(response.updateTime);
+      //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
+      response.tester = JSON.parse(response.tester);
       return response;
     }));
   }
@@ -53,20 +57,19 @@ export class QaSysService {
 
   addStation(station: Station): Observable<JSON>{
     let formData = new FormData();
-    formData.append("id", station.id);
-    formData.append("vender", station.vender);
-    formData.append("chipset", station.chipset);
-    formData.append("device", station.device);
-    formData.append("timestamp", station.timestamp.toDateString())
-    formData.append("DUT_name", station.DUT_name);
-    formData.append("DUT_HW_version", station.DUT_HW_version);
-    formData.append("DUT_WIFI_FW_version", station.DUT_WIFI_FW_version);
-    formData.append("DUT_BT_HCD_file", station.DUT_BT_HCD_file);
-    formData.append("DUT_username", station.DUT_username);
-    formData.append("DUT_password", station.DUT_password);
-    formData.append("external_power_supply", station.external_power_supply);
-    formData.append("additional_comments", station.additional_comments);
-    formData.append("DUT_connection_picture", station.DUT_connection_picture);
+    for(let property in station){
+      if (station.hasOwnProperty(property)) {
+        if (property == "creationTime" || property == "updateTime"){
+          formData.append(property, station[property].toDateString());
+        }
+        else if (property == "tester"){
+          formData.append(property, JSON.stringify(station[property]));
+        }
+        else{
+          formData.append(property, station[property]);
+        }
+      }
+    }
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
@@ -76,20 +79,16 @@ export class QaSysService {
   updateStation(prevInfo: StationInfoBrief, station: Station): Observable<JSON>{
     let formData = new FormData();
     formData.append("prevId", prevInfo.id)
-    formData.append("id", station.id);
-    formData.append("vender", station.vender);
-    formData.append("chipset", station.chipset);
-    formData.append("device", station.device);
-    formData.append("timestamp", station.timestamp.toDateString())
-    formData.append("DUT_name", station.DUT_name);
-    formData.append("DUT_HW_version", station.DUT_HW_version);
-    formData.append("DUT_WIFI_FW_version", station.DUT_WIFI_FW_version);
-    formData.append("DUT_BT_HCD_file", station.DUT_BT_HCD_file);
-    formData.append("DUT_username", station.DUT_username);
-    formData.append("DUT_password", station.DUT_password);
-    formData.append("external_power_supply", station.external_power_supply);
-    formData.append("additional_comments", station.additional_comments);
-    formData.append("DUT_connection_picture", station.DUT_connection_picture);
+    for(let property in station){
+      if (station.hasOwnProperty(property)) {
+        if (property == "creationTime" || property == "updateTime"){
+          formData.append(property, station[property].toDateString());
+        }
+        else{
+          formData.append(property, station[property]);
+        }
+      }
+    }
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };

@@ -1,71 +1,155 @@
 <mat-dialog-content>
-  <p class="row">
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>ID</mat-label>
-      <input matInput placeholder="ID" value="{{station['vender']}}-{{station['chipset']}}-{{station['device']}}UP" disabled>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>Vender Name</mat-label>
-      <input matInput placeholder="Vender Name" [(ngModel)]="station['vender']" [readonly] = "readOnly">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>Chipset Number</mat-label>
-      <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" [readonly] = "readOnly">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>Device Number</mat-label>
-      <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" [readonly] = "readOnly">
-    </mat-form-field>
-  </p>
-  <p class="row">
-    <mat-form-field appearance="outline" class="col">
-      <input matInput [matDatepicker]="myDatepicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['timestamp']">
-      <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-      <mat-datepicker #myDatepicker></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>DUT Name</mat-label>
-      <input matInput placeholder="DUT Name"  [(ngModel)]="station['DUT_name']" [readonly] = "readOnly">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>DUT HW version</mat-label>
-      <input matInput placeholder="DUT HW version"  [(ngModel)]="station['DUT_HW_version']" [readonly] = "readOnly">
-    </mat-form-field>
-  </p>
-  <p class="row">
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>DUT WIFI FW version</mat-label>
-      <input matInput placeholder="DUT WIFI FW version"  [(ngModel)]="station['DUT_WIFI_FW_version']" [readonly] = "readOnly">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>DUT BT HCD File</mat-label>
-      <input matInput placeholder="DUT BT HCD File"  [(ngModel)]="station['DUT_BT_HCD_file']" [readonly] = "readOnly">
-    </mat-form-field>
-  </p>
-  <p class="row">
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>DUT Username</mat-label>
-      <input matInput placeholder=">DUT Username" [(ngModel)]="station['DUT_username']" [readonly] = "readOnly">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>DUT Password</mat-label>
-      <input matInput placeholder="DUT Password" [(ngModel)]="station['DUT_password']" [readonly] = "readOnly">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>External Power Supply</mat-label>
-      <input matInput placeholder="External Power Supply" [(ngModel)]="station['external_power_supply']" [readonly] = "readOnly">
-    </mat-form-field>
-  </p>
-  <p class="row">
-    <mat-form-field appearance="outline" class="col">
-      <mat-label>Additional Comment</mat-label>
-      <textarea matInput placeholder="Additional Comment" [(ngModel)]="station['additional_comments']" [readonly] = "readOnly"></textarea>
-    </mat-form-field>
-  </p>
-  <p class="row">
-    <input type="file" class="col" *ngIf="!readOnly" (change)="onFileChange($event)">
-  </p>
-  <img class="row" *ngIf="imagePath" [src]="imagePath">
+  <mat-toolbar>
+    <mat-button-toggle-group  (change)="onChangeSheet($event)">
+      <mat-button-toggle value="general" [checked]='true'>General Info</mat-button-toggle>
+      <mat-button-toggle value="pc">PC Info</mat-button-toggle>
+      <mat-button-toggle value="dut">DUT Info</mat-button-toggle>
+      <mat-button-toggle value="tester">Tester Info</mat-button-toggle>
+    </mat-button-toggle-group>
+  </mat-toolbar>
+  <div class="container" [ngSwitch]="selectedSheet">
+    <div *ngSwitchCase="'general'">
+      <p class="row">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>ID</mat-label>
+          <input matInput placeholder="ID" value="{{station['vender']}}-{{station['chipset']}}-{{station['device']}}UP" disabled>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>Vender Name</mat-label>
+          <input matInput placeholder="Vender Name" [(ngModel)]="station['vender']" [readonly] = "readOnly">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>Chipset Number</mat-label>
+          <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" [readonly] = "readOnly">
+        </mat-form-field>
+      </p>
+      <p class="row">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>Number of Device</mat-label>
+          <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" [readonly] = "readOnly">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+            <mat-label>Creation Date</mat-label>
+            <input matInput [matDatepicker]="creationDatePicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['creationTime']">
+            <mat-datepicker-toggle matSuffix [for]="creationDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #creationDatePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+            <mat-label>Update Date</mat-label>
+            <input matInput [matDatepicker]="updateTimePicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['updateTime']">
+            <mat-datepicker-toggle matSuffix [for]="updateTimePicker"></mat-datepicker-toggle>
+            <mat-datepicker #updateTimePicker></mat-datepicker>
+        </mat-form-field>
+      </p>
+      <p class="row">
+          <input type="file" class="col" *ngIf="!readOnly" (change)="onFileChange($event)">
+      </p>
+      <p class="row">
+          <img class="row" *ngIf="stationImagePath" [src]="stationImagePath">
+      </p>
+      
+    </div>
+    <div *ngSwitchCase="'pc'">
+        <p class="row">
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Computer IP Address</mat-label>
+            <input matInput placeholder="Computer IP Address"  [(ngModel)]="station['computer_IP']" [readonly] = "readOnly">
+          </mat-form-field>
+        </p>
+        <p class="row">
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Computer Username</mat-label>
+            <input matInput placeholder="Computer Username"  [(ngModel)]="station['computer_username']" [readonly] = "readOnly">
+          </mat-form-field>
+        </p>
+        <p class="row">
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Computer Password</mat-label>
+            <input matInput placeholder="Computer Password"  [(ngModel)]="station['computer_password']" [readonly] = "readOnly">
+          </mat-form-field>
+        </p>
+    </div>
+    <div *ngSwitchCase="'dut'">
+      <p class="row">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT Name</mat-label>
+          <input matInput placeholder="DUT Name"  [(ngModel)]="station['DUT_name']" [readonly] = "readOnly">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT HW version</mat-label>
+          <input matInput placeholder="DUT HW version"  [(ngModel)]="station['DUT_HW_version']" [readonly] = "readOnly">
+        </mat-form-field>
+      </p>
+      <p class="row">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT WIFI FW version</mat-label>
+          <input matInput placeholder="DUT WIFI FW version"  [(ngModel)]="station['DUT_WIFI_FW_version']" [readonly] = "readOnly">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT BT HCD File</mat-label>
+          <input matInput placeholder="DUT BT HCD File"  [(ngModel)]="station['DUT_BT_HCD_file']" [readonly] = "readOnly">
+        </mat-form-field>
+      </p>
+      <p class="row">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT Username</mat-label>
+          <input matInput placeholder=">DUT Username" [(ngModel)]="station['DUT_username']" [readonly] = "readOnly">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT Password</mat-label>
+          <input matInput placeholder="DUT Password" [(ngModel)]="station['DUT_password']" [readonly] = "readOnly">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>External Power Supply</mat-label>
+          <input matInput placeholder="External Power Supply" [(ngModel)]="station['external_power_supply']" [readonly] = "readOnly">
+        </mat-form-field>
+      </p>
+      <p class="row">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>Additional Comment</mat-label>
+          <textarea matInput placeholder="Additional Comment" [(ngModel)]="station['additional_comments']" [readonly] = "readOnly"></textarea>
+        </mat-form-field>
+      </p>
+      <p class="row">
+          <input type="file" class="col" *ngIf="!readOnly" (change)="onFileChange($event)">
+      </p>
+      <p class="row">
+          <img class="row" *ngIf="DUTImagePath" [src]="DUTImagePath">
+      </p>
+    </div>
+    <div *ngSwitchCase="'tester'">
+        <p class="row">
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Most Recent Package Tested</mat-label>
+            <input matInput placeholder="Most Recent Package Tested"  [(ngModel)]="station['most_recent_package_tested']" [readonly] = "readOnly">
+          </mat-form-field>
+        </p>
+        <p class="row">
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Flow Used</mat-label>
+            <input matInput placeholder="Flow Used"  [(ngModel)]="station['flow_used']" [readonly] = "readOnly">
+          </mat-form-field>
+        </p>
+        <p class="row">
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Setup Files</mat-label>
+            <input matInput placeholder="Setup Files"  [(ngModel)]="station['setup_files']" [readonly] = "readOnly">
+          </mat-form-field>
+        </p>
+        <button mat-button *ngIf="!readOnly" (click)="addTester($event)" class="col"><i-file-plus></i-file-plus>Add Tester</button>
+        <div *ngFor = "let tester of station['tester']; let i = index">
+            <p class="row">
+              <mat-form-field appearance="outline" class="col">     
+                <mat-label>Tester{{i + 1}}</mat-label>
+                <input matInput placeholder="Tester{{i + 1}}" value={{tester}} (change)="changeTester($event, i)" [readonly] = "readOnly" >
+              </mat-form-field>
+            </p>
+        </div>
+    </div>
+  </div>
+ 
+  
+
 </mat-dialog-content>
 <mat-dialog-actions *ngIf="!readOnly">
     <button mat-raised-button	(click)="onSubmit($event)">Save</button>
