@@ -24,7 +24,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   loadingInfo = false;
   //set the defaul order to Ascending
   order: string = "ASCENDING";
-  sortBase: string;
+  sortBase: string = "Position";
   //control the Order by component, if the user has not selected sort by, the order by should be disabled
   canSort: boolean = false;
   //declare a subject to handle the unsubscription of all subscriptions
@@ -45,7 +45,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
     private qaSysService:QaSysService, public snackBar: MatSnackBar) { 
-    this.displayedColumns = ["Position", "Vender", "Chipset", "Device", "Timestamp"];
+    this.displayedColumns = ["Position", "Vender", "Chipset", "Device", "Status", "Date"];
     this.orders = [ "ASCENDING", "DESCENDING"]
    }
 
@@ -236,6 +236,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.updateDataSource()
     this.pageLength = this.dataSource.data.length;
     this.updatePage();
+    this.sortData();
   }
 
   showFavoriteList():void{
@@ -244,6 +245,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     this.updateDataSource()
     this.pageLength = this.dataSource.data.length;
     this.updatePage();
+    this.sortData();
   }
 
   onRefresh():void {
@@ -267,6 +269,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         this.currentPage = 0;
         this.updateDataSource()
         this.updatePage();
+        this.sortData();
         this.loadingInfo = false;
         this.snackBar.open("Table refreshed!", "Dismiss", {
           duration: 2000

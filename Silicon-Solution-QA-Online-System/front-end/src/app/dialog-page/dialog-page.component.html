@@ -29,14 +29,15 @@
           <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" [readonly] = "readOnly">
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
-            <mat-label>Creation Date</mat-label>
-            <input matInput [matDatepicker]="creationDatePicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['creationTime']">
-            <mat-datepicker-toggle matSuffix [for]="creationDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #creationDatePicker></mat-datepicker>
+          <mat-select placeholder="Station Status" [(ngModel)]="station['status']" [disabled] = "readOnly">
+            <mat-option *ngFor="let status of stationStatus" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
             <mat-label>Update Date</mat-label>
-            <input matInput [matDatepicker]="updateTimePicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['updateTime']">
+            <input matInput [matDatepicker]="updateTimePicker" placeholder="mm/dd/yyyy" [(ngModel)]="station['updateTime']" disabled>
             <mat-datepicker-toggle matSuffix [for]="updateTimePicker"></mat-datepicker-toggle>
             <mat-datepicker #updateTimePicker></mat-datepicker>
         </mat-form-field>

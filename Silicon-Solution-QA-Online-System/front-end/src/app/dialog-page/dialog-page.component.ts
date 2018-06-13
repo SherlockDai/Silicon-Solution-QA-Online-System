@@ -17,7 +17,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   station: Station;
   readOnly: boolean;
   private ngUnsubscribe: Subject<any> = new Subject();
-  private selectedSheet = "general";
+  private selectedSheet = "general"; 
+  //initialize the status list
+  private stationStatus = ["inactive", "active", "idle"];
   constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, 
       private _sanitizer: DomSanitizer, private qaSysService:QaSysService ) {
@@ -50,6 +52,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
   onSubmit(event):void {
     this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP';
+    //update the update date
+    this.station.updateTime = new Date()
     if(this.data.action == "insert"){
       this.qaSysService.addStation(this.station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => {
@@ -59,7 +63,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               vender: this.station['vender'],
               chipset: this.station['chipset'],
               device: this.station['device'],
-              timestamp: this.station['creationTime']
+              status: this.station['status'],
+              updateTime: this.station['updateTime']
             };
             this.dialogRef.close(newBriefStation)
           }
@@ -75,7 +80,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               vender: this.station['vender'],
               chipset: this.station['chipset'],
               device: this.station['device'],
-              timestamp: this.station['creationTime']
+              status: this.station['status'],
+              updateTime: this.station['updateTime']
             };
             this.dialogRef.close({prevInfo: this.data.prevInfo, newInfo: newBriefStation})
           }

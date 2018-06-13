@@ -3,6 +3,7 @@ export class Station {
     vender: string;
     chipset: string;
     device: string;
+    status: string;
     creationTime: Date;
     updateTime: Date;
     station_picture: Blob
@@ -27,6 +28,7 @@ export class Station {
       this.vender = "";
       this.chipset = "";
       this.device = "";
+      this.status = "";
       this.creationTime = new Date();
       this.updateTime = new Date();
       this.DUT_name = "";
