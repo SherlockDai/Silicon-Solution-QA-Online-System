@@ -196,6 +196,17 @@ app.post('/updateStation', function(request, response){
   form.parse(request);
 })
 
+app.post('/getSuggestion', function(request, response){
+  let query = request.body['field'];
+  dbo.collection(stationCollection).distinct(query, function(err, result){
+    if (err) {
+      response.send([]);
+      throw err;
+    }
+    response.send(result);
+  })
+})
+
 var server = app.listen(port, function () {
   var host = server.address().address
   var port = server.address().port

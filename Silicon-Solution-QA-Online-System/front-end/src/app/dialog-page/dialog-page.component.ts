@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { Station } from "../station";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, } from '@angular/material';
+import { Station, FileLocation } from "../station";
 import { Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -20,6 +20,12 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   private selectedSheet = "general"; 
   //initialize the status list
   private stationStatus = ["inactive", "active", "idle"];
+  private options: Array<String>;
+
+  //store the new DUT_WIFI_FW_version
+  private newDutWifiFwVersion: FileLocation = new FileLocation();
+  //store the new DUT BT HCD file
+  private newDutBtHcdFile: FileLocation = new FileLocation();
   constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, 
       private _sanitizer: DomSanitizer, private qaSysService:QaSysService ) {
@@ -53,7 +59,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   onSubmit(event):void {
     this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP';
     //update the update date
-    this.station.updateTime = new Date()
+    this.station.update_time = new Date()
     if(this.data.action == "insert"){
       this.qaSysService.addStation(this.station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => {
@@ -64,7 +70,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               chipset: this.station['chipset'],
               device: this.station['device'],
               status: this.station['status'],
-              updateTime: this.station['updateTime']
+              update_time: this.station['update_time']
             };
             this.dialogRef.close(newBriefStation)
           }
@@ -81,7 +87,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               chipset: this.station['chipset'],
               device: this.station['device'],
               status: this.station['status'],
-              updateTime: this.station['updateTime']
+              update_time: this.station['update_time']
             };
             this.dialogRef.close({prevInfo: this.data.prevInfo, newInfo: newBriefStation})
           }
@@ -109,6 +115,25 @@ changeTester(event, index):void {
 
 onChangeSheet(event):void {
   this.selectedSheet = event.value;
+}
+
+giveSuggestion(event):void {
+  if(event.target.id == "DUT_WIFI_FW_version" || event.target.id == "DUT_BT_HCD_file"){
+    //extract the historical file data from corresponding field in station
+    this.options = this.station[event.target.id];
+  }
+  else
+    this.qaSysService.getSuggestion(event.target.id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      response => this.options = response
+    )
+}
+
+displayWithDescription(file?: FileLocation): String | undefined{
+  return file ? file.description : undefined;
+}
+
+onLocationChange(event, id){
+  let test = 1;
 }
 
   ngOnInit() {

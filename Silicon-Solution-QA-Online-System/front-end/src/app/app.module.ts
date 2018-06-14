@@ -17,7 +17,7 @@ import { MatButtonModule, MatCheckboxModule, MatSelectModule,
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
   MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule,
   MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSnackBarModule,
-  MatToolbarModule, MatButtonToggleModule } from "@angular/material";
+  MatToolbarModule, MatButtonToggleModule, MatAutocompleteModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
 
@@ -32,6 +32,7 @@ import { DialogPageComponent } from './dialog-page/dialog-page.component';
     DialogPageComponent
   ],
   imports: [
+    MatAutocompleteModule,
     MatButtonToggleModule,
     MatToolbarModule,
     MatSnackBarModule,

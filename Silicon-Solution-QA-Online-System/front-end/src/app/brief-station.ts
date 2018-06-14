@@ -4,5 +4,5 @@ export interface StationInfoBrief {
   chipset: string;
   device: string;
   status: string;
-  updateTime: Date;
+  update_time: Date;
 }

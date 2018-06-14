@@ -17,6 +17,7 @@ export class QaSysService {
   private getStationUrl = "http://localhost:3000/getStation"
   private deleteStationUrl = "http://localhost:3000/deleteStation"
   private updateStationUrl = "http://localhost:3000/updateStation"
+  private getSuggestionUrl = "http://localhost:3000/getSuggestion"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
@@ -43,8 +44,8 @@ export class QaSysService {
   getStation(station: StationInfoBrief): Observable<Station>{
     return this.http.post<any>(this.getStationUrl, station, this.httpOptions).pipe(map(response => {
       //since formdata can only pass string, we fetched the date string from date object, now we need to convert it back
-      response.creationTime = new Date(response.creationTime);
-      response.updateTime = new Date(response.updateTime);
+      response.creation_time = new Date(response.creation_time);
+      response.update_time = new Date(response.update_time);
       //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
       response.tester = JSON.parse(response.tester);
       return response;
@@ -59,7 +60,7 @@ export class QaSysService {
     let formData = new FormData();
     for(let property in station){
       if (station.hasOwnProperty(property)) {
-        if (property == "creationTime" || property == "updateTime"){
+        if (property == "creation_time" || property == "update_time"){
           formData.append(property, station[property].toDateString());
         }
         else if (property == "tester"){
@@ -81,7 +82,7 @@ export class QaSysService {
     formData.append("prevId", prevInfo.id)
     for(let property in station){
       if (station.hasOwnProperty(property)) {
-        if (property == "creationTime" || property == "updateTime"){
+        if (property == "creation_time" || property == "update_time"){
           formData.append(property, station[property].toDateString());
         }
         else if (property == "tester"){
@@ -96,6 +97,14 @@ export class QaSysService {
     headers.delete('Content-Type');
     let options = { headers: headers };
     return this.http.post<JSON>(this.updateStationUrl, formData, options);
+  }
+
+  //get the distinct values in certain field
+  getSuggestion(fieldName: String): Observable<Array<String>>{
+    let data = {
+      field: fieldName
+    }
+    return this.http.post<Array<String>>(this.getSuggestionUrl, data, this.httpOptions);
   }
 
   /** Log a HeroService message with the MessageService */
