@@ -12,3 +12,7 @@ mat-button-toggle-group{
     color: rgb(255, 177, 113);
     border-bottom: 2px;
 }
+
+.row{
+    align-items: baseline
+}

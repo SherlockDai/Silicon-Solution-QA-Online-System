@@ -81,21 +81,48 @@
           <input matInput placeholder="DUT HW version" id="DUT_HW_version" [(ngModel)]="station['DUT_HW_version']" [readonly] = "readOnly">
         </mat-form-field>
       </p>
-      <p class="row">
-        <mat-form-field appearance="outline" class="col" *ngIf = "!readOnly">
+      <p class="row" *ngIf = "readOnly">
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT WIFI FW version</mat-label>
+          <mat-select placeholder=">DUT WIFI FW version" [(value)]="newDutWifiFwVersion['location']">
+            <mat-option *ngFor="let version of station['DUT_WIFI_FW_version']" [value]="version.location">
+              {{ version.description }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button (click)="openLocation(newDutWifiFwVersion['location'])"><i-arrow-right></i-arrow-right></button>
+        <mat-form-field appearance="outline" class="col">
+          <mat-label>DUT BT HCD File</mat-label>
+          <mat-select placeholder="DUT BT HCD File" [(value)]="newDutBtHcdFile['location']">
+            <mat-option *ngFor="let file of station['DUT_BT_HCD_file']" [value]="file.location">
+              {{ file.description }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button (click)="openLocation(newDutBtHcdFile['location'])"><i-arrow-right></i-arrow-right></button>
+      </p>
+      <p class="row" *ngIf = "!readOnly">
+        <mat-form-field appearance="outline" class="col" >
           <mat-label>DUT WIFI FW version</mat-label>
           <input matInput placeholder="DUT WIFI FW version" id="DUT_WIFI_FW_version" [(ngModel)]="newDutWifiFwVersion['description']" 
             [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col" *ngIf = "readOnly">
-          <mat-label>DUT WIFI FW version</mat-label>
-          <input matInput placeholder="DUT WIFI FW version" id="DUT_WIFI_FW_version" [(ngModel)]="station['DUT_WIFI_FW_version']">
+        <mat-form-field appearance="outline" class="col" >
+          <mat-label>File Location</mat-label>
+          <input matInput placeholder="File Location" id="DUT_WIFI_FW_version_file_location" [(ngModel)]="newDutWifiFwVersion['location']">
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col">
+      </p> 
+      <p class="row" *ngIf = "!readOnly">
+        <mat-form-field appearance="outline" class="col" >
           <mat-label>DUT BT HCD File</mat-label>
-          <input matInput placeholder="DUT BT HCD File" id="DUT_BT_HCD_file" [(ngModel)]="station['DUT_BT_HCD_file']" [readonly] = "readOnly">
+          <input matInput placeholder="DUT BT HCD File" id="DUT_BT_HCD_file" [(ngModel)]="newDutBtHcdFile['description']" 
+            [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
-      </p>
+        <mat-form-field appearance="outline" class="col" >
+          <mat-label>File Location</mat-label>
+          <input matInput placeholder="File Location" id="DUT_BT_HCD_file_location" [(ngModel)]="newDutBtHcdFile['location']">
+        </mat-form-field>
+      </p>  
       <p class="row">
         <mat-form-field appearance="outline" class="col">
           <mat-label>DUT Username</mat-label>
@@ -143,14 +170,28 @@
           </mat-form-field>
         </p>
         <button mat-button *ngIf="!readOnly" (click)="addTester($event)" class="col"><i-file-plus></i-file-plus>Add Tester</button>
-        <div *ngFor = "let tester of station['tester']; let i = index">
-            <p class="row">
-              <mat-form-field appearance="outline" class="col">     
-                <mat-label>Tester{{i + 1}}</mat-label>
-                <input matInput placeholder="Tester{{i + 1}}" id="tester{{i}}" value={{tester}} (change)="changeTester($event, i)" [readonly] = "readOnly" >
-              </mat-form-field>
-            </p>
-        </div>
+        <table mat-table [dataSource]="testerSource" class="col">
+
+          <!-- Vender Column -->
+          <ng-container matColumnDef="Model">
+            <th mat-header-cell *matHeaderCellDef> Tester Model </th>
+            <td mat-cell *matCellDef="let element "> <input matInput [(ngModel)]="element.tester_model" placeholder="Tester Model" [readonly] = "readOnly"></td>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="IP">
+            <th mat-header-cell *matHeaderCellDef> Tester IP </th>
+            <td mat-cell *matCellDef="let element"> <input matInput [(ngModel)]="element.tester_IP" placeholder="Tester IP" [readonly] = "readOnly"> </td>
+          </ng-container>
+
+          <!-- Vender Column -->
+          <ng-container matColumnDef="FirmwareVersion">
+              <th mat-header-cell *matHeaderCellDef> Firmware Version </th>
+              <td mat-cell *matCellDef="let element "> <input matInput [(ngModel)]="element.firmware_version" placeholder="Firmware Version" [readonly] = "readOnly"> </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="testerColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: testerColumns"></tr>
+        </table>
     </div>
   </div>
  

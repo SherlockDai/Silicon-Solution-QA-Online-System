@@ -48,6 +48,8 @@ export class QaSysService {
       response.update_time = new Date(response.update_time);
       //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
       response.tester = JSON.parse(response.tester);
+      response.DUT_WIFI_FW_version = JSON.parse(response.DUT_WIFI_FW_version);
+      response.DUT_BT_HCD_file = JSON.parse(response.DUT_BT_HCD_file);
       return response;
     }));
   }
@@ -63,7 +65,7 @@ export class QaSysService {
         if (property == "creation_time" || property == "update_time"){
           formData.append(property, station[property].toDateString());
         }
-        else if (property == "tester"){
+        else if (Array.isArray(station[property])){
           formData.append(property, JSON.stringify(station[property]));
         }
         else{
@@ -85,7 +87,7 @@ export class QaSysService {
         if (property == "creation_time" || property == "update_time"){
           formData.append(property, station[property].toDateString());
         }
-        else if (property == "tester"){
+        else if (Array.isArray(station[property])){
           formData.append(property, JSON.stringify(station[property]));
         }
         else{

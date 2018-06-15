@@ -21,7 +21,7 @@ export class Station {
     computer_password: string;
     most_recent_package_tested: string;
     flow_used: string;
-    tester: Array<String>;
+    tester: Array<Tester>;
     setup_files: string;
     constructor(){
       this.id = "";
@@ -44,17 +44,29 @@ export class Station {
       this.computer_password = "";
       this.most_recent_package_tested = "";
       this.flow_used = "";
-      this.tester = new Array();
+      this.tester = new Array<Tester>();
       this.setup_files = "";
     }
   }
 
 export class FileLocation{
   description: string;
-  path: string;
+  location: string;
 
   constructor(){
     this.description = "";
-    this.path = "";
+    this.location = "";
+  }
+}
+
+export class Tester{
+  tester_model: string;
+  firmware_version: string;
+  tester_IP: string;
+
+  constructor(){
+    this.tester_model = "";
+    this.firmware_version = "";
+    this.tester_IP = "";
   }
 }
