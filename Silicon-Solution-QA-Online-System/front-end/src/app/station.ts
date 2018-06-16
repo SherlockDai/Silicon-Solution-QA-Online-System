@@ -23,6 +23,7 @@ export class Station {
     flow_used: string;
     tester: Array<Tester>;
     setup_files: string;
+    station_description: string;
     constructor(){
       this.id = "";
       this.vender = "";
@@ -46,6 +47,7 @@ export class Station {
       this.flow_used = "";
       this.tester = new Array<Tester>();
       this.setup_files = "";
+      this.station_description = "";
     }
   }
 

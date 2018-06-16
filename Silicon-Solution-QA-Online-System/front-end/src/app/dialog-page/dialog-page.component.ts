@@ -163,6 +163,10 @@ openLocation(dest){
   myWindow.history.pushState(null, null, dest)
 }
 
+onChangeView(descision){
+  this.readOnly = descision;
+}
+
   ngOnInit() {
     if(this.station['DUT_connection_picture'] && this.station['DUT_connection_picture'] != null){
       let file = this.dataURLtoFile("data:image/png;base64," + this.station.DUT_connection_picture, this.station.id + "_DUT_connection_picture.png");
