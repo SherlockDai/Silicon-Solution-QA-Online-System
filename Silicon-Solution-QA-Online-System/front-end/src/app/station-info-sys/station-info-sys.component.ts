@@ -9,6 +9,7 @@ import {  Subject, Subscription, Observable, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Station } from '../station';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-station-info-sys',
   templateUrl: './station-info-sys.component.html',
@@ -17,6 +18,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class StationInfoSysComponent implements OnInit, OnDestroy {
   orders: string[];
   displayedColumns: string[];
+  columns: Array<any>;
   dataSource: MatTableDataSource<StationInfoBrief>;
   pageDataSource: MatTableDataSource<StationInfoBrief>;
   fullDataSource: MatTableDataSource<StationInfoBrief>;
@@ -44,8 +46,15 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   private pageLength = 0;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
-    private qaSysService:QaSysService, public snackBar: MatSnackBar) { 
-    this.displayedColumns = ["Position", "Vender", "Chipset", "Device", "Status", "Date"];
+    private qaSysService:QaSysService, public snackBar: MatSnackBar, route:ActivatedRoute) { 
+    this.columns = [
+      { columnDef: 'Vender', header: 'Vender', cell: (element: any) => `${element.vender}`     },
+      { columnDef: 'Chipset', header: 'Chipset', cell: (element: any) => `${element.chipset}`   },
+      { columnDef: 'Device', header: 'Device', cell: (element: any) => `${element.device}`   },
+      { columnDef: 'Status', header: 'Status', cell: (element: any) => `${element.status}`   },
+      { columnDef: 'Date', header: 'Date', cell: (element: any) => `${element.update_time}`   },
+    ];
+    this.displayedColumns = this.columns.map(c => c.columnDef);
     this.orders = [ "ASCENDING", "DESCENDING"]
    }
 

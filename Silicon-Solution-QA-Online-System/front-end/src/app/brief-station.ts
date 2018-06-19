@@ -1,4 +1,4 @@
-export interface StationInfoBrief {
+export class StationInfoBrief {
   id: string;
   vender: string;
   chipset: string;

@@ -38,47 +38,12 @@
       </div>
       <table mat-table [dataSource]="pageDataSource"  *ngIf="pageDataSource">
 
-          <!--- Note that these columns can be defined in any order.
-                The actual rendered columns are set as a property on the row definition" -->
-        
-          <!-- Position Column -->
-          <ng-container matColumnDef="Position">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let i = index;"> {{i}} </td>
-          </ng-container>
-        
-          <!-- Vender Column -->
-          <ng-container matColumnDef="Vender">
-            <th mat-header-cell *matHeaderCellDef> Vender </th>
-            <td mat-cell *matCellDef="let element "> {{element.vender}} </td>
-          </ng-container>
-        
-          <!-- Chipset Column -->
-          <ng-container matColumnDef="Chipset">
-            <th mat-header-cell *matHeaderCellDef> Chipset </th>
-            <td mat-cell *matCellDef="let element"> {{element.chipset}} </td>
-          </ng-container>
-        
-          <!-- Device Column -->
-          <ng-container matColumnDef="Device">
-            <th mat-header-cell *matHeaderCellDef> Devices </th>
-            <td mat-cell *matCellDef="let element"> {{element.device}} </td>
-          </ng-container>
-
-          <!-- Status Column -->
-          <ng-container matColumnDef="Status">
-            <th mat-header-cell *matHeaderCellDef> Status </th>
-            <td mat-cell *matCellDef="let element"> {{element.status}}</td>
-          </ng-container>
-
-           <!-- Date Column -->
-           <ng-container matColumnDef="Date">
-              <th mat-header-cell *matHeaderCellDef> Date </th>
-              <td mat-cell *matCellDef="let element"> {{element.update_time | date:"MM/dd/yy" }}</td>
-            </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="openBottomSheet(row)"></tr>
+        <ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
+          <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
+          <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openBottomSheet(row)"></mat-row>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="pageLength" 
           [pageSize]="5" (page)="pageEvent = handlePage($event)" showFirstLastButtons></mat-paginator>

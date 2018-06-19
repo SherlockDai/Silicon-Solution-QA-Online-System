@@ -22,6 +22,7 @@ import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
 import { ClipboardModule } from "ngx-clipboard";
+import {CdkTableModule} from '@angular/cdk/table';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ClipboardModule } from "ngx-clipboard";
     LocationPageComponent
   ],
   imports: [
+    CdkTableModule,
     ClipboardModule,
     MatAutocompleteModule,
     MatButtonToggleModule,
