@@ -46,7 +46,7 @@ app.get('/', function (req, res) {
 })
 
 
-app.post("/userInfo", function(request, response){
+app.post("/login", function(request, response, next){
   var query = {username: request.body["username"]};
   dbo.collection(userCollection).findOne(query, function(err, result){
     if(err) throw err;
@@ -64,16 +64,28 @@ app.post("/userInfo", function(request, response){
   })
 })
 
-app.get('/allStationInfo',  function(request, response){
-  dbo.collection(stationCollection).find({},{fields:{_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1}}).toArray(function(err, result){
+app.post('/getAll',  function(request, response, next){
+  if (request.body['collection']){
+    var coll = request.body['collection']
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input collection!'
+    })
+    return next();
+  }
+  if (request.body['option'])
+    var option = request.body['option']
+  dbo.collection(coll).find({},{fields:option}).toArray(function(err, result){
     if(err) throw err;
     response.send(result);
   })
 })
 
-app.post('/addStation', function(request, response){
+app.post('/addOne', function(request, response, next){
   let form = new multiparty.Form();
   let station = {};
+  let collection = null;
 
   form.on('error', function(err){
     console.log("Error parsing form" + err.stack);
@@ -93,21 +105,33 @@ app.post('/addStation', function(request, response){
   })
 
   form.on('field', function(name, value){
-    station[name] = value;
+    if(name == "collection"){
+      collection = value;
+    }
+    else{
+      station[name] = value;
+    }
   })
 
   form.on('close', function(){
     //handle the final station info when every thing is loaded especially the picture
     //now store all the info in database
-    dbo.collection(stationCollection).insertOne(station, function(err, result){
+    if(collection == null){
+      response.status(400).send({
+        message: 'Must input collection!'
+      })
+      return next();
+    }
+    dbo.collection(collection).insertOne(station, function(err, result){
       if (err) {
         response.send(false);
         throw err;
+        return next();
       }
       if (result.result.ok && result.result.ok == 1)
         response.send(true);
       else 
-      response.send(false);
+        response.send(false);
     })
   })
 
@@ -115,27 +139,52 @@ app.post('/addStation', function(request, response){
 
 })
 
-app.post('/getStation', function(request, response){
-  let query = {id: request.body["id"]};
-  dbo.collection(stationCollection).findOne(query, {fields:{_id: 0}}, function(err, result){
+app.post('/getOne', function(request, response, next){
+  if (request.body['collection']){
+    var coll = request.body['collection']
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input collection!'
+    })
+    return next();
+  }
+  if (request.body['fields']){
+    var query = request.body['fields'];
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input fields!'
+    })
+    return next();
+  }
+  dbo.collection(coll).findOne(query, {fields:{_id: 0}}, function(err, result){
     if (err) throw err;
-/*     if(result.DUT_connection_picture){
-      let buffer = result.DUT_connection_picture.buffer;
-      let ab = new ArrayBuffer(buffer.length);
-      let view = new Uint8Array(ab);
-      for (let i = 0; i < buffer.length; ++i) {
-        view[i] = buffer[i];
-      }
-      result.DUT_connection_picture = view;
-    } */
-
+    //TODO what if this one is already delete by another user?
     response.send(result);
   })
 });
 
-app.post('/deleteStation', function(request, response){
-  let query = {id: request.body["id"]};
-  dbo.collection(stationCollection).remove(query, {justOne: true}, function(err, result){
+app.post('/deleteOne', function(request, response, next){
+  if (request.body['collection']){
+    var collection = request.body['collection']
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input collection!'
+    })
+    return next();
+  }
+  if (request.body['fields']){
+    var query = request.body['fields'];
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input fields!'
+    })
+    return next();
+  }
+  dbo.collection(collection).remove(query, {justOne: true}, function(err, result){
     if (err) {
       response.send(false);
       throw err;
@@ -147,10 +196,11 @@ app.post('/deleteStation', function(request, response){
   })
 })
 
-app.post('/updateStation', function(request, response){
+app.post('/updateOne', function(request, response, next){
   let form = new multiparty.Form();
   let station = {};
-  let prevStationId = "";
+  let prevId = null;
+  let collection = null;
   form.on('error', function(err){
     console.log("Error parsing form" + err.stack);
   });
@@ -170,7 +220,10 @@ app.post('/updateStation', function(request, response){
 
   form.on('field', function(name, value){
     if(name == 'prevId'){
-      prevStationId = value;
+      prevId = value;
+    }
+    else if(name == "collection"){
+      collection = value;
     }
     else{
       station[name] = value;
@@ -180,7 +233,19 @@ app.post('/updateStation', function(request, response){
   form.on('close', function(){
     //handle the final station info when every thing is loaded especially the picture
     //now store all the info in database
-    let query = {id: prevStationId}
+    if(collection == null){
+      response.status(400).send({
+        message: 'Must input collection!'
+      })
+      return next();
+    }
+    if(prevId == null){
+      response.status(400).send({
+        message: 'Must input previous station id!'
+      })
+      return next();
+    }
+    let query = {id: prevId}
     dbo.collection(stationCollection).updateOne(query, {$set:station}, function(err, result){
       if (err) {
         response.send(false);
@@ -197,8 +262,25 @@ app.post('/updateStation', function(request, response){
 })
 
 app.post('/getSuggestion', function(request, response){
-  let query = request.body['field'];
-  dbo.collection(stationCollection).distinct(query, function(err, result){
+  if (request.body['collection']){
+    var collection = request.body['collection']
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input collection!'
+    })
+    return next();
+  }
+  if (request.body['field']){
+    var query = request.body['field'];
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input field!'
+    })
+    return next();
+  }
+  dbo.collection(collection).distinct(query, function(err, result){
     if (err) {
       response.send([]);
       throw err;

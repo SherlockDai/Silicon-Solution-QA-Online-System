@@ -11,18 +11,19 @@ import { Station } from "./station";
 })
 export class QaSysService {
   //the login api url
-  private loginUrl = "http://localhost:3000/userInfo"
-  private allStationUrl = "http://localhost:3000/allStationInfo"
-  private addStationUrl = "http://localhost:3000/addStation"
-  private getStationUrl = "http://localhost:3000/getStation"
-  private deleteStationUrl = "http://localhost:3000/deleteStation"
-  private updateStationUrl = "http://localhost:3000/updateStation"
+  private loginUrl = "http://localhost:3000/login"
+  private allStationUrl = "http://localhost:3000/getAll"
+  private addStationUrl = "http://localhost:3000/addOne"
+  private getStationUrl = "http://localhost:3000/getOne"
+  private deleteStationUrl = "http://localhost:3000/deleteOne"
+  private updateStationUrl = "http://localhost:3000/updateOne"
   private getSuggestionUrl = "http://localhost:3000/getSuggestion"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
     })
   };
+  private collection = "stationInfo"
 
   constructor(
     private http:HttpClient,
@@ -38,24 +39,35 @@ export class QaSysService {
   }
 
   getAllStation(): Observable<StationInfoBrief[]>{
-    return this.http.get<StationInfoBrief[]>(this.allStationUrl);
+    return this.http.post<StationInfoBrief[]>(this.allStationUrl, {
+      collection: this.collection,
+      option: {
+        _id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1
+      }
+    }, this.httpOptions);
   }
 
   getStation(station: StationInfoBrief): Observable<Station>{
-    return this.http.post<any>(this.getStationUrl, station, this.httpOptions).pipe(map(response => {
-      //since formdata can only pass string, we fetched the date string from date object, now we need to convert it back
-      response.creation_time = new Date(response.creation_time);
-      response.update_time = new Date(response.update_time);
-      //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
-      response.tester = JSON.parse(response.tester);
-      response.DUT_WIFI_FW_version = JSON.parse(response.DUT_WIFI_FW_version);
-      response.DUT_BT_HCD_file = JSON.parse(response.DUT_BT_HCD_file);
-      return response;
-    }));
+    return this.http.post<any>(this.getStationUrl, {
+        collection: this.collection,
+        fields: {id: station.id},
+      }, this.httpOptions).pipe(map(response => {
+        //since formdata can only pass string, we fetched the date string from date object, now we need to convert it back
+        response.creation_time = new Date(response.creation_time);
+        response.update_time = new Date(response.update_time);
+        //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
+        response.tester = JSON.parse(response.tester);
+        response.DUT_WIFI_FW_version = JSON.parse(response.DUT_WIFI_FW_version);
+        response.DUT_BT_HCD_file = JSON.parse(response.DUT_BT_HCD_file);
+        return response;
+      }));
   }
 
   deleteStation(station: StationInfoBrief): Observable<Boolean>{
-    return this.http.post<Boolean>(this.deleteStationUrl, station, this.httpOptions);
+    return this.http.post<Boolean>(this.deleteStationUrl, {
+      collection: this.collection,
+      fields: {id: station.id}
+    }, this.httpOptions);
   }
 
   addStation(station: Station): Observable<JSON>{
@@ -73,6 +85,7 @@ export class QaSysService {
         }
       }
     }
+    formData.append("collection", this.collection);
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
@@ -95,6 +108,7 @@ export class QaSysService {
         }
       }
     }
+    formData.append("collection", this.collection);
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
@@ -104,6 +118,7 @@ export class QaSysService {
   //get the distinct values in certain field
   getSuggestion(fieldName: String): Observable<Array<String>>{
     let data = {
+      collection: this.collection,
       field: fieldName
     }
     return this.http.post<Array<String>>(this.getSuggestionUrl, data, this.httpOptions);
