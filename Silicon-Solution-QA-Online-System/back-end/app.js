@@ -65,7 +65,7 @@ app.post("/userInfo", function(request, response){
 })
 
 app.get('/allStationInfo',  function(request, response){
-  dbo.collection(stationCollection).find({},{fields:{_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, updateTime: 1}}).toArray(function(err, result){
+  dbo.collection(stationCollection).find({},{fields:{_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1}}).toArray(function(err, result){
     if(err) throw err;
     response.send(result);
   })

@@ -20,6 +20,8 @@ import { MatButtonModule, MatCheckboxModule, MatSelectModule,
   MatToolbarModule, MatButtonToggleModule, MatAutocompleteModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
+import { LocationPageComponent } from './location-page/location-page.component';
+import { ClipboardModule } from "ngx-clipboard";
 
 @NgModule({
   declarations: [
@@ -29,9 +31,11 @@ import { DialogPageComponent } from './dialog-page/dialog-page.component';
     NotFoundPageComponent,
     StationInfoSysComponent,
     BottomSheetComponent,
-    DialogPageComponent
+    DialogPageComponent,
+    LocationPageComponent
   ],
   imports: [
+    ClipboardModule,
     MatAutocompleteModule,
     MatButtonToggleModule,
     MatToolbarModule,

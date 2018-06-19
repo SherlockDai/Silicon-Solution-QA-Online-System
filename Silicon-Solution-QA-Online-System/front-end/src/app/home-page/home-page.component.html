@@ -3,11 +3,11 @@
     <div class="navi-container"  [@flyInOut]="'in'" (@flyInOut.done)="showUp($event)">
         <img class="logo-home" src="../../assets/images/logo-home.png"/>
         <div class="btn-group">
-          <button><a href="javascript:void(0)" routerLink="/login">Logout</a></button>
-          <button><a pageScroll href="#document-manuals">Doc & Manuals</a></button>
-          <button><a pageScroll href="#bookkeeping-info">Bookkeeping</a></button>
-          <button><a pageScroll href="#test-status">Test Status</a></button>
-          <button><a pageScroll href="#station-info">Station Info</a></button>
+          <a href="javascript:void(0)" routerLink="/login"><button>Logout</button></a>
+          <a pageScroll href="#document-manuals"><button>Doc & Manuals</button></a>
+          <a pageScroll href="#bookkeeping-info"><button>Bookkeeping</button></a>
+          <a pageScroll href="#test-status"><button>Test Status</button></a>
+          <a pageScroll href="#station-info"><button>Station Info</button></a>
         </div>
     </div>
     <div class="team-info" [@showUp] = "state">
@@ -26,7 +26,7 @@
       <div class="parallax team-img"></div>
     </div>
   </div>
-  <div class="station-info" id="station-info">
+  <div class="station-info" id="station-info" name="station-info">
     <div class="station-info-text-wrap">
       <div class="station-info-text">
           <p class="title" >

@@ -12,7 +12,9 @@ mat-button-toggle-group{
     color: rgb(255, 177, 113);
     border-bottom: 2px;
 }
-
-.row{
-    align-items: baseline
+::ng-deep .mat-form-field-flex {
+    display: inline-flex;
+    align-items: center !important;
+    box-sizing: border-box;
+    width: 100%;
 }

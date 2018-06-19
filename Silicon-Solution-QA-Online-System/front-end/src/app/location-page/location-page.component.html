@@ -1,0 +1,9 @@
+<p class="row">
+  <mat-form-field appearance="standard" class="col">
+    <mat-label>Location URL</mat-label>
+    <input matInput [value]="url" readonly>
+    <mat-hint>Please copy the URL and paste it in browser or file exploer</mat-hint>
+    <button mat-mini-fab matSuffix matTooltip="Click here to copy the URL" 
+      style="z-index: 100;" (cbOnSuccess)="copyToClipboard()" [cbContent]="url" ngxClipboard ><i-clipboard></i-clipboard></button>
+  </mat-form-field>
+</p>

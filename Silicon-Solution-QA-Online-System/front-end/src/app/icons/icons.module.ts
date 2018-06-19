@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { IconCamera, IconHeart, IconGithub, IconHome, 
-  IconPlusSquare, IconRefreshCcw, IconEdit, IconTrash2, IconInfo, IconSlash, IconFilePlus, IconArrowRight } from 'angular-feather';
+  IconPlusSquare, IconRefreshCcw, IconEdit, IconTrash2, IconInfo, IconSlash, IconFilePlus, IconArrowRight, IconClipboard } from 'angular-feather';
  
 const icons = [
+  IconClipboard,
   IconSlash,
   IconCamera,
   IconHeart,

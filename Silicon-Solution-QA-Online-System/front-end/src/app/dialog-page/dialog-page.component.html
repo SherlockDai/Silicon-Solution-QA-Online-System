@@ -85,22 +85,23 @@
       <p class="row" *ngIf = "readOnly">
         <mat-form-field appearance="outline" class="col">
           <mat-label>DUT WIFI FW version</mat-label>
-          <mat-select placeholder=">DUT WIFI FW version" [(value)]="newDutWifiFwVersion['location']">
+          <mat-select placeholder="Please make selection (latest to oldest)" [(value)]="newDutWifiFwVersion['location']">
             <mat-option *ngFor="let version of station['DUT_WIFI_FW_version']" [value]="version.location">
               {{ version.description }}
             </mat-option>
           </mat-select>
+        <a class="location_btn" matSuffix [routerLink] = "['location', {url: newDutWifiFwVersion.location}]" target="_blank"><i-arrow-right></i-arrow-right></a>
         </mat-form-field>
-        <button mat-icon-button (click)="openLocation(newDutWifiFwVersion['location'])"><i-arrow-right></i-arrow-right></button>
+       
         <mat-form-field appearance="outline" class="col">
           <mat-label>DUT BT HCD File</mat-label>
-          <mat-select placeholder="DUT BT HCD File" [(value)]="newDutBtHcdFile['location']">
+          <mat-select placeholder="Please make selection (latest to oldest)" [(value)]="newDutBtHcdFile['location']">
             <mat-option *ngFor="let file of station['DUT_BT_HCD_file']" [value]="file.location">
               {{ file.description }}
             </mat-option>
           </mat-select>
+          <a class="location_btn" matSuffix [routerLink] = "['location', {url: newDutBtHcdFile['location']}]" target="_blank"><i-arrow-right></i-arrow-right></a>
         </mat-form-field>
-        <button mat-icon-button (click)="openLocation(newDutBtHcdFile['location'])"><i-arrow-right></i-arrow-right></button>
       </p>
       <p class="row" *ngIf = "!readOnly">
         <mat-form-field appearance="outline" class="col" >
@@ -213,6 +214,6 @@
     <button mat-raised-button	(click)="onChangeView(false)" *ngIf="readOnly">Update</button>
     <button mat-raised-button	(click)="onChangeView(true)" *ngIf="!readOnly">View</button>
     <button mat-raised-button	(click)="onSubmit($event)" *ngIf="!readOnly">Save</button>
-    <button mat-button *ngIf="!readOnly">Cancel</button>
+    <button mat-button (click)="dialogRef.close()" *ngIf="!readOnly">Cancel</button>
 </mat-dialog-actions>
 

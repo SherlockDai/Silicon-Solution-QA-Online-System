@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QaSysService } from "../qa-sys.service";
 import { StationInfoBrief } from "../brief-station";
+import { Router }                 from '@angular/router';
 @Component({
   selector: 'app-dialog-page',
   templateUrl: './dialog-page.component.html',
@@ -31,8 +32,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   private testerSource: MatTableDataSource<Tester>;
   private testerColumns: Array<String>;
   constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, 
-      private _sanitizer: DomSanitizer, private qaSysService:QaSysService ) {
+      @Inject(MAT_DIALOG_DATA) public data: any, 
+      private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
+      private router: Router) {
       this.station = data["station"];
       this.readOnly = data["action"] == "detail" ? true : false;
       if(this.station.DUT_connection_picture)
@@ -157,14 +159,12 @@ displayWithDescription(file?: FileLocation): String | undefined{
   return file ? file.description : undefined;
 }
 
-openLocation(dest){
-  let myWindow = window.open("", "_blank");
-  myWindow.document.write("<h1>"+ dest +"</h1><p>Please use the path above to access the location that store the corresponding files</p>")
-  myWindow.history.pushState(null, null, dest)
-}
-
 onChangeView(descision){
   this.readOnly = descision;
+}
+
+openLocation(url): void{
+  this.router.navigate(['/location', {url: url}]);
 }
 
   ngOnInit() {
@@ -174,7 +174,7 @@ onChangeView(descision){
       this.station.station_picture = this.dataURLtoFile("data:image/png;base64," + this.station.station_picture, this.station.id + "_station_picture.png");
     }
     if(this.station.DUT_BT_HCD_file != null && this.station.DUT_BT_HCD_file.length > 0){
-      //deep copy
+      //deep copy, so that we can bind it to the select element and update it if necessary without affecting the original one
       this.newDutBtHcdFile = JSON.parse(JSON.stringify(this.station.DUT_BT_HCD_file[0]));
     }
     if(this.station.DUT_WIFI_FW_version != null && this.station.DUT_WIFI_FW_version.length > 0){
