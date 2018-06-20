@@ -8,7 +8,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { Ng2PageScrollModule } from "ng2-page-scroll";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
-import { StationInfoSysComponent } from './station-info-sys/station-info-sys.component';
+import { InfoSysComponent } from './info-sys/info-sys.component';
 import { IconsModule } from './icons/icons.module';
 import { HttpClientModule }    from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -30,7 +30,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     LoginPageComponent,
     HomePageComponent,
     NotFoundPageComponent,
-    StationInfoSysComponent,
+    InfoSysComponent,
     BottomSheetComponent,
     DialogPageComponent,
     LocationPageComponent

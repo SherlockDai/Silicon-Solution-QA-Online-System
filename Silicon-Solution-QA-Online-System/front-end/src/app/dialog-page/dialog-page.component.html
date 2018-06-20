@@ -38,7 +38,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
             <mat-label>Update Date</mat-label>
-            <input matInput [matDatepicker]="update_timePicker" placeholder="mm/dd/yyyy" id="update_time" [(ngModel)]="station['update_time']" disabled>
+            <input matInput [matDatepicker]="update_timePicker" placeholder="mm/dd/yyyy" id="update_time"  disabled>
             <mat-datepicker-toggle matSuffix [for]="update_timePicker"></mat-datepicker-toggle>
             <mat-datepicker #update_timePicker></mat-datepicker>
         </mat-form-field>

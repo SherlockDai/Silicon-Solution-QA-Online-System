@@ -1,38 +1,34 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource, MatBottomSheet, MatDialog, 
   MatDialogRef, getMatIconFailedToSanitizeLiteralError, MatSnackBar} from '@angular/material';
-import { BottomSheetComponent } from "../bottom-sheet/bottom-sheet.component";
-import { DialogPageComponent } from "../dialog-page/dialog-page.component";
 import { QaSysService } from "../qa-sys.service";
-import { StationInfoBrief } from "../brief-station";
 import {  Subject, Subscription, Observable, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Station } from '../station';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
 @Component({
-  selector: 'app-station-info-sys',
-  templateUrl: './station-info-sys.component.html',
-  styleUrls: ['./station-info-sys.component.css'],
+  selector: 'app-info-sys',
+  templateUrl: './info-sys.component.html',
+  styleUrls: ['./info-sys.component.css'],
 })
-export class StationInfoSysComponent implements OnInit, OnDestroy {
+export class InfoSysComponent implements OnInit, OnDestroy {
   orders: string[];
   displayedColumns: string[];
   columns: Array<any>;
-  dataSource: MatTableDataSource<StationInfoBrief>;
-  pageDataSource: MatTableDataSource<StationInfoBrief>;
-  fullDataSource: MatTableDataSource<StationInfoBrief>;
-  favoriateDataSource: MatTableDataSource<StationInfoBrief>;
+  dataSource;
+  pageDataSource;
+  fullDataSource;
+  favoriateDataSource;
   loadingInfo = false;
   //set the defaul order to Ascending
   order: string = "ASCENDING";
-  sortBase: string = "Position";
+  sortBase: string = "Vender";
   //control the Order by component, if the user has not selected sort by, the order by should be disabled
   canSort: boolean = false;
   //declare a subject to handle the unsubscription of all subscriptions
   private ngUnsubscribe: Subject<any> = new Subject();
-  //array that stores users favorite station info (brief)
-  private favoriteStations: StationInfoBrief[] = [];
+  //array that stores users favorite record info (brief)
+  private favoriteRecords: any[] = [];
   //boolean that identify the current datasource
   private isFullList: boolean = true;
   //localstorage that stores users' favorite stations
@@ -44,18 +40,18 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   private pageSize = 5;
   private array: any;
   private pageLength = 0;
+  private configuration;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
     private qaSysService:QaSysService, public snackBar: MatSnackBar, route:ActivatedRoute) { 
-    this.columns = [
-      { columnDef: 'Vender', header: 'Vender', cell: (element: any) => `${element.vender}`     },
-      { columnDef: 'Chipset', header: 'Chipset', cell: (element: any) => `${element.chipset}`   },
-      { columnDef: 'Device', header: 'Device', cell: (element: any) => `${element.device}`   },
-      { columnDef: 'Status', header: 'Status', cell: (element: any) => `${element.status}`   },
-      { columnDef: 'Date', header: 'Date', cell: (element: any) => `${element.update_time}`   },
-    ];
+    this.configuration = route.snapshot.data
+    this.columns = this.configuration.tableColumns;
     this.displayedColumns = this.columns.map(c => c.columnDef);
-    this.orders = [ "ASCENDING", "DESCENDING"]
+    this.orders = [ "ASCENDING", "DESCENDING"];
+    this.fullDataSource = this.configuration.fullDataSource;
+    this.pageDataSource = this.configuration.pageDataSource;
+    this.dataSource = this.fullDataSource;
+    this.favoriateDataSource = this.configuration.favoriateDataSource;
    }
 
    //filter function
@@ -67,7 +63,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
 
   //table cell click listener, open bottom sheet
   openBottomSheet(row): void {
-    let bottomSHeetRef = this.bottomSheet.open(BottomSheetComponent, {
+    let bottomSHeetRef = this.bottomSheet.open(this.configuration.bottomSheet, {
       data: {
         record: row,
         isFullList: this.isFullList
@@ -81,14 +77,14 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
           this.loadingInfo = true;
           this.openDialog(result['action'], result['row']);
         }
-        //add the corresponding station into the favorite list
+        //add the corresponding record into the favorite list
         else if(result['action'] == "favorite"){
           this.addToFavorite(result['row']);
         }
         else if(result['action'] == "unfavorite"){
           this.deleteFromFavorite(result['row']);
         }
-        //todo delete the corresponding station if the user press the delete button
+        //todo delete the corresponding record if the user press the delete button
         else if(result['action'] == "delete"){
           this.deleteFromTable(result['row']);
         }
@@ -97,14 +93,14 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   }
 
   //bottom sheet click listener, open dialog
-  openDialog(action: string, selectedRecord: StationInfoBrief): void{
+  openDialog(action: string, selectedRecord: any): void{
     let dialogRef;
-    this.qaSysService.getStation(selectedRecord).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getOne(selectedRecord, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       response => {
         this.loadingInfo = false;
-        dialogRef = this.dialog.open(DialogPageComponent, {
+        dialogRef = this.dialog.open(this.configuration.dialog, {
           data: {
-            station: response,
+            record: response,
             action: action,
             prevInfo: selectedRecord
           },
@@ -127,7 +123,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
               }
             }
             this.updatePage();
-            this.snackBar.open("Station is updated!", "Dismiss", {
+            this.snackBar.open("Record is updated!", "Dismiss", {
               duration: 2000
             });
           }
@@ -137,23 +133,23 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
   }
 
   onInsertion(event):void {
-    //create a empty station, send it to the dialog page with insertion action
-    let newStation:Station = new Station();
+    //create a empty record, send it to the dialog page with insertion action
+    let newStation = new this.configuration.fullInfo();
     let dialogRef;
-    dialogRef = this.dialog.open(DialogPageComponent, {
+    dialogRef = this.dialog.open(this.configuration.dialog, {
         data: {
-          station: newStation,
+          record: newStation,
           action: "insert"
         }
       }
     );
     dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
       if(result){
-        //add the returned new station to the station list
+        //add the returned new record to the record list
         let newData = this.fullDataSource.data;
         newData.push(result);
         this.fullDataSource.data = newData;
-        this.snackBar.open("Station is added!", "Dismiss", {
+        this.snackBar.open("Record is added!", "Dismiss", {
           duration: 2000
         });
         this.updatePage();
@@ -192,45 +188,45 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
     }
   }
 
-  addToFavorite(station: StationInfoBrief):void {
+  addToFavorite(record: any):void {
     //update favorite list
-    this.favoriteStations.push(station);
-    this.favoriateDataSource.data = this.favoriteStations;
+    this.favoriteRecords.push(record);
+    this.favoriateDataSource.data = this.favoriteRecords;
     //update local storage
-    this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
-    this.snackBar.open("Station is now in Favorite list!", "Dismiss", {
+    this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteRecords));
+    this.snackBar.open("Record is now in Favorite list!", "Dismiss", {
       duration: 2000
     });
   }
 
-  deleteFromFavorite(station: StationInfoBrief):void{
+  deleteFromFavorite(record: any):void{
     //update favorite list
-    let index = this.favoriteStations.indexOf(station);
-    this.favoriteStations.splice(index, 1);
-    this.favoriateDataSource.data = this.favoriteStations;
+    let index = this.favoriteRecords.indexOf(record);
+    this.favoriteRecords.splice(index, 1);
+    this.favoriateDataSource.data = this.favoriteRecords;
     //update local storage
-    this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteStations));
-    this.snackBar.open("Station is removed from Favorite List!", "Dismiss", {
+    this.localStorage.setItem("favoriteStation", JSON.stringify(this.favoriteRecords));
+    this.snackBar.open("Record is removed from Favorite List!", "Dismiss", {
       duration: 2000
     });
     this.updatePage();
   }
 
-  deleteFromTable(station: StationInfoBrief):void {
-    this.qaSysService.deleteStation(station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+  deleteFromTable(record: any):void {
+    this.qaSysService.deleteOne(record, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       result => {
         if (result){
-          //remove the station from the list
+          //remove the record from the list
           let newData = this.fullDataSource.data;
-          let index = newData.indexOf(station);
+          let index = newData.indexOf(record);
           if(index > -1)
             newData.splice(index, 1);
           this.fullDataSource.data = newData;
           //remove it from favorite if applied
-          if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(station) != -1){
-            this.deleteFromFavorite(station);
+          if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(record) != -1){
+            this.deleteFromFavorite(record);
           }
-          this.snackBar.open("Station is deleted!", "Dismiss", {
+          this.snackBar.open("Record is deleted!", "Dismiss", {
             duration: 2000
           });
           this.updatePage();
@@ -259,7 +255,7 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
 
   onRefresh():void {
     this.loadingInfo = true;
-    this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getAll(this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
         //update the full table is easy
         this.fullDataSource = new MatTableDataSource(data)
@@ -267,10 +263,10 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
         if (this.favoriateDataSource){
           let prevIds = []
           let newData = []
-          this.favoriateDataSource.data.forEach(station => prevIds.push(station.id));
-          data.forEach(station => {
-            if (prevIds.indexOf(station.id) != -1){
-              newData.push(station);
+          this.favoriateDataSource.data.forEach(record => prevIds.push(record.id));
+          data.forEach(record => {
+            if (prevIds.indexOf(record.id) != -1){
+              newData.push(record);
             }
           })
           this.favoriateDataSource.data = newData;
@@ -323,14 +319,13 @@ export class StationInfoSysComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //ngOnInit is a better place to fetch data rather than constructor https://angular.io/guide/lifecycle-hooks
-    this.qaSysService.getAllStation().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getAll(this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
-        this.fullDataSource = new MatTableDataSource(data);
+        this.fullDataSource.data = data;
         let favoriteData = this.localStorage.getItem('favoriteStation') || "[]";
-        this.favoriateDataSource = new MatTableDataSource(JSON.parse(favoriteData));
+        this.favoriateDataSource.data = JSON.parse(favoriteData);
         this.dataSource = this.fullDataSource;
         this.pageLength = this.dataSource.data.length;
-        this.pageDataSource = new MatTableDataSource();
         this.updatePage();
       }
     )

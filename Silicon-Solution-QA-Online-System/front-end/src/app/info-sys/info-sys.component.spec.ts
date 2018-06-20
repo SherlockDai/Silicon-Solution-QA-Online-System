@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StationInfoSysComponent } from './station-info-sys.component';
+import { InfoSysComponent } from './info-sys.component';
 
 describe('StationInfoSysComponent', () => {
-  let component: StationInfoSysComponent;
-  let fixture: ComponentFixture<StationInfoSysComponent>;
+  let component: InfoSysComponent;
+  let fixture: ComponentFixture<InfoSysComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StationInfoSysComponent ]
+      declarations: [ InfoSysComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StationInfoSysComponent);
+    fixture = TestBed.createComponent(InfoSysComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

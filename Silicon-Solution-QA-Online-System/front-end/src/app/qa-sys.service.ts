@@ -4,26 +4,23 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from './message.service';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { StationInfoBrief } from './brief-station';
-import { Station } from "./station";
 @Injectable({
   providedIn: 'root'
 })
 export class QaSysService {
   //the login api url
   private loginUrl = "http://localhost:3000/login"
-  private allStationUrl = "http://localhost:3000/getAll"
-  private addStationUrl = "http://localhost:3000/addOne"
-  private getStationUrl = "http://localhost:3000/getOne"
-  private deleteStationUrl = "http://localhost:3000/deleteOne"
-  private updateStationUrl = "http://localhost:3000/updateOne"
+  private getAllUrl = "http://localhost:3000/getAll"
+  private addOneUrl = "http://localhost:3000/addOne"
+  private getOneUrl = "http://localhost:3000/getOne"
+  private deleteOneUrl = "http://localhost:3000/deleteOne"
+  private updateOneUrl = "http://localhost:3000/updateOne"
   private getSuggestionUrl = "http://localhost:3000/getSuggestion"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
     })
   };
-  private collection = "stationInfo"
 
   constructor(
     private http:HttpClient,
@@ -38,19 +35,19 @@ export class QaSysService {
     return this.http.post<JSON>(this.loginUrl, data, this.httpOptions);
   }
 
-  getAllStation(): Observable<StationInfoBrief[]>{
-    return this.http.post<StationInfoBrief[]>(this.allStationUrl, {
-      collection: this.collection,
+  getAll(collection: string): Observable<any[]>{
+    return this.http.post<any[]>(this.getAllUrl, {
+      collection: collection,
       option: {
         _id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1
       }
     }, this.httpOptions);
   }
 
-  getStation(station: StationInfoBrief): Observable<Station>{
-    return this.http.post<any>(this.getStationUrl, {
-        collection: this.collection,
-        fields: {id: station.id},
+  getOne(record: any, collection: string): Observable<any>{
+    return this.http.post<any>(this.getOneUrl, {
+        collection: collection,
+        fields: {id: record.id},
       }, this.httpOptions).pipe(map(response => {
         //since formdata can only pass string, we fetched the date string from date object, now we need to convert it back
         response.creation_time = new Date(response.creation_time);
@@ -63,62 +60,56 @@ export class QaSysService {
       }));
   }
 
-  deleteStation(station: StationInfoBrief): Observable<Boolean>{
-    return this.http.post<Boolean>(this.deleteStationUrl, {
-      collection: this.collection,
-      fields: {id: station.id}
+  deleteOne(record: any, collection: String): Observable<Boolean>{
+    return this.http.post<Boolean>(this.deleteOneUrl, {
+      collection: collection,
+      fields: {id: record.id}
     }, this.httpOptions);
   }
 
-  addStation(station: Station): Observable<JSON>{
+  addOne(record: any, collection: string): Observable<JSON>{
     let formData = new FormData();
-    for(let property in station){
-      if (station.hasOwnProperty(property)) {
-        if (property == "creation_time" || property == "update_time"){
-          formData.append(property, station[property].toDateString());
-        }
-        else if (Array.isArray(station[property])){
-          formData.append(property, JSON.stringify(station[property]));
+    for(let property in record){
+      if (record.hasOwnProperty(property)) {
+        if (Array.isArray(record[property])){
+          formData.append(property, JSON.stringify(record[property]));
         }
         else{
-          formData.append(property, station[property]);
+          formData.append(property, record[property]);
         }
       }
     }
-    formData.append("collection", this.collection);
+    formData.append("collection", collection);
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
-    return this.http.post<JSON>(this.addStationUrl, formData, options);
+    return this.http.post<JSON>(this.addOneUrl, formData, options);
   }
 
-  updateStation(prevInfo: StationInfoBrief, station: Station): Observable<JSON>{
+  updateOne(prevInfo: any, record: any, collection: string): Observable<JSON>{
     let formData = new FormData();
     formData.append("prevId", prevInfo.id)
-    for(let property in station){
-      if (station.hasOwnProperty(property)) {
-        if (property == "creation_time" || property == "update_time"){
-          formData.append(property, station[property].toDateString());
-        }
-        else if (Array.isArray(station[property])){
-          formData.append(property, JSON.stringify(station[property]));
+    for(let property in record){
+      if (record.hasOwnProperty(property)) {
+        if (Array.isArray(record[property])){
+          formData.append(property, JSON.stringify(record[property]));
         }
         else{
-          formData.append(property, station[property]);
+          formData.append(property, record[property]);
         }
       }
     }
-    formData.append("collection", this.collection);
+    formData.append("collection", collection);
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
-    return this.http.post<JSON>(this.updateStationUrl, formData, options);
+    return this.http.post<JSON>(this.updateOneUrl, formData, options);
   }
 
   //get the distinct values in certain field
-  getSuggestion(fieldName: String): Observable<Array<String>>{
+  getSuggestion(fieldName: String, collection: string): Observable<Array<String>>{
     let data = {
-      collection: this.collection,
+      collection: collection,
       field: fieldName
     }
     return this.http.post<Array<String>>(this.getSuggestionUrl, data, this.httpOptions);

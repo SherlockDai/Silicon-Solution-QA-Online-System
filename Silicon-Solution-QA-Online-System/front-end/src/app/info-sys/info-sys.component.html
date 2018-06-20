@@ -22,8 +22,8 @@
               <mat-slide-toggle (change)="onAutoFreshChange($event)" >Auto refresh</mat-slide-toggle>
               <mat-form-field>
                   <mat-select placeholder="Sort By" (selectionChange)="onSortChange($event.value.toLowerCase())">
-                    <mat-option *ngFor="let key of displayedColumns" [value]="key" >
-                      {{ key }}
+                    <mat-option *ngFor="let key of columns" [value]="key.value" >
+                      {{ key.columnDef }}
                     </mat-option>
                   </mat-select>
               </mat-form-field>
@@ -45,7 +45,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openBottomSheet(row)"></mat-row>
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="pageLength" 
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="dataSource.data.length" 
           [pageSize]="5" (page)="pageEvent = handlePage($event)" showFirstLastButtons></mat-paginator>
     </div>
   </div>

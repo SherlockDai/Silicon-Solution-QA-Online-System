@@ -4,5 +4,5 @@ export class StationInfoBrief {
   chipset: string;
   device: string;
   status: string;
-  update_time: Date;
+  update_time: number;
 }

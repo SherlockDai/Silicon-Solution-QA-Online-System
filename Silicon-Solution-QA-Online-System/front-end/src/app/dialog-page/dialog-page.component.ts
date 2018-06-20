@@ -31,11 +31,12 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   //store the tester info
   private testerSource: MatTableDataSource<Tester>;
   private testerColumns: Array<String>;
+  private collection = "stationInfo"
   constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
       @Inject(MAT_DIALOG_DATA) public data: any, 
       private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
       private router: Router) {
-      this.station = data["station"];
+      this.station = data["record"];
       this.readOnly = data["action"] == "detail" ? true : false;
       if(this.station.DUT_connection_picture)
         //now the picture attr stores base64 we will convert it to File object in onInit
@@ -66,7 +67,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   onSubmit(event):void {
     this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP';
     //update the update date
-    this.station.update_time = new Date()
+    this.station.update_time = (new Date()).getTime();
     //update the DUT_BT_HCD_file and DUT_WIFI_FW_version
     let histDutWifiVersion = this.station.DUT_WIFI_FW_version.map(version => version.description);
     let hisDutBtHcdFile = this.station.DUT_BT_HCD_file.map(file => file.description);
@@ -89,7 +90,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       }
     }
     if(this.data.action == "insert"){
-      this.qaSysService.addStation(this.station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      this.qaSysService.addOne(this.station, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => {
           if(response){
             let newBriefStation: StationInfoBrief = {
@@ -106,7 +107,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       )
     }
     else if(this.data.action == "update"){
-      this.qaSysService.updateStation(this.data.prevInfo, this.station).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      this.qaSysService.updateOne(this.data.prevInfo, this.station, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => {
           if(response){
             let newBriefStation: StationInfoBrief = {
@@ -150,7 +151,7 @@ giveSuggestion(event):void {
     this.options = this.station[event.target.id].map(file => file.description);
   }
   else
-    this.qaSysService.getSuggestion(event.target.id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getSuggestion(event.target.id, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       response => this.options = response
     )
 }
