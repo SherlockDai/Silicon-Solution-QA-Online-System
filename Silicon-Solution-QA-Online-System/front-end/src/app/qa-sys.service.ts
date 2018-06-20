@@ -49,13 +49,16 @@ export class QaSysService {
         collection: collection,
         fields: {id: record.id},
       }, this.httpOptions).pipe(map(response => {
-        //since formdata can only pass string, we fetched the date string from date object, now we need to convert it back
-        response.creation_time = new Date(response.creation_time);
-        response.update_time = new Date(response.update_time);
         //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
-        response.tester = JSON.parse(response.tester);
-        response.DUT_WIFI_FW_version = JSON.parse(response.DUT_WIFI_FW_version);
-        response.DUT_BT_HCD_file = JSON.parse(response.DUT_BT_HCD_file);
+        for(let property in response){
+          if (record.hasOwnProperty(property)) {
+            try {
+              response[property] = JSON.parse(response[property])
+            } catch (error) {
+              continue;
+            }
+          }
+        }
         return response;
       }));
   }

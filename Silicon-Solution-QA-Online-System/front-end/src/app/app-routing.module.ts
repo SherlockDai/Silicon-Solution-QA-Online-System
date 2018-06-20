@@ -21,7 +21,7 @@ const stationInfoConfig = {
     { columnDef: 'Chipset', value: "chipset", header: 'Chipset', cell: (element: any) => `${element.chipset}`   },
     { columnDef: 'Device', value: "device", header: 'Device', cell: (element: any) => `${element.device}`   },
     { columnDef: 'Status', value: "status", header: 'Status', cell: (element: any) => `${element.status}`   },
-    { columnDef: 'Date', value: "update_time", header: 'Date', cell: (element: any) => `${(new Date(parseInt(element.update_time))).toDateString()}`   },
+    { columnDef: 'Date', value: "update_time", header: 'Date', cell: (element: any) => `${(new Date(element.update_time)).toDateString()}`   },
   ],
 
   pageDataSource: new MatTableDataSource<StationInfoBrief>(),
