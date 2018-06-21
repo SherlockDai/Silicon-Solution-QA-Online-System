@@ -6,7 +6,7 @@ export class Station {
     status: string;
     creation_time: number;
     update_time: number;
-    station_picture: Blob
+    station_picture: any
     DUT_name: string;
     DUT_HW_version: string;
     DUT_WIFI_FW_version: Array<FileLocation>;
@@ -14,7 +14,7 @@ export class Station {
     DUT_username: string;
     DUT_password: string;
     external_power_supply: string;
-    DUT_connection_picture: Blob;
+    DUT_connection_picture: any;
     additional_comments: string;
     computer_IP: string;
     computer_username: string;

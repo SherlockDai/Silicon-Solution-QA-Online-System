@@ -40,9 +40,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       this.readOnly = data["action"] == "detail" ? true : false;
       if(this.station.DUT_connection_picture)
         //now the picture attr stores base64 we will convert it to File object in onInit
-        this.DUTImagePath ="data:image/png;base64," + this.station.DUT_connection_picture;
+        this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture);
       if(this.station.station_picture)
-        this.stationImagePath = "data:image/png;base64," + this.station.station_picture;
+        this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture);
       this.testerColumns = ["Model", "IP", "FirmwareVersion"];
     }
 

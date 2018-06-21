@@ -1,14 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const uploadPath = "./uploads/"
+app.use(express.static(__dirname + '/uploads/'));
+
 const multiparty = require('multiparty');
+const fs = require("fs")
 
 const port = 3000;
+const serverUrl =" http://localhost:3000/";
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb://localhost:27017/Silicon-Solution-Online-System-DB";
+const dbUrl = "mongodb://localhost:27017/Silicon-Solution-Online-System-DB";
 
 const userCollection = "userInfo"
-const stationCollection = "stationInfo"
+
 
 var dbo
 
@@ -34,7 +39,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-MongoClient.connect(url,  { useNewUrlParser: true },  function(err, db) {
+MongoClient.connect(dbUrl,  { useNewUrlParser: true },  function(err, db) {
   if (err) throw err;
   dbo = db.db("Silicon-Solution-Online-System-DB");
   console.log("MongoDB connect success!");
@@ -84,37 +89,35 @@ app.post('/getAll',  function(request, response, next){
 
 app.post('/addOne', function(request, response, next){
   let form = new multiparty.Form();
-  let station = {};
+  let record = {};
   let collection = null;
 
   form.on('error', function(err){
     console.log("Error parsing form" + err.stack);
   });
 
-  form.on('part', function(part){
-    if(part.filename){
-      let chunks = [];
-      part.on("data", function(chunk){
-        chunks.push(chunk);
-      })
-
-      part.on("end", function(){
-        station[part.name] = Buffer.concat(chunks)
-      })
-    }
-  })
+  form.on('file', function(name, file){
+    //move the file to our upload/image folder
+    const temp_path = file.path;
+    const newFileName = [record['id'], name, file['originalFilename']].join('-');
+    const new_path = uploadPath + newFileName;
+    record[name] = serverUrl + newFileName;
+    fs.rename(temp_path, new_path, (err) => {
+      if (err) throw err;
+    })
+  });
 
   form.on('field', function(name, value){
     if(name == "collection"){
       collection = value;
     }
     else{
-      station[name] = value;
+      record[name] = value;
     }
   })
 
   form.on('close', function(){
-    //handle the final station info when every thing is loaded especially the picture
+    //handle the final record info when every thing is loaded especially the picture
     //now store all the info in database
     if(collection == null){
       response.status(400).send({
@@ -122,7 +125,7 @@ app.post('/addOne', function(request, response, next){
       })
       return next();
     }
-    dbo.collection(collection).insertOne(station, function(err, result){
+    dbo.collection(collection).insertOne(record, function(err, result){
       if (err) {
         response.send(false);
         throw err;
@@ -198,7 +201,7 @@ app.post('/deleteOne', function(request, response, next){
 
 app.post('/updateOne', function(request, response, next){
   let form = new multiparty.Form();
-  let station = {};
+  let record = {};
   let prevId = null;
   let collection = null;
   form.on('error', function(err){
@@ -213,7 +216,7 @@ app.post('/updateOne', function(request, response, next){
       })
 
       part.on("end", function(){
-        station[part.name] = Buffer.concat(chunks)
+        record[part.name] = Buffer.concat(chunks)
       })
     }
   })
@@ -226,12 +229,12 @@ app.post('/updateOne', function(request, response, next){
       collection = value;
     }
     else{
-      station[name] = value;
+      record[name] = value;
     }
   })
 
   form.on('close', function(){
-    //handle the final station info when every thing is loaded especially the picture
+    //handle the final record info when every thing is loaded especially the picture
     //now store all the info in database
     if(collection == null){
       response.status(400).send({
@@ -241,12 +244,12 @@ app.post('/updateOne', function(request, response, next){
     }
     if(prevId == null){
       response.status(400).send({
-        message: 'Must input previous station id!'
+        message: 'Must input previous record id!'
       })
       return next();
     }
     let query = {id: prevId}
-    dbo.collection(stationCollection).updateOne(query, {$set:station}, function(err, result){
+    dbo.collection(recordCollection).updateOne(query, {$set:record}, function(err, result){
       if (err) {
         response.send(false);
         throw err;
