@@ -13,7 +13,7 @@
       <p class="row">
         <mat-form-field appearance="outline" class="col">
           <mat-label>ID</mat-label>
-          <input matInput placeholder="ID" value="{{station['vender']}}-{{station['chipset']}}-{{station['device']}}UP" id="id" disabled>
+          <input matInput placeholder="Station Name" value="{{station['vender']}}-{{station['chipset']}}-{{station['device']}}UP" id="id" disabled>
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
           <mat-label>Vender Name</mat-label>
@@ -27,7 +27,7 @@
       <p class="row">
         <mat-form-field appearance="outline" class="col">
           <mat-label>Number of Device</mat-label>
-          <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" id="device" [readonly] = "readOnly">
+          <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" id="device" [readonly] = "readOnly" [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
           <mat-select placeholder="Station Status" [(ngModel)]="station['status']" id="status" [disabled] = "readOnly">
@@ -36,15 +36,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col">
-            <mat-label>Update Date</mat-label>
-            <input matInput [matDatepicker]="update_timePicker" placeholder="mm/dd/yyyy" id="update_time"  disabled>
-            <mat-datepicker-toggle matSuffix [for]="update_timePicker"></mat-datepicker-toggle>
-            <mat-datepicker #update_timePicker></mat-datepicker>
-        </mat-form-field>
       </p>
       <p class="row">
-          <input type="file" class="col" *ngIf="!readOnly" id="station_picture" (change)="onFileChange($event)">
+          <mat-label for="station_picture">Station Picture</mat-label>
+          <input type="file" class="col form-control-file" *ngIf="!readOnly" id="station_picture" (change)="onFileChange($event)" accept="image/*" title="Please upload station picture">
       </p>
       <p class="row">
           <img class="row" *ngIf="stationImagePath" [src]="stationImagePath">
@@ -106,12 +101,12 @@
       <p class="row" *ngIf = "!readOnly">
         <mat-form-field appearance="outline" class="col" >
           <mat-label>DUT WIFI FW version</mat-label>
-          <input matInput placeholder="DUT WIFI FW version" id="DUT_WIFI_FW_version" [(ngModel)]="newDutWifiFwVersion['description']" 
+          <input matInput placeholder="DUT WIFI FW Version" id="DUT_WIFI_FW_version" [(ngModel)]="newDutWifiFwVersion['description']" 
             [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
         <mat-form-field appearance="outline" class="col" >
           <mat-label>File Location</mat-label>
-          <input matInput placeholder="File Location" id="DUT_WIFI_FW_version_file_location" [(ngModel)]="newDutWifiFwVersion['location']">
+          <input matInput placeholder="Copy file path to here" id="DUT_WIFI_FW_version_file_location" [(ngModel)]="newDutWifiFwVersion['location']">
         </mat-form-field>
       </p> 
       <p class="row" *ngIf = "!readOnly">
@@ -122,7 +117,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" class="col" >
           <mat-label>File Location</mat-label>
-          <input matInput placeholder="File Location" id="DUT_BT_HCD_file_location" [(ngModel)]="newDutBtHcdFile['location']">
+          <input matInput placeholder="Copy file path to here" id="DUT_BT_HCD_file_location" [(ngModel)]="newDutBtHcdFile['location']">
         </mat-form-field>
       </p>  
       <p class="row">
@@ -146,31 +141,15 @@
         </mat-form-field>
       </p>
       <p class="row">
-          <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" (change)="onFileChange($event)">
+          <mat-label for="DUT_connection_picture">DUT Connection Picture</mat-label>
+          <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" (change)="onFileChange($event)" accept="image/*" title="Please upload DUT connection picture">
       </p>
       <p class="row">
           <img class="row" *ngIf="DUTImagePath" [src]="DUTImagePath">
       </p>
     </div>
     <div *ngSwitchCase="'tester'">
-      <p class="row">
-        <mat-form-field appearance="outline" class="col">
-          <mat-label>Most Recent Package Tested</mat-label>
-          <input matInput placeholder="Most Recent Package Tested" id="most_recent_package_tested" [(ngModel)]="station['most_recent_package_tested']" [readonly] = "readOnly">
-        </mat-form-field>
-      </p>
-      <p class="row">
-        <mat-form-field appearance="outline" class="col">
-          <mat-label>Flow Used</mat-label>
-          <input matInput placeholder="Flow Used" id="flow_used"  [(ngModel)]="station['flow_used']" [readonly] = "readOnly">
-        </mat-form-field>
-      </p>
-      <p class="row">
-        <mat-form-field appearance="outline" class="col">
-          <mat-label>Setup Files</mat-label>
-          <input matInput placeholder="Setup Files" id="setup_files" [(ngModel)]="station['setup_files']" [readonly] = "readOnly">
-        </mat-form-field>
-      </p>
+      
       <button mat-button *ngIf="!readOnly" (click)="addTester($event)" class="col"><i-file-plus></i-file-plus>Add Tester</button>
       <table mat-table [dataSource]="testerSource" class="col">
 
