@@ -51,14 +51,12 @@ export class QaSysService {
       }, this.httpOptions).pipe(map(response => {
         //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
         for(let property in response){
-          if (record.hasOwnProperty(property)) {
             try {
               response[property] = JSON.parse(response[property])
             } catch (error) {
               continue;
             }
           }
-        }
         return response;
       }));
   }
