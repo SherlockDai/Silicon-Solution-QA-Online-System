@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const rimraf = require('rimraf');
+
 const uploadPath = "./uploads/"
 app.use(express.static(__dirname + '/uploads/'));
 
@@ -101,8 +103,11 @@ app.post('/addOne', function(request, response, next){
     const temp_path = file.path;
     const image_type = file.originalFilename.split('.').pop();
     const newFileName = record['id'] + '-' + name + '.' + image_type;
-    const new_path = uploadPath + newFileName;
-    record[name] = serverUrl + newFileName;
+    if (!fs.existsSync(uploadPath + record['id'] + "\\")){
+      fs.mkdirSync(uploadPath + record['id'] + "\\");
+    }
+    const new_path = uploadPath + record['id'] + "\\" +  newFileName;
+    record[name] = serverUrl + record['id'] + "\\" + newFileName;
     fs.rename(temp_path, new_path, (err) => {
       if (err) throw err;
     })
@@ -121,15 +126,17 @@ app.post('/addOne', function(request, response, next){
     //handle the final record info when every thing is loaded especially the picture
     //now store all the info in database
     if(collection == null){
-      response.status(400).send({
-        message: 'Must input collection!'
+      response.send({
+        error: 'Must input collection!'
       })
       return next();
     }
     dbo.collection(collection).insertOne(record, function(err, result){
       if (err) {
-        response.send(false);
-        throw err;
+        const regex = /^E\d+/;
+        err_code = err.errmsg.match(regex);
+        if (err_code == "E11000")
+          response.status(400).send("Insertion failed! Duplicated Station ID! Please change station's name");
         return next();
       }
       if (result.result.ok && result.result.ok == 1)
@@ -174,7 +181,7 @@ app.post('/deleteOne', function(request, response, next){
     var collection = request.body['collection']
   }
   else{
-    response.status(400).send({
+    response.status(400).send({ 
       message: 'Must input collection!'
     })
     return next();
@@ -188,6 +195,12 @@ app.post('/deleteOne', function(request, response, next){
     })
     return next();
   }
+  //remove files
+  rimraf( __dirname + '/uploads/' + request.body['fields']['id'], function(error){
+    if (error){
+      throw error;
+    }
+  });
   dbo.collection(collection).remove(query, {justOne: true}, function(err, result){
     if (err) {
       response.send(false);
@@ -214,7 +227,10 @@ app.post('/updateOne', function(request, response, next){
     const temp_path = file.path;
     const image_type = file.originalFilename.split('.').pop();
     const newFileName = record['id'] + '-' + name + '.' + image_type;
-    const new_path = uploadPath + newFileName;
+    if (!fs.existsSync(uploadPath + record['id'] + "\\")){
+      fs.mkdirSync(uploadPath + record['id'] + "\\");
+    }
+    const new_path = uploadPath + record['id'] + "\\" + newFileName;
     record[name] = serverUrl + newFileName;
     fs.rename(temp_path, new_path, (err) => {
       if (err) throw err;

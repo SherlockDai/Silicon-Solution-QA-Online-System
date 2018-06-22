@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { User } from "./user";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from './message.service';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Observable, of, throwError  } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -84,7 +84,8 @@ export class QaSysService {
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
-    return this.http.post<JSON>(this.addOneUrl, formData, options);
+    return this.http.post<any>(this.addOneUrl, formData, options).pipe(
+      catchError(this.errorHandler));
   }
 
   updateOne(prevInfo: any, record: any, collection: string): Observable<JSON>{
@@ -119,6 +120,10 @@ export class QaSysService {
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
     this.messageService.add('HeroService: ' + message);
+  }
+
+  private errorHandler(response: HttpErrorResponse){
+    return throwError(response.error)
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

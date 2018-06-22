@@ -144,18 +144,18 @@ export class InfoSysComponent implements OnInit, OnDestroy {
       }
     );
     dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
-      if(result){
-        //add the returned new record to the record list
-        let newData = this.fullDataSource.data;
-        newData.push(result);
-        this.fullDataSource.data = newData;
-        this.snackBar.open("Record is added!", "Dismiss", {
-          duration: 2000
-        });
-        this.updatePage();
+        if(result){
+          //add the returned new record to the record list
+          let newData = this.fullDataSource.data;
+          newData.push(result);
+          this.fullDataSource.data = newData;
+          this.snackBar.open("Record is added!", "Dismiss", {
+            duration: 2000
+          });
+          this.updatePage();
+        }
       }
-    })
-
+    )
   }
 
   onSortChange(value: string):void {

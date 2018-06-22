@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, 
+  MatTableDataSource, MatSnackBar} from '@angular/material';
 import { Station, FileLocation, Tester } from "../station";
 import { Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
@@ -35,7 +36,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
       @Inject(MAT_DIALOG_DATA) public data: any, 
       private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
-      private router: Router) {
+      private router: Router, public snackBar: MatSnackBar) {
       this.station = data["record"];
       this.readOnly = data["action"] == "detail" ? true : false;
       if(this.station.DUT_connection_picture)
@@ -103,6 +104,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
             };
             this.dialogRef.close(newBriefStation)
           }
+        },
+        err => {
+          this.snackBar.open(err, "Dismiss");
         }
       )
     }
