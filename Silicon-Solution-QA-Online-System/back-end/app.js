@@ -99,7 +99,8 @@ app.post('/addOne', function(request, response, next){
   form.on('file', function(name, file){
     //move the file to our upload/image folder
     const temp_path = file.path;
-    const newFileName = [record['id'], name, file['originalFilename']].join('-');
+    const image_type = file.originalFilename.split('.').pop();
+    const newFileName = record['id'] + '-' + name + '.' + image_type;
     const new_path = uploadPath + newFileName;
     record[name] = serverUrl + newFileName;
     fs.rename(temp_path, new_path, (err) => {
@@ -208,18 +209,17 @@ app.post('/updateOne', function(request, response, next){
     console.log("Error parsing form" + err.stack);
   });
 
-  form.on('part', function(part){
-    if(part.filename){
-      let chunks = [];
-      part.on("data", function(chunk){
-        chunks.push(chunk);
-      })
-
-      part.on("end", function(){
-        record[part.name] = Buffer.concat(chunks)
-      })
-    }
-  })
+  form.on('file', function(name, file){
+    //move the file to our upload/image folder
+    const temp_path = file.path;
+    const image_type = file.originalFilename.split('.').pop();
+    const newFileName = record['id'] + '-' + name + '.' + image_type;
+    const new_path = uploadPath + newFileName;
+    record[name] = serverUrl + newFileName;
+    fs.rename(temp_path, new_path, (err) => {
+      if (err) throw err;
+    })
+  });
 
   form.on('field', function(name, value){
     if(name == 'prevId'){
@@ -249,7 +249,7 @@ app.post('/updateOne', function(request, response, next){
       return next();
     }
     let query = {id: prevId}
-    dbo.collection(recordCollection).updateOne(query, {$set:record}, function(err, result){
+    dbo.collection(collection).updateOne(query, {$set:record}, function(err, result){
       if (err) {
         response.send(false);
         throw err;
