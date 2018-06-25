@@ -102,12 +102,36 @@ app.post('/addOne', function(request, response, next){
     //move the file to our upload/image folder
     const temp_path = file.path;
     const image_type = file.originalFilename.split('.').pop();
-    const newFileName = record['id'] + '-' + name + '.' + image_type;
+    
+    if (name == 'uploads[]'){
+      var newFileName = file.originalFilename;
+    }
+    else{
+      var newFileName = name + '.' + image_type;
+    }
     if (!fs.existsSync(uploadPath + record['id'] + "\\")){
       fs.mkdirSync(uploadPath + record['id'] + "\\");
     }
     const new_path = uploadPath + record['id'] + "\\" +  newFileName;
-    record[name] = serverUrl + record['id'] + "\\" + newFileName;
+    if (name == 'uploads[]'){
+      const result = record.documents.filter(function( doc ) {
+        return doc.name == file.originalFilename;
+      });
+      if (result.length > 0){
+        for (let doc of result){
+          //first time, the doc url might be the local url
+          doc.url = serverUrl + record['id'] + "\\" + newFileName
+          //filename must be the same so we just update the size
+          doc.size = file.size
+        }
+      }
+      else
+        record.documents.push({url: serverUrl + record['id'] + "\\" + newFileName, name: file.originalFilename, size: file.size})
+    }
+    else{
+      record[name] = serverUrl + record['id'] + "\\" + newFileName;
+    }
+    
     fs.rename(temp_path, new_path, (err) => {
       if (err) throw err;
     })
@@ -118,7 +142,12 @@ app.post('/addOne', function(request, response, next){
       collection = value;
     }
     else{
-      record[name] = value;
+      try{
+        record[name] = JSON.parse(value);
+      } catch(e){
+        record[name] = value;
+      }
+      
     }
   })
 

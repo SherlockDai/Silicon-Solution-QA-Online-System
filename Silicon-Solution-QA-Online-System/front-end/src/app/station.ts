@@ -24,6 +24,9 @@ export class Station {
     tester: Array<Tester>;
     setup_files: string;
     station_description: string;
+    documents: Array<Documnetation>;
+    uploads: Array<File>;
+
     constructor(){
       this.id = "";
       this.vender = "";
@@ -48,6 +51,8 @@ export class Station {
       this.tester = new Array<Tester>();
       this.setup_files = "";
       this.station_description = "";
+      this.documents = new Array<Documnetation>();
+      this.uploads = new Array<File>();
     }
   }
 
@@ -71,4 +76,18 @@ export class Tester{
     this.firmware_version = "";
     this.tester_IP = "";
   }
+
+}
+
+export class Documnetation{
+  name: string;
+  size: string;
+  url: any;
+
+  constructor(){
+    this.name = "";
+    this.size = "";
+    this.url = "";
+  }
+
 }

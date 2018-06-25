@@ -23,6 +23,7 @@ import { DialogPageComponent } from './dialog-page/dialog-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
 import { ClipboardModule } from "ngx-clipboard";
 import {CdkTableModule} from '@angular/cdk/table';
+import { DragAndDropDirective } from './drag-and-drop.directive';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {CdkTableModule} from '@angular/cdk/table';
     InfoSysComponent,
     BottomSheetComponent,
     DialogPageComponent,
-    LocationPageComponent
+    LocationPageComponent,
+    DragAndDropDirective
   ],
   imports: [
     CdkTableModule,
