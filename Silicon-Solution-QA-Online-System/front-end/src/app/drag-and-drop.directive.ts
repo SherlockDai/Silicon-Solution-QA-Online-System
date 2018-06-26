@@ -35,10 +35,4 @@ export class DragAndDropDirective {
     this.fileDropped.emit(files);
   }
 
-  @HostListener('click', ['$event']) public onClick(evt){
-    evt.preventDefault();
-    evt.stopPropagation();
-    this.clicked.emit();
-  }
-
 }

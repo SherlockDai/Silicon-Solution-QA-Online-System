@@ -50,7 +50,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         if(this.station.station_picture)
           this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture);
         this.testerColumns = ["Model", "IP", "FirmwareVersion"];
-        this.documentColumns = ["File", "Size"]; 
+        this.documentColumns = ["File", "Size", "Remove"]; 
       }
 
     onFileChange(event):void {
@@ -218,6 +218,24 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       }
       this.documentSource.data = this.station.documents;
     }
+  }
+
+  removeDocument(target): void{
+    let index = this.station.documents.indexOf(target);
+    if (index > -1) {
+      // if the url is null it means the removed document is just added, not stored on our backend, 
+      // no need to add it to the remove list
+      if (this.station.documents[index].url != null){
+        this.station.deleted.push(this.station.documents[index]);
+      }
+      this.station.documents.splice(index, 1);
+    }
+    for (index = this.station.uploads.length - 1; index >= 0; index--){
+      if (this.station.uploads[index].name == target.name){
+        this.station.uploads.splice(index, 1);
+      }
+    }
+    this.documentSource.data = this.station.documents;
   }
 
   ngOnInit() {

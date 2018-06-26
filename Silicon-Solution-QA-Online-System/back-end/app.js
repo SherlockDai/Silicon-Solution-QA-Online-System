@@ -119,14 +119,14 @@ app.post('/addOne', function(request, response, next){
       });
       if (result.length > 0){
         for (let doc of result){
-          //first time, the doc url might be the local url
-          doc.url = serverUrl + record['id'] + "\\" + newFileName
+          //first time, the doc url might be null
+          doc.url = serverUrl
           //filename must be the same so we just update the size
           doc.size = file.size
         }
       }
       else
-        record.documents.push({url: serverUrl + record['id'] + "\\" + newFileName, name: file.originalFilename, size: file.size})
+        record.documents.push({url: serverUrl, name: file.originalFilename, size: file.size})
     }
     else{
       record[name] = serverUrl + record['id'] + "\\" + newFileName;
@@ -245,42 +245,13 @@ app.post('/deleteOne', function(request, response, next){
 app.post('/updateOne', function(request, response, next){
   let form = new multiparty.Form();
   let record = {};
-  let prevId = null;
+  let prevId = null
   let collection = null;
   form.on('error', function(err){
     console.log("Error parsing form" + err.stack);
   });
 
   form.on('file', function(name, file){
-    //move the file to our upload/image folder
-    const temp_path = file.path;
-    const image_type = file.originalFilename.split('.').pop();
-    const newFileName = record['id'] + '-' + name + '.' + image_type;
-    if (!fs.existsSync(uploadPath + record['id'] + "\\")){
-      fs.mkdirSync(uploadPath + record['id'] + "\\");
-    }
-    const new_path = uploadPath + record['id'] + "\\" + newFileName;
-    record[name] = serverUrl + newFileName;
-    fs.rename(temp_path, new_path, (err) => {
-      if (err) throw err;
-    })
-  });
-
-  form.on('field', function(name, value){
-    if(name == 'prevId'){
-      prevId = value;
-    }
-    else if(name == "collection"){
-      collection = value;
-    }
-    else{
-      record[name] = value;
-    }
-  })
-
-  form.on('close', function(){
-    //handle the final record info when every thing is loaded especially the picture
-    //now store all the info in database
     if(collection == null){
       response.status(400).send({
         message: 'Must input collection!'
@@ -293,11 +264,82 @@ app.post('/updateOne', function(request, response, next){
       })
       return next();
     }
+    //move the file to our upload folder
+    const temp_path = file.path;
+    const image_type = file.originalFilename.split('.').pop();
+    
+    if (name == 'uploads[]'){
+      var newFileName = file.originalFilename;
+    }
+    else{
+      var newFileName = name + '.' + image_type;
+    }
+    //move the files to the previous id folder first
+    if (!fs.existsSync(uploadPath + prevId + "\\")){
+      fs.mkdirSync(uploadPath + prevId + "\\");
+    }
+    const new_path = uploadPath + prevId + "\\" +  newFileName;
+    if (name == 'uploads[]'){
+      const result = record.documents.filter(function( doc ) {
+        return doc.name == file.originalFilename;
+      });
+      if (result.length > 0){
+        for (let doc of result){
+          //first time, the doc url might be the local url
+          doc.url = serverUrl
+          //filename must be the same so we just update the size
+          doc.size = file.size
+        }
+      }
+      else
+        record.documents.push({url: serverUrl, name: file.originalFilename, size: file.size})
+    }
+    else{
+      record[name] = serverUrl + prevId + "\\" + newFileName;
+    }
+    //use sync rename here, since we will rename the folder lately, async rename might cause folder locked
+    fs.renameSync(temp_path, new_path);
+  });
+
+  form.on('field', function(name, value){
+    //the reason we store it is we don't want to store collection and prevId in our station doc
+    if(name == 'prevId'){
+      prevId = value;
+    }
+    else if(name == "collection"){
+      collection = value;
+    }
+    else
+      try{
+        record[name] = JSON.parse(value);
+      } catch(e){
+        record[name] = value;
+      }   
+  })
+  form.on('close', function(){
+    //handle the final record info when every thing is loaded especially the picture
+    //now store all the info in database
     let query = {id: prevId}
+    //remove deleted files from file system
+    while(record.deleted.length > 0){
+      let file = record.deleted.pop()
+      rimraf( __dirname + '/uploads/' + prevId + '/' + file.name, function(error){
+        if (error){
+          throw error;
+        }
+      });
+    }
     dbo.collection(collection).updateOne(query, {$set:record}, function(err, result){
       if (err) {
-        response.send(false);
         throw err;
+      }
+      //change the folder's name if the user changed the id, hopefully they don't
+      if(prevId != record['id']){
+        const old_path = uploadPath + prevId + "/";
+        const new_path = uploadPath + record['id'] + "/";
+        fs.rename(old_path, new_path, (err) => {
+          if (err) throw err
+        })
       }
       if (result.result.ok && result.result.ok == 1)
         response.send(true);
@@ -334,6 +376,39 @@ app.post('/getSuggestion', function(request, response){
       throw err;
     }
     response.send(result);
+  })
+})
+
+app.post('/checkExisting', function(request, response){
+  if (request.body['collection']){
+    var collection = request.body['collection']
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input collection!'
+    })
+    return next();
+  }
+  if (request.body['field']){
+    var query = request.body['field'];
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input field!'
+    })
+    return next();
+  }
+  dbo.collection(collection).distinct(query, function(err, result){
+    if (err){
+      response.send(false)
+      throw err
+    }
+    if(result){
+      return true;
+    }
+    else{
+      return false;
+    }
   })
 })
 

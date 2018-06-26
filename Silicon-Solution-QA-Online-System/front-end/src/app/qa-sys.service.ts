@@ -70,6 +70,7 @@ export class QaSysService {
 
   addOne(record: any, collection: string): Observable<JSON>{
     let formData = new FormData();
+    formData.append("collection", collection);
     for(let property in record){
       if (record.hasOwnProperty(property)) {
         if (property == 'uploads'){
@@ -86,7 +87,6 @@ export class QaSysService {
         }
       }
     }
-    formData.append("collection", collection);
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
@@ -96,9 +96,15 @@ export class QaSysService {
 
   updateOne(prevInfo: any, record: any, collection: string): Observable<JSON>{
     let formData = new FormData();
-    formData.append("prevId", prevInfo.id)
+    formData.append("prevId", prevInfo.id);
+    formData.append("collection", collection);
     for(let property in record){
       if (record.hasOwnProperty(property)) {
+        if (property == 'uploads'){
+          for (let doc of record[property]){
+            formData.append('uploads[]', doc, doc['name'])
+          }
+        }
         if (Array.isArray(record[property])){
           formData.append(property, JSON.stringify(record[property]));
         }
@@ -107,7 +113,6 @@ export class QaSysService {
         }
       }
     }
-    formData.append("collection", collection);
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };

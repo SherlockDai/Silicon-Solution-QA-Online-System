@@ -26,6 +26,7 @@ export class Station {
     station_description: string;
     documents: Array<Documnetation>;
     uploads: Array<File>;
+    deleted: Array<Documnetation>;
 
     constructor(){
       this.id = "";
@@ -53,6 +54,7 @@ export class Station {
       this.station_description = "";
       this.documents = new Array<Documnetation>();
       this.uploads = new Array<File>();
+      this.deleted = new Array<Documnetation>();
     }
   }
 
