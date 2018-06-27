@@ -54,12 +54,11 @@ app.get('/', function (req, res) {
 
 
 app.post("/login", function(request, response, next){
-  var query = {username: request.body["username"]};
+  var query = {email: request.body["email"]};
   dbo.collection(userCollection).findOne(query, function(err, result){
     if(err) throw err;
-    console.log(result);
     if(result == null){
-      response.send({result: false, reason: "username"});
+      response.send({result: false, reason: "email"});
     }
     //check if the password is the same
     else if(request.body["password"] === result["password"]){
@@ -68,6 +67,17 @@ app.post("/login", function(request, response, next){
     else{
       response.send({result: false, reason: "password"});
     }
+  })
+})
+
+app.post('/register', function(request, resposne){
+  let query = {email: request.body.email, password: request.body.password};
+  dbo.collection(userCollection).insertOne(query, function(err, result){
+    if (err) throw err
+    if (result.result.ok && result.result.ok == 1)
+        resposne.send(true);
+      else 
+        response.send(false);
   })
 })
 
@@ -398,16 +408,16 @@ app.post('/checkExisting', function(request, response){
     })
     return next();
   }
-  dbo.collection(collection).distinct(query, function(err, result){
+  dbo.collection(collection).findOne(query, function(err, result){
     if (err){
       response.send(false)
       throw err
     }
     if(result){
-      return true;
+      response.send(true);
     }
     else{
-      return false;
+      response.send(false);
     }
   })
 })

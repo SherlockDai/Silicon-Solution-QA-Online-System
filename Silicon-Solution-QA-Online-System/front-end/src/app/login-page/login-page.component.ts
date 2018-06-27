@@ -1,11 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
-} from '@angular/animations'
+import { trigger, state, style, animate, transition } from '@angular/animations'
+import { FormControl } from "@angular/forms";
+import { MatSnackBar } from "@angular/material";
 
 import { QaSysService } from "../qa-sys.service";
 import { Observable, Subject } from 'rxjs';
@@ -43,13 +39,24 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   loading: boolean;
   //decalre user to store the user's information
   user: User;
+  //form control for registration
+  registEmailFormControl: FormControl;
+  registPasswordFormControl: FormControl;
+  //form control for login
+  loginEmailFormControl: FormControl;
+  loginPasswordFormControl: FormControl
+  //store the collection for user info
+  collection = "userInfo"
+  //control registration checked icon
+  registEmailChecked = false;
+  registPasswordChecked = false;
 
   private ngUnsubscribe: Subject<any> = new Subject();
   changeForm(){
     this.toggle = !this.toggle;
   }
   //function that change the state in order to trigger the fly animation
-  constructor(private qaSysService:QaSysService, private router: Router) {
+  constructor(private qaSysService:QaSysService, private router: Router, public snackBar: MatSnackBar) {
    }
 
   ngOnInit() {
@@ -59,16 +66,25 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.state = 'in';
     //initialize loading to false
     this.loading = false;
+    //initializing form controls
+    this.registEmailFormControl = new FormControl();
+    this.registPasswordFormControl = new FormControl();
+    this.loginEmailFormControl = new FormControl();
+    this.loginPasswordFormControl = new FormControl();
   }
 
   expandOut():void{
     this.state = "out";
   }
 
-  login(username: string, password:string):void{
+  login(email: string, password:string):void{
+    email = email.toLowerCase();
+    if(!email.includes('@litepoint.com')){
+      this.loginEmailFormControl.setErrors({'email-format': true});
+      return;
+    }
     this.loading = true;
-    
-    this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
+    this.qaSysService.login(email, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => this.checkInfo(result));
   }
 
@@ -78,9 +94,63 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       this.router.navigate(['/home']);
     }
     else{
-      
+      if(result["reason"] == "email"){
+        this.loginEmailFormControl.setErrors({'email': true})
+      }
+      else if(result["reason"] == "password"){
+        this.loginPasswordFormControl.setErrors({'password': true})
+      }
     }
     this.loading = false;
+  }
+
+  confirmPassword(password: string, confirm_password: string){
+    if (password !== confirm_password){
+      this.registPasswordFormControl.setErrors({'password-different': true})
+      this.registPasswordChecked = false;
+    }
+    else{
+      if (password != ""){
+        this.registPasswordChecked = true
+      }
+    }
+  }
+
+  checkEmail(email: string){
+    email = email.toLowerCase();
+    if(!email.includes('@litepoint.com')){
+      this.registEmailFormControl.setErrors({'email-format': true});
+      return;
+    }
+    this.qaSysService.checkExisting('email', email, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+      if (result) {
+        this.registEmailFormControl.setErrors({'email-existing': true})
+        this.registEmailChecked = false;
+      }
+      else{
+        this.registEmailChecked = true;
+      }
+    })
+  }
+
+  register(email, password): void{
+    if (this.registEmailChecked == false){
+      email.focus();
+      return;
+    }
+    if (this.registPasswordChecked == false){
+      password.focus();
+      return;
+    }
+     this.qaSysService.register(email.value.toLowerCase(), password.value).pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+       if (result){
+         this.toggle = !this.toggle;
+         this.snackBar.open("Registration successed! A confirmation email will be sent to your email address.", "Dismiss");
+       }
+       else{
+         this.snackBar.open("Registration failed! Please contact administrator! derek.dai@litepoint.com");
+       }
+     })
   }
 
   ngOnDestroy(){

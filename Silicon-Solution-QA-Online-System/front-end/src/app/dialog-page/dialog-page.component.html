@@ -13,22 +13,25 @@
     <div *ngSwitchCase="'general'">
       <p class="row">
         <mat-form-field appearance="outline" class="col">
-          <mat-label>Station Name</mat-label>
-          <input matInput placeholder="Station Name" value="{{station['vender']}}-{{station['chipset']}}-{{station['device']}}UP" id="id" disabled>
+          <mat-label [ngClass]="idError ? 'text-danger' : ''">Station Name</mat-label>
+          <input matInput [ngClass]="idError ? 'text-danger' : ''" placeholder="Station Name" value="{{station.vender + '-' + station.chipset + '-' + station.device + 'UP'}}" id="id" #station_id [readonly] = "true">
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
           <mat-label>Vender Name</mat-label>
-          <input matInput placeholder="Vender Name" [(ngModel)]="station['vender']" [readonly] = "readOnly" id="vender" [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
+          <input matInput placeholder="Vender Name" [(ngModel)]="station['vender']" [readonly] = "readOnly" id="vender" (blur) = "checkExisting(station_id, $event)" 
+              [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
           <mat-label>Chipset Number</mat-label>
-          <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" id="chipset" [readonly] = "readOnly" [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
+          <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" id="chipset" [readonly] = "readOnly" (blur) = "checkExisting(station_id)" 
+              [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
       </p>
       <p class="row">
         <mat-form-field appearance="outline" class="col">
           <mat-label>Number of Device</mat-label>
-          <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" id="device" [readonly] = "readOnly" [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
+          <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" id="device" [readonly] = "readOnly" (blur) = "checkExisting(station_id)" 
+              [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
         </mat-form-field>
         <mat-form-field appearance="outline" class="col">
           <mat-select placeholder="Station Status" [(ngModel)]="station['status']" id="status" [disabled] = "readOnly">

@@ -37,7 +37,13 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     private documentSource: MatTableDataSource<Documnetation>;
     private documentColumns: Array<String>;
 
+    //store the collection name
     private collection = "stationInfo"
+
+    //control the error message
+    private idError = false;
+    //store the current id before updating the id
+    private current_station_id;
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
         private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
@@ -51,6 +57,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture);
         this.testerColumns = ["Model", "IP", "FirmwareVersion"];
         this.documentColumns = ["File", "Size", "Remove"]; 
+        this.current_station_id = this.station.id;
       }
 
     onFileChange(event):void {
@@ -72,7 +79,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(event):void {
-      this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP';
+      //have to update the station id here, otherwise if the user choose the suggestion we cannot update the id
+      this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP'
       //update the update date
       this.station.update_time = (new Date()).getTime();
       //update the DUT_BT_HCD_file and DUT_WIFI_FW_version
@@ -236,6 +244,22 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       }
     }
     this.documentSource.data = this.station.documents;
+  }
+
+  checkExisting(target, event): void{
+    if (this.readOnly || this.current_station_id == target.value){
+      return;
+    }
+    this.qaSysService.checkExisting(target.id, target.value, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(function (i, result) {
+      if(!result){
+        this.idError = false;
+      }
+      else{
+        this.idError = true;
+        target.focus();
+        this.snackBar.open('This Station Name is in use!', 'dismiss');
+      }
+    }.bind(this, target))
   }
 
   ngOnInit() {

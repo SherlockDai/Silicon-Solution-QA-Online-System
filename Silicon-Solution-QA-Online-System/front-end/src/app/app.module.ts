@@ -11,13 +11,12 @@ import { NotFoundPageComponent } from './not-found-page/not-found-page.component
 import { InfoSysComponent } from './info-sys/info-sys.component';
 import { IconsModule } from './icons/icons.module';
 import { HttpClientModule }    from '@angular/common/http';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
   MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule,
   MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSnackBarModule,
-  MatToolbarModule, MatButtonToggleModule, MatAutocompleteModule } from "@angular/material";
+  MatToolbarModule, MatButtonToggleModule, MatAutocompleteModule, MatIconModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
@@ -38,6 +37,7 @@ import { DragAndDropDirective } from './drag-and-drop.directive';
     DragAndDropDirective
   ],
   imports: [
+    MatIconModule,
     CdkTableModule,
     ClipboardModule,
     MatAutocompleteModule,
@@ -59,6 +59,7 @@ import { DragAndDropDirective } from './drag-and-drop.directive';
     MatCheckboxModule,
     MatSelectModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     Ng2PageScrollModule,

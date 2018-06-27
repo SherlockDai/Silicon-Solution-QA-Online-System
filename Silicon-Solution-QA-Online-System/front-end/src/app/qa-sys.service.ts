@@ -10,12 +10,14 @@ import { Observable, of, throwError  } from 'rxjs';
 export class QaSysService {
   //the login api url
   private loginUrl = "http://localhost:3000/login"
+  private registerUrl = "http://localhost:3000/register"
   private getAllUrl = "http://localhost:3000/getAll"
   private addOneUrl = "http://localhost:3000/addOne"
   private getOneUrl = "http://localhost:3000/getOne"
   private deleteOneUrl = "http://localhost:3000/deleteOne"
   private updateOneUrl = "http://localhost:3000/updateOne"
   private getSuggestionUrl = "http://localhost:3000/getSuggestion"
+  private checkExistingUrl = "http://localhost:3000/checkExisting"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
@@ -26,13 +28,20 @@ export class QaSysService {
     private http:HttpClient,
     private messageService: MessageService) { }
 
-  login(username:string, password:string): Observable<JSON>{
+  login(email:string, password:string): Observable<JSON>{
     let data = {
-      username: username.toLowerCase(),
+      email: email,
       password: password
     }
-    let jsonData = JSON.stringify(data)
     return this.http.post<JSON>(this.loginUrl, data, this.httpOptions);
+  }
+
+  register(email:string, password: string): Observable<Boolean>{
+    let data = {
+      email: email,
+      password: password
+    }
+    return this.http.post<Boolean>(this.registerUrl, data, this.httpOptions);
   }
 
   getAll(collection: string): Observable<any[]>{
@@ -130,5 +139,14 @@ export class QaSysService {
 
   private errorHandler(response: HttpErrorResponse){
     return throwError(response.error)
+  }
+
+  checkExisting(fieldName: string, fieldValue: string , collection: string): Observable<Boolean>{
+    let data = {
+      collection: collection,
+      field: {}
+    }
+    data.field[fieldName] = fieldValue;
+    return this.http.post<Boolean>(this.checkExistingUrl, data, this.httpOptions);
   }
 }

@@ -2,19 +2,71 @@
   <div class="form-container">
     <div class="form" [@expandOut]= "state">
       <img src="../../assets/images/logo.PNG" class="logo">
-      <form class="register-form" [class.fade-out-form] = "toggle">
-        <input type="email" placeholder="email address"/>
-        <input type="text" placeholder="username"/>
-        <input type="password" placeholder="password"/>
-        <input type="password" placeholder="confirm password"/>
-        <button>create</button>
+      <form *ngIf = "!toggle">
+        <mat-form-field class="col">
+          <input matInput type="email" placeholder="email address" [formControl]="registEmailFormControl" #email_regist 
+            (blur)="checkEmail(email_regist.value)" (focus)="registEmailChecked = false" required/>
+          <mat-hint>Please use Litepoint email address!</mat-hint>
+          <mat-icon *ngIf="registEmailChecked" matSuffix style="color:green"><i-check></i-check></mat-icon>
+          <mat-error *ngIf="registEmailFormControl.hasError('email-format') && !registEmailFormControl.hasError('required')">
+            Please use <strong>litepoint</strong> email address
+          </mat-error>
+          <mat-error *ngIf="registEmailFormControl.hasError('email-existing') && !registEmailFormControl.hasError('required')">
+            This email address is already registered
+          </mat-error>
+          <mat-error *ngIf="registEmailFormControl.hasError('required')">
+              Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="col">
+          <input matInput type="password" placeholder="password" [formControl]="registPasswordFormControl" #password_regist 
+            (keyup)="confirmPassword(password_regist.value, password_confirm_regist.value)" required/>
+          <mat-icon *ngIf="registPasswordChecked" matSuffix style="color:green"><i-check></i-check></mat-icon>
+          <mat-error *ngIf="registPasswordFormControl.hasError('password-different') && !registPasswordFormControl.hasError('required')">
+            Two passwords are not identical
+          </mat-error>
+          <mat-error *ngIf="registPasswordFormControl.hasError('required')">
+              Password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="col">
+          <input matInput type="password" placeholder="confirm password" [formControl]="registPasswordFormControl" #password_confirm_regist
+            (keyup)="confirmPassword(password_regist.value, password_confirm_regist.value)" required/>
+          <mat-icon *ngIf="registPasswordChecked" matSuffix style="color:green"><i-check></i-check></mat-icon>
+          <mat-error *ngIf="registPasswordFormControl.hasError('password-different') && !registPasswordFormControl.hasError('required')">
+            Two passwords are not identical
+          </mat-error>
+          <mat-error *ngIf="registPasswordFormControl.hasError('required')">
+              Password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <button type="sumbit" (click)="register(email_regist, password_regist)">create</button>
         <p class="message">Already registered? <a href="javascript:void(0)" (click)="changeForm()">Sign In</a></p>
       </form>
-      <form class="login-form" [class.fade-out-form] = "!toggle">
-        <input name="username" type="email" placeholder="username" #username/>
-        <input name="password" type="password" placeholder="password" #password/>
-        <button *ngIf="!loading" (click)="login(username.value, password.value)" class="btn">login</button>
-        <img *ngIf="loading" class="loading-gif" src="../../assets/images/loading.gif"/>
+      <form *ngIf = "toggle">
+        <mat-form-field class="col">
+          <input matInput name="email" type="email" placeholder="email" #email [formControl]="loginEmailFormControl" required/>
+          <mat-error *ngIf="loginEmailFormControl.hasError('email-format') && !loginEmailFormControl.hasError('required')">
+            Please enter <strong>litepoint</strong> email address
+          </mat-error>
+          <mat-error *ngIf="loginEmailFormControl.hasError('email') && !loginEmailFormControl.hasError('required')">
+            The email address is not registered
+          </mat-error>
+          <mat-error *ngIf="loginEmailFormControl.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="col">
+          <input matInput name="password" type="password" placeholder="password" #password [formControl]="loginPasswordFormControl" required/>
+          <mat-error *ngIf="loginPasswordFormControl.hasError('password') && !loginPasswordFormControl.hasError('required')">
+              Please enter a valid password!
+          </mat-error>
+          <mat-error *ngIf="loginPasswordFormControl.hasError('required')">
+              Password is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+        <button type="submit" (click)="login(email.value, password.value)" class="btn" [disabled] = "loading">login</button> 
+        <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
         <p class="message">Not registered? <a href="javascript:void(0)" (click)="changeForm()">Create an account</a></p>
         <p class="message">Forget password? <a href="javascript:void(0)">Find password</a></p>
       </form>
