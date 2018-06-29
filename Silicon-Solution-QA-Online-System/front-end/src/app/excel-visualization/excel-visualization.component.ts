@@ -121,7 +121,7 @@ export class ExcelVisualizationComponent implements OnInit {
         }
       }
       else{
-        this.inserts.push(record.id)
+        this.inserts.push(record)
       }
     }
 
@@ -130,6 +130,7 @@ export class ExcelVisualizationComponent implements OnInit {
         this.deletes.push(record)
       }
     }
+    this.currentSheet = this.currentSheet.concat(this.deletes);
   }
 
 
