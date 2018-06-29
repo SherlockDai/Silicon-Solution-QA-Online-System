@@ -23,6 +23,7 @@ import { LocationPageComponent } from './location-page/location-page.component';
 import { ClipboardModule } from "ngx-clipboard";
 import {CdkTableModule} from '@angular/cdk/table';
 import { DragAndDropDirective } from './drag-and-drop.directive';
+import { ExcelVisualizationComponent } from './excel-visualization/excel-visualization.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { DragAndDropDirective } from './drag-and-drop.directive';
     BottomSheetComponent,
     DialogPageComponent,
     LocationPageComponent,
-    DragAndDropDirective
+    DragAndDropDirective,
+    ExcelVisualizationComponent
   ],
   imports: [
     MatIconModule,

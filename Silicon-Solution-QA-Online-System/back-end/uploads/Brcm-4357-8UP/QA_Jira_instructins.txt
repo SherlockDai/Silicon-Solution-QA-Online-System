@@ -1,0 +1,54 @@
+Hi Aditya,
+
+Please help build 4 UP station for BRCM 4357 DUT. The four DUTs we have are A1 reference DUT from BRCM. 
+
+FW and HCD file can be found at:
+\\lphqfiler1\Public\Business Development\Public\Project\BRCM\BRCM_4357\WIFI_FW\Litepoint_4357a1_REF_IGUANA_REL_13_10_82.zip
+
+\\lphqfiler1\Public\Business Development\Public\Project\BRCM\BRCM_4357\BT_HCD
+
+Below is the bringing up commands. You can put all of them together in to load.sh and run it when setting up. Please note one command is changed.
+
+rmmod dhd
+sleep 1
+insmod dhd.ko
+./dhd -i eth1 download config_pcie_mfgtest.bin bcm94357fcpagbe.txt
+sleep 1
+./wl interface_create sta -c 1
+sleep 1
+ifconfig eth1 192.168.1.101 up
+sleep 1
+ifconfig wl1.2 192.168.3.101 up
+sleep 1
+
+You can download the package from:
+S:\LitePoint\Silicon_Solutions\engineering_drop\Broadcom_4357\IQfact+_BRCM_4357_MPS_3.4.0.2.zip
+
+Example flow for APT testing is attached. Please note, for RSDB testing, we had added "ant_connection=13,24,13,24" in INSERT_DUT OPTION_STRING. This is to indicate how we connect the DUT.
+
+Please let me know if you have any issue.
+
+Currently, no calibration is supported.
+
+Thanks
+Yipeng
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Hi Aditya,
+
+Please check attached flow and log.
+
+Instruction for Brix bringing up can be found at \\lphqfiler1\Public\Business Development\Public\Project\BRCM\BRCM_4355\User Manual\4355 Setup instruciton_RSDB and None RSDB.docx
+
+We only have bin folder which supports APT. This is same way as 4360 packages. It is desired behavior.
+
+Please use M16 tester with latest FW 2.7.0. I will check with team on the deadline of the QA.
+
+Thanks
+Yipeng
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Hi Aditya,
+You need to add command "./wl_server_socket &" in the putty console to enable the wl server.
+Thanks
+Yipeng

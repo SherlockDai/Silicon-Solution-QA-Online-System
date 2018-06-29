@@ -11,6 +11,7 @@ export class QaSysService {
   //the login api url
   private loginUrl = "http://localhost:3000/login"
   private registerUrl = "http://localhost:3000/register"
+  private retrieveUrl = "http://localhost:3000/retrievePassword"
   private getAllUrl = "http://localhost:3000/getAll"
   private addOneUrl = "http://localhost:3000/addOne"
   private getOneUrl = "http://localhost:3000/getOne"
@@ -42,6 +43,13 @@ export class QaSysService {
       password: password
     }
     return this.http.post<Boolean>(this.registerUrl, data, this.httpOptions);
+  }
+
+  retrievePassword(email: string): Observable<Boolean>{
+    let data = {
+      email: email
+    }
+    return this.http.post<Boolean>(this.retrieveUrl, data, this.httpOptions);
   }
 
   getAll(collection: string): Observable<any[]>{

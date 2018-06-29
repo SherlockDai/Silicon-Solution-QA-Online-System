@@ -2,6 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const rimraf = require('rimraf');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'outlook',
+  auth: {
+    user: 'litepoint-qateam@outlook.com',
+    pass: 'lp12345LP'
+  }
+});
 
 const uploadPath = "./uploads/"
 app.use(express.static(__dirname + '/uploads/'));
@@ -74,10 +83,54 @@ app.post('/register', function(request, resposne){
   let query = {email: request.body.email, password: request.body.password};
   dbo.collection(userCollection).insertOne(query, function(err, result){
     if (err) throw err
-    if (result.result.ok && result.result.ok == 1)
+    if (result.result.ok && result.result.ok == 1){
+        const mailOptions = {
+          from: 'litepoint-qateam@outlook.com',
+          to: request.body.email,
+          subject: 'Silicon Solution Online System Registration Confirmation',
+          text: `Hello! \nThanks for using our QA Team\'s online system. Your registered email address is ${request.body.email} and your password is ${request.body.password}.
+                \nCheers!\nSilicon Solution QA Team\nLitepoint - A Teradyne Company`
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
         resposne.send(true);
+      }
       else 
         response.send(false);
+  })
+})
+
+app.post('/retrievePassword', function(request, resposne){
+  let query = {email: request.body.email};
+  dbo.collection(userCollection).findOne(query, function(err, result){
+    if (err) throw err
+    if (result){
+      const mailOptions = {
+        from: 'litepoint-qateam@outlook.com',
+        to: request.body.email,
+        subject: 'Silicon Solution Online System retrieve password',
+        text: `Hello! \nThanks for using our QA Team\'s online system. Your registered email address is ${request.body.email} and your password is ${result.password}.
+        \nCheers!\nSilicon Solution QA Team\nLitepoint - A Teradyne Company`
+      }
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          resposne.send(false);
+        } else {
+          console.log('Email sent: ' + info.response);
+          resposne.send(true);
+        }
+      });
+    }
+    else{
+      resposne.send(false);
+    }
   })
 })
 

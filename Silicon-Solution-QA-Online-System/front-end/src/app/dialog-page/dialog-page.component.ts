@@ -36,6 +36,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     //store the document info
     private documentSource: MatTableDataSource<Documnetation>;
     private documentColumns: Array<String>;
+    private documentViewColumns: Array<String>;
 
     //store the collection name
     private collection = "stationInfo"
@@ -44,6 +45,10 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     private idError = false;
     //store the current id before updating the id
     private current_station_id;
+
+    //control the uploading progress bar
+    private uploading = false;
+
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
         private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
@@ -56,7 +61,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         if(this.station.station_picture)
           this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture);
         this.testerColumns = ["Model", "IP", "FirmwareVersion"];
-        this.documentColumns = ["File", "Size", "Remove"]; 
+        this.documentColumns = ["File", "Size", "Remove"];
+        this.documentViewColumns = ["File", "Size"] 
         this.current_station_id = this.station.id;
       }
 
@@ -79,6 +85,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(event):void {
+      //show uploading progress bar
+      this.uploading = true;
       //have to update the station id here, otherwise if the user choose the suggestion we cannot update the id
       this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP'
       //update the update date
@@ -120,6 +128,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
             }
           },
           err => {
+            this.uploading = false;
             this.snackBar.open(err, "Dismiss");
           }
         )
@@ -192,17 +201,20 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       const result = this.station.documents.filter(function(doc) {
         return doc.name == file.name;
       });
+      //update the document if this is the update of the previous document
       if (result.length > 0){
         for (let doc of result){
-          //first time, the url is null
+          //url should set to null since we update the file
           doc.url = null;
           //filename must be the same so we just update the size
           doc.size = file.size;
         }
       }
       else
+        //add the new file info to the document field
         this.station.documents.push({url: null, name: file.name, size: file.size})
     }
+    //update table data source, since the table data just copy data from the document, does not use reference
     this.documentSource.data = this.station.documents;
   }
 
@@ -263,11 +275,6 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if(this.station['DUT_connection_picture'] && this.station['DUT_connection_picture'] != null){
-      let file = this.dataURLtoFile("data:image/png;base64," + this.station.DUT_connection_picture, this.station.id + "_DUT_connection_picture.png");
-      this.station.DUT_connection_picture = file;
-      this.station.station_picture = this.dataURLtoFile("data:image/png;base64," + this.station.station_picture, this.station.id + "_station_picture.png");
-    }
     if(this.station.DUT_BT_HCD_file != null && this.station.DUT_BT_HCD_file.length > 0){
       //deep copy, so that we can bind it to the select element and update it if necessary without affecting the original one
       this.newDutBtHcdFile = JSON.parse(JSON.stringify(this.station.DUT_BT_HCD_file[0]));

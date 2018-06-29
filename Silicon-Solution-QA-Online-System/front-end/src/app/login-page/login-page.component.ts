@@ -79,10 +79,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   login(email: string, password:string):void{
     email = email.toLowerCase();
-    if(!email.includes('@litepoint.com')){
-      this.loginEmailFormControl.setErrors({'email-format': true});
-      return;
-    }
+    if(this.validateEmailFormat(email) == false) return;
     this.loading = true;
     this.qaSysService.login(email, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => this.checkInfo(result));
@@ -118,10 +115,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   checkEmail(email: string){
     email = email.toLowerCase();
-    if(!email.includes('@litepoint.com')){
-      this.registEmailFormControl.setErrors({'email-format': true});
-      return;
-    }
+    if(this.validateEmailFormat(email) == false) return;
     this.qaSysService.checkExisting('email', email, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
       if (result) {
         this.registEmailFormControl.setErrors({'email-existing': true})
@@ -134,6 +128,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   register(email, password): void{
+    this.loading = true;
     if (this.registEmailChecked == false){
       email.focus();
       return;
@@ -150,7 +145,38 @@ export class LoginPageComponent implements OnInit, OnDestroy {
        else{
          this.snackBar.open("Registration failed! Please contact administrator! derek.dai@litepoint.com");
        }
+       this.loading = false;
      })
+  }
+
+  validateEmailFormat(email: string): Boolean{
+    if(!email.includes('@litepoint.com')){
+      this.registEmailFormControl.setErrors({'email-format': true});
+      return false;
+    }
+    return true
+  }
+
+  retrievePassword(emailEl): void {
+    this.loading = true;
+    const email = emailEl.value.toLowerCase();
+    if (!email){
+      this.loginEmailFormControl.setErrors({'required': true});
+    }
+    else if (!this.validateEmailFormat(email)){
+      this.loginEmailFormControl.setErrors({'email-format': true});
+    }
+    else{
+      this.qaSysService.retrievePassword(email).pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+        if (result){
+          this.snackBar.open("Your password has been sent to your email address!", "Dismiss")
+        }
+        else{
+          this.loginEmailFormControl.setErrors({'email': true});
+        }
+        this.loading = false;
+      })
+    }
   }
 
   ngOnDestroy(){
