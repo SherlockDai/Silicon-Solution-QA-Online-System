@@ -16,7 +16,8 @@
           <p class="row">
             <mat-form-field appearance="outline" class="col">
               <mat-label [ngClass]="idError ? 'text-danger' : ''">Station Name</mat-label>
-              <input matInput [ngClass]="idError ? 'text-danger' : ''" placeholder="Station Name" value="{{station.vender + '-' + station.chipset + '-' + station.device + 'UP'}}" id="id" #station_id [readonly] = "true">
+              <input matInput [ngClass]="idError ? 'text-danger' : ''" placeholder="Station Name" 
+                value="{{station.vender + '-' + station.chipset + '-' + station.device + 'UP'}}" id="id" #station_id [readonly] = "true" disabled>
             </mat-form-field>
             <mat-form-field appearance="outline" class="col">
               <mat-label>Vender Name</mat-label>
@@ -201,8 +202,8 @@
             <ng-container matColumnDef="File">
               <th mat-header-cell *matHeaderCellDef> Document </th>
               <td mat-cell *matCellDef="let element "> 
-                <a *ngIf="element.url" [href]="_sanitizer.bypassSecurityTrustUrl(element.url + '/' + station.id + '/' + element.name)" target="_blank">{{element.name}}</a> 
-                <span *ngIf="!element.url">{{element.name}}</span></td>
+                <a *ngIf="element.url" [href]="_sanitizer.bypassSecurityTrustUrl(element.url + station.id + '/' + element.fileName)" target="_blank">{{element.fileName}}</a> 
+                <span *ngIf="!element.url">{{element.fileName}}</span></td>
             </ng-container>
     
             <!-- Position Column -->

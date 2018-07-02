@@ -95,13 +95,13 @@ export class QaSysService {
             formData.append('uploads[]', doc, doc['name'])
           }
         }
-        if (Array.isArray(record[property])){
-          //currently I have to hard code for the documents
-          formData.append(property, JSON.stringify(record[property]));
-        }
-        else{
+        //stringify all property and parse them on backend
+        //exlcude File object
+        if (typeof record[property].name == 'string'){
           formData.append(property, record[property]);
         }
+        else
+          formData.append(property, JSON.stringify(record[property]));
       }
     }
     let headers = new HttpHeaders();
@@ -122,12 +122,13 @@ export class QaSysService {
             formData.append('uploads[]', doc, doc['name'])
           }
         }
-        if (Array.isArray(record[property])){
-          formData.append(property, JSON.stringify(record[property]));
-        }
-        else{
+        //stringify all property and parse them on backend
+        //exlcude File object
+        if (typeof record[property].name == 'string'){
           formData.append(property, record[property]);
         }
+        else
+          formData.append(property, JSON.stringify(record[property]));
       }
     }
     let headers = new HttpHeaders();

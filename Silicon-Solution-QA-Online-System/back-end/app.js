@@ -178,7 +178,7 @@ app.post('/addOne', function(request, response, next){
     const new_path = uploadPath + record['id'] + "\\" +  newFileName;
     if (name == 'uploads[]'){
       const result = record.documents.filter(function( doc ) {
-        return doc.name == file.originalFilename;
+        return doc.fileName == file.originalFilename;
       });
       if (result.length > 0){
         for (let doc of result){
@@ -189,10 +189,10 @@ app.post('/addOne', function(request, response, next){
         }
       }
       else
-        record.documents.push({url: serverUrl, name: file.originalFilename, size: file.size})
+        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size})
     }
     else{
-      record[name] = serverUrl + record['id'] + "\\" + newFileName;
+      record[name] = {url: serverUrl, fileName: newFileName};
     }
     
     fs.rename(temp_path, new_path, (err) => {
@@ -344,7 +344,7 @@ app.post('/updateOne', function(request, response, next){
     const new_path = uploadPath + prevId + "\\" +  newFileName;
     if (name == 'uploads[]'){
       const result = record.documents.filter(function( doc ) {
-        return doc.name == file.originalFilename;
+        return doc.fileName == file.originalFilename;
       });
       if (result.length > 0){
         for (let doc of result){
@@ -355,10 +355,10 @@ app.post('/updateOne', function(request, response, next){
         }
       }
       else
-        record.documents.push({url: serverUrl, name: file.originalFilename, size: file.size})
+        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size})
     }
     else{
-      record[name] = serverUrl + prevId + "\\" + newFileName;
+      record[name] = {url: serverUrl, fileName: newFileName};
     }
     //use sync rename here, since we will rename the folder lately, async rename might cause folder locked
     fs.renameSync(temp_path, new_path);

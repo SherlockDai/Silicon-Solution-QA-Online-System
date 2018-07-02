@@ -57,9 +57,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         this.readOnly = data["action"] == "detail" ? true : false;
         if(this.station.DUT_connection_picture)
           //now the picture attr stores base64 we will convert it to File object in onInit
-          this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture);
+          this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture.url + this.station.id + '/' + this.station.DUT_connection_picture.fileName);
         if(this.station.station_picture)
-          this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture);
+          this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + this.station.station_picture.fileName);
         this.testerColumns = ["Model", "IP", "FirmwareVersion"];
         this.documentColumns = ["File", "Size", "Remove"];
         this.documentViewColumns = ["File", "Size"] 
@@ -199,7 +199,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     for (let file of files){
       this.station.uploads.push(file)
       const result = this.station.documents.filter(function(doc) {
-        return doc.name == file.name;
+        return doc.fileName == file.name;
       });
       //update the document if this is the update of the previous document
       if (result.length > 0){
@@ -212,7 +212,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       }
       else
         //add the new file info to the document field
-        this.station.documents.push({url: null, name: file.name, size: file.size})
+        this.station.documents.push({url: null, fileName: file.name, size: file.size})
     }
     //update table data source, since the table data just copy data from the document, does not use reference
     this.documentSource.data = this.station.documents;
@@ -223,7 +223,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       for (let file of event.target.files){
         this.station.uploads.push(file)
         const result = this.station.documents.filter(function(doc) {
-          return doc.name == file.name;
+          return doc.fileName == file.name;
         });
         if (result.length > 0){
           for (let doc of result){
@@ -234,7 +234,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           }
         }
         else
-          this.station.documents.push({url: null, name: file.name, size: file.size})
+          this.station.documents.push({url: null, fileName: file.name, size: file.size})
       }
       this.documentSource.data = this.station.documents;
     }
