@@ -22,7 +22,15 @@
           <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
     </table>
-    <button type="button" class="btn btn-primary" style="display: flex; align-items: flex-end; justify-content: flex-end" (click)="analyze()"><i-activity></i-activity>Analyze</button>
+    <div class="row control-group">
+      <div class="col">
+        <button type="button" class="btn btn-primary" style="display: flex; align-items: flex-end; justify-content: flex-end" (click)="analyze()"><i-activity></i-activity>Analyze</button>
+      </div>
+      <mat-slide-toggle class="col" (change)="showUpdates = !showUpdates">updates</mat-slide-toggle>
+      <mat-slide-toggle class="col" (change)="showInserts = !showInserts">inserts</mat-slide-toggle>
+      <mat-slide-toggle class="col" (change)="showDeletes = !showDeletes">deletes</mat-slide-toggle>
+      <mat-slide-toggle class="col" (change)="showUnchanged = !showUnchanged">unchanged</mat-slide-toggle>
+    </div>   
     <table mat-table [dataSource] = "currentSheet" class="col">
         <ng-container matColumnDef="Brand">
           <th mat-header-cell *matHeaderCellDef> Brand </th>
@@ -43,15 +51,16 @@
 
         <ng-container matColumnDef="MP">
           <th mat-header-cell *matHeaderCellDef> MP </th>
-          <td mat-cell *matCellDef="let element "><span [ngClass] = "{'updated' : updates[element.id] && updates[element.id].mp == 1}">{{element.mp}}</span></td>
+          <td mat-cell *matCellDef="let element "><span [ngClass] = "{'updated' : showUpdates && updates[element.id] && updates[element.id].mp == 1}">{{element.mp}}</span></td>
         </ng-container>
     
         <!-- Position Column -->
         <ng-container matColumnDef="Notes">
           <th mat-header-cell *matHeaderCellDef>Notes</th>
-          <td mat-cell *matCellDef="let element"><span [ngClass] = "{'updated' : updates[element.id] && updates[element.id].notes == 1}">{{element.notes}}</span></td>
+          <td mat-cell *matCellDef="let element"><span [ngClass] = "{'updated' : showUpdates && updates[element.id] && updates[element.id].notes == 1}">{{element.notes}}</span></td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="resultColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: resultColumns" [ngClass] = "deletes.includes(row) ? 'deleted' : (inserts.includes(row) ? 'inserted' : '')"></tr>
+        <tr mat-row *matRowDef="let row; columns: resultColumns" 
+          [ngClass] = "(showDeletes && deletes.includes(row)) ? 'deleted' : ((showInserts && inserts.includes(row)) ? 'inserted' : ((showUnchanged && unchanged.includes(row)) ? 'unchanged' : ''))"></tr>
     </table>
 </div>

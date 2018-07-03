@@ -14,11 +14,17 @@ export class ExcelVisualizationComponent implements OnInit {
   private resultColumns: Array<String> = [];
   private data: Array<AOA> = [];
   private data_account: Array<Array<Account>> = [];
+  private data_dicts: Array<Object> = []
   private count = 0;
   private updates = {};
   private deletes = [];
   private inserts = [];
   private currentSheet = [];
+  private unchanged = [];
+  private showUpdates = false;
+  private showDeletes = false;
+  private showInserts = false;
+  private showUnchanged = false;
   constructor() { 
     this.tableColumns = ["File", "Last Modified"]
     this.resultColumns = ["Brand", "CM", "Chipset", "MP", "Notes"]
@@ -59,8 +65,11 @@ export class ExcelVisualizationComponent implements OnInit {
 
   analyze(): void{
     this.count = this.tableDataSource.data.length;
+    let data = this.tableDataSource.data;
+    this.tableDataSource.data = [];
+    this.files = [];
     //table data is sorted, use it
-    for (let file of this.tableDataSource.data){
+    for (let file of data){
       const reader: FileReader = new FileReader();
       reader.onload = (e: any) => {
         /* read workbook */
@@ -81,8 +90,9 @@ export class ExcelVisualizationComponent implements OnInit {
 
   convertData(): void{
     for(let record of this.data){
-      let metadata = record[1]
-      let account_arr = []
+      let metadata = record[1];
+      let account_arr = [];
+      let dict = {};
       for (let row = 2; row < record.length; row++){
         let account: Account = new Account();
         for (let column = 0; column < record[1].length; column++){
@@ -91,16 +101,19 @@ export class ExcelVisualizationComponent implements OnInit {
         }
         account.id = account.brand + '-' + account.cm + '-' + account.chipset;
         account_arr.push(account);
+        dict[account.id] = account
       }
       this.data_account.push(account_arr);
+      this.data_dicts.push(dict);
     }
+    this.currentSheet = this.data_account[this.data_account.length - 1];
     this.checkLatestUpdate()
+    this.checkUnchanged()
   }
 
   checkLatestUpdate():void {
     let len = this.data_account.length;
     if (len < 2) return;
-    this.currentSheet = this.data_account[len - 1];
     let lastSheet = this.data_account[len -2];
     let visited = new Set()
     for (let record of this.currentSheet){
@@ -131,6 +144,24 @@ export class ExcelVisualizationComponent implements OnInit {
       }
     }
     this.currentSheet = this.currentSheet.concat(this.deletes);
+  }
+
+  checkUnchanged(): void{
+    for (let account of this.currentSheet){
+      let count = 3;
+      for (let index = this.data_dicts.length - 2; index >= 0 ; index--){
+        if (count == 0){
+          this.unchanged.push(account)
+        }
+        let prevAccount = this.data_dicts[index][account.id]
+        if (prevAccount.mp == account.mp && prevAccount.notes == account.notes){
+          count --;
+        }
+        else{
+          break;
+        }
+      }
+    }
   }
 
 

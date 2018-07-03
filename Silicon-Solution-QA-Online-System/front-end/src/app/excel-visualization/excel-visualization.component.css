@@ -34,10 +34,20 @@ file-drop{
   .inserted {
     background-color: #99ff99
   }
+
+  .unchanged {
+    background-color: #a3a3c2
+  }
   
   td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
     padding: 0;
     border-bottom-width: 1px;
     border-bottom-style: solid;
     padding-right: 2em;
+}
+
+.control-group{
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
 }
