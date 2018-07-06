@@ -15,8 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatSelectModule, 
   MatTableModule, MatInputModule, MatPaginatorModule, MatSlideToggleModule,
   MatBottomSheetModule, MatListModule, MatDialogModule, MatProgressBarModule,
-  MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSnackBarModule,
-  MatToolbarModule, MatButtonToggleModule, MatAutocompleteModule, MatIconModule } from "@angular/material";
+  MatDatepickerModule, MatNativeDateModule, MatSnackBarModule,
+  MatToolbarModule, MatButtonToggleModule, MatAutocompleteModule, MatIconModule, MatSortModule } from "@angular/material";
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogPageComponent } from './dialog-page/dialog-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
@@ -39,6 +39,7 @@ import { ExcelVisualizationComponent } from './excel-visualization/excel-visuali
     ExcelVisualizationComponent
   ],
   imports: [
+    MatSortModule,
     MatIconModule,
     CdkTableModule,
     ClipboardModule,
@@ -48,7 +49,6 @@ import { ExcelVisualizationComponent } from './excel-visualization/excel-visuali
     MatSnackBarModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatSortModule,
     MatProgressBarModule,
     MatDialogModule,
     MatListModule,

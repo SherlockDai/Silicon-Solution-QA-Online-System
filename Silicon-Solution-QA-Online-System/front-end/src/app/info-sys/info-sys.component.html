@@ -20,26 +20,12 @@
               <button mat-button (click)="onInsertion(event)"><i-plus-square></i-plus-square>Add</button>
               <button mat-icon-button (click)="onRefresh()"><i-refresh-ccw></i-refresh-ccw></button>
               <mat-slide-toggle (change)="onAutoFreshChange($event)" >Auto refresh</mat-slide-toggle>
-              <mat-form-field>
-                  <mat-select placeholder="Sort By" (selectionChange)="onSortChange($event.value.toLowerCase())">
-                    <mat-option *ngFor="let key of columns" [value]="key.value" >
-                      {{ key.columnDef }}
-                    </mat-option>
-                  </mat-select>
-              </mat-form-field>
-              <mat-form-field>
-                  <mat-select placeholder="Order By" (selectionChange)="onOrderChange($event.value)" [disabled]="!canSort">
-                    <mat-option *ngFor="let order of orders" [value]="order">
-                      {{ order }}
-                    </mat-option>
-                  </mat-select>
-              </mat-form-field>
           </div>
       </div>
-      <table mat-table [dataSource]="pageDataSource"  *ngIf="pageDataSource">
+      <table mat-table [dataSource]="pageDataSource" matSort *ngIf="pageDataSource">
 
         <ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
-          <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
           <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}</mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

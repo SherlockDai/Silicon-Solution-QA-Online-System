@@ -18,11 +18,11 @@ const stationInfoConfig = {
   bottomSheet: BottomSheetComponent,
   collection: "stationInfo",
   tableColumns: [
-    { columnDef: 'Vender', value: "vender", header: 'Vender', cell: (element: any) => `${element.vender}`     },
-    { columnDef: 'Chipset', value: "chipset", header: 'Chipset', cell: (element: any) => `${element.chipset}`   },
-    { columnDef: 'Device', value: "device", header: 'Device', cell: (element: any) => `${element.device}`   },
-    { columnDef: 'Status', value: "status", header: 'Status', cell: (element: any) => `${element.status}`   },
-    { columnDef: 'Date', value: "update_time", header: 'Date', cell: (element: any) => `${(new Date(parseInt(element.update_time))).toDateString()}`   },
+    { columnDef: 'vender', value: "vender", header: 'Vender', cell: (element: any) => `${element.vender}`     },
+    { columnDef: 'chipset', value: "chipset", header: 'Chipset', cell: (element: any) => `${element.chipset}`   },
+    { columnDef: 'device', value: "device", header: 'Device', cell: (element: any) => `${element.device}`   },
+    { columnDef: 'status', value: "status", header: 'Status', cell: (element: any) => `${element.status}`   },
+    { columnDef: 'update_time', value: "update_time", header: 'Date', cell: (element: any) => `${(new Date(parseInt(element.update_time))).toDateString()}`   },
   ],            
 
   pageDataSource: new MatTableDataSource<StationInfoBrief>(),

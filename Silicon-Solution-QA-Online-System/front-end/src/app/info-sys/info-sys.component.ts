@@ -41,6 +41,7 @@ export class InfoSysComponent implements OnInit, OnDestroy {
   private array: any;
   private pageLength = 0;
   private configuration;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
     private qaSysService:QaSysService, public snackBar: MatSnackBar, route:ActivatedRoute) { 
@@ -158,36 +159,6 @@ export class InfoSysComponent implements OnInit, OnDestroy {
     )
   }
 
-  onSortChange(value: string):void {
-    this.sortBase = value;
-    this.canSort = true;
-    this.sortData();
-  }
-
-  onOrderChange(value: string):void {
-    this.order = value;
-    this.sortData();
-  }
-
-  sortData():void{
-    if(this.order === "ASCENDING")
-    this.pageDataSource.data = this.pageDataSource.data.sort(this.dynamicSort(this.sortBase))
-    else
-    this.pageDataSource.data = this.pageDataSource.data.sort(this.dynamicSort("-" + this.sortBase))
-  }
-
-  dynamicSort(property) {
-    var sortOrder = 1;
-    if(property[0] === "-") {
-        sortOrder = -1;
-        property = property.substr(1);
-    }
-    return function (a,b) {
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-        return result * sortOrder;
-    }
-  }
-
   addToFavorite(record: any):void {
     //update favorite list
     this.favoriteRecords.push(record);
@@ -241,7 +212,6 @@ export class InfoSysComponent implements OnInit, OnDestroy {
     this.updateDataSource()
     this.pageLength = this.dataSource.data.length;
     this.updatePage();
-    this.sortData();
   }
 
   showFavoriteList():void{
@@ -250,7 +220,6 @@ export class InfoSysComponent implements OnInit, OnDestroy {
     this.updateDataSource()
     this.pageLength = this.dataSource.data.length;
     this.updatePage();
-    this.sortData();
   }
 
   onRefresh():void {
@@ -274,7 +243,6 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         this.currentPage = 0;
         this.updateDataSource()
         this.updatePage();
-        this.sortData();
         this.loadingInfo = false;
         this.snackBar.open("Table refreshed!", "Dismiss", {
           duration: 2000
@@ -327,6 +295,7 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         this.dataSource = this.fullDataSource;
         this.pageLength = this.dataSource.data.length;
         this.updatePage();
+        this.pageDataSource.sort = this.sort;
       }
     )
   }

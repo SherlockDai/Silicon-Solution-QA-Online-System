@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, 
-  MatTableDataSource, MatSnackBar} from '@angular/material';
+  MatTableDataSource, MatSnackBar, MatSort} from '@angular/material';
 import { Station, FileLocation, Tester, Documnetation } from "../station";
 import { Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { Router }                 from '@angular/router';
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.css']
 })
-export class DialogPageComponent implements OnInit, OnDestroy {
+export class DialogPageComponent implements OnInit, OnDestroy, AfterViewInit {
     stationImagePath: SafeResourceUrl;
     DUTImagePath: SafeResourceUrl;
     station: Station;
@@ -49,21 +49,24 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     //control the uploading progress bar
     private uploading = false;
 
+    @ViewChild(MatSort) sort: MatSort;
+
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
         private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
         private router: Router, public snackBar: MatSnackBar) {
-        this.station = data["record"];
-        this.readOnly = data["action"] == "detail" ? true : false;
-        if(this.station.DUT_connection_picture)
-          //now the picture attr stores base64 we will convert it to File object in onInit
-          this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture.url + this.station.id + '/' + this.station.DUT_connection_picture.fileName);
-        if(this.station.station_picture)
-          this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + this.station.station_picture.fileName);
-        this.testerColumns = ["Model", "IP", "FirmwareVersion"];
-        this.documentColumns = ["File", "Size", "Remove"];
-        this.documentViewColumns = ["File", "Size"] 
-        this.current_station_id = this.station.id;
+          dialogRef.disableClose = true;
+          this.station = data["record"];
+          this.readOnly = data["action"] == "detail" ? true : false;
+          if(this.station.DUT_connection_picture)
+            //now the picture attr stores base64 we will convert it to File object in onInit
+            this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture.url + this.station.id + '/' + this.station.DUT_connection_picture.fileName);
+          if(this.station.station_picture)
+            this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + this.station.station_picture.fileName);
+          this.testerColumns = ["Model", "IP", "FirmwareVersion"];
+          this.documentColumns = ["fileName", "size", "Remove"];
+          this.documentViewColumns = ["fileName", "size"] 
+          this.current_station_id = this.station.id;
       }
 
     onFileChange(event):void {
@@ -285,6 +288,11 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     this.testerSource = new MatTableDataSource(this.station.tester);
     this.documentSource = new MatTableDataSource(this.station.documents);
     
+    this.documentSource.sort = this.sort
+  }
+
+  ngAfterViewInit(){
+    let test = 1;
   }
 
   ngOnDestroy() {

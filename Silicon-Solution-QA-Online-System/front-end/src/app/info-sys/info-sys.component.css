@@ -137,6 +137,16 @@ mat-row:hover {
   cursor: pointer;
 }
 
+mat-footer-row, mat-header-row, mat-row {
+  display: flex;
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-style: solid;
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 2em;
+}
+
 .mat-header-cell{
   text-align: center;
   font-weight: bold;
@@ -161,7 +171,7 @@ mat-cell, mat-footer-cell, mat-header-cell {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: normal;
   overflow: hidden;
   word-wrap: break-word;
   min-height: inherit;

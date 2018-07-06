@@ -9,16 +9,17 @@ import { Observable, of, throwError  } from 'rxjs';
 })
 export class QaSysService {
   //the login api url
-  private loginUrl = "http://localhost:3000/login"
-  private registerUrl = "http://localhost:3000/register"
-  private retrieveUrl = "http://localhost:3000/retrievePassword"
-  private getAllUrl = "http://localhost:3000/getAll"
-  private addOneUrl = "http://localhost:3000/addOne"
-  private getOneUrl = "http://localhost:3000/getOne"
-  private deleteOneUrl = "http://localhost:3000/deleteOne"
-  private updateOneUrl = "http://localhost:3000/updateOne"
-  private getSuggestionUrl = "http://localhost:3000/getSuggestion"
-  private checkExistingUrl = "http://localhost:3000/checkExisting"
+  private server = "http://localhost:3000/"
+  private loginUrl = this.server + "login"
+  private registerUrl = this.server + "register"
+  private retrieveUrl = this.server + "retrievePassword"
+  private getAllUrl = this.server + "getAll"
+  private addOneUrl = this.server + "addOne"
+  private getOneUrl = this.server + "getOne"
+  private deleteOneUrl = this.server + "deleteOne"
+  private updateOneUrl = this.server + "updateOne"
+  private getSuggestionUrl = this.server + "getSuggestion"
+  private checkExistingUrl = this.server + "checkExisting"
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
