@@ -13,7 +13,7 @@ import { Router }                 from '@angular/router';
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.css']
 })
-export class DialogPageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DialogPageComponent implements OnInit, OnDestroy {
     stationImagePath: SafeResourceUrl;
     DUTImagePath: SafeResourceUrl;
     station: Station;
@@ -277,6 +277,12 @@ export class DialogPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }.bind(this, target))
   }
 
+  sortDocuments(event): void{
+    if (!this.documentSource.sort){
+      this.documentSource.sort = this.sort;
+    }
+  }
+
   ngOnInit() {
     if(this.station.DUT_BT_HCD_file != null && this.station.DUT_BT_HCD_file.length > 0){
       //deep copy, so that we can bind it to the select element and update it if necessary without affecting the original one
@@ -288,11 +294,7 @@ export class DialogPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.testerSource = new MatTableDataSource(this.station.tester);
     this.documentSource = new MatTableDataSource(this.station.documents);
     
-    this.documentSource.sort = this.sort
-  }
 
-  ngAfterViewInit(){
-    let test = 1;
   }
 
   ngOnDestroy() {
