@@ -144,7 +144,7 @@
           <p class="row">
             <mat-form-field appearance="outline" class="col">
               <mat-label>Additional Comment</mat-label>
-              <textarea matInput placeholder="Additional Comment" id="additional_comments" [(ngModel)]="station['additional_comments']" [readonly] = "readOnly"></textarea>
+              <textarea rows="4" matInput placeholder="Additional Comment" id="additional_comments" [(ngModel)]="station['additional_comments']" [readonly] = "readOnly"></textarea>
             </mat-form-field>
           </p>
           <p class="row">
@@ -185,7 +185,7 @@
             <p class="row">
                 <mat-form-field appearance="outline" class="col">
                   <mat-label>Station Description</mat-label>
-                  <textarea matInput placeholder="Station Description" id="station_description" [(ngModel)]="station['station_description']" [readonly] = "readOnly"></textarea>
+                  <textarea rows="4" matInput placeholder="Station Description" id="station_description" [(ngModel)]="station['station_description']" [readonly] = "readOnly"></textarea>
                 </mat-form-field>
               </p>
         </div>
@@ -196,12 +196,14 @@
             </div>
           </div>
           <input type="file" style="display:none;" id="document_upload" name="file" #document_upload (change)="onFileSelect($event)" (click)="document_upload.value = null" multiple/>
+
           <table mat-table [dataSource]="documentSource" matSort class="col mat-elevation-z8">
-    
             <ng-container matColumnDef="fileName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortDocuments($event)"> Document </th>
               <td mat-cell *matCellDef="let element "> 
-                <a *ngIf="element.url" [href]="_sanitizer.bypassSecurityTrustUrl(element.url + station.id + '/' + element.fileName)" target="_blank">{{element.fileName}}</a> 
+                <a *ngIf="element.url" [href]="_sanitizer.bypassSecurityTrustUrl(element.url + station.id + '/' + element.fileName)" [download]="element.fileName" target="_blank">
+                  {{element.fileName}}
+                </a> 
                 <ng-container *ngIf="!element.url">{{element.fileName}}</ng-container></td>
             </ng-container>
 

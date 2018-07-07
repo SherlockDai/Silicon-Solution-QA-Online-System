@@ -6,6 +6,8 @@ import {  Subject, Subscription, Observable, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
+import { ConfirmationPageComponent } from "../confirmation-page/confirmation-page.component";
+
 @Component({
   selector: 'app-info-sys',
   templateUrl: './info-sys.component.html',

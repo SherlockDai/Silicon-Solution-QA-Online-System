@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Action confirmation</h1>
+<mat-dialog-content>
+  <p>Do you <b>confirm</b> this action?</p>
+  <mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="onConfirmClick()" cdkFocusInitial>Confirm</button>
+</mat-dialog-actions>
+</mat-dialog-content>

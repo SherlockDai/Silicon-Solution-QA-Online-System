@@ -24,6 +24,7 @@ import { ClipboardModule } from "ngx-clipboard";
 import {CdkTableModule} from '@angular/cdk/table';
 import { DragAndDropDirective } from './drag-and-drop.directive';
 import { ExcelVisualizationComponent } from './excel-visualization/excel-visualization.component';
+import { ConfirmationPageComponent } from './confirmation-page/confirmation-page.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ExcelVisualizationComponent } from './excel-visualization/excel-visuali
     DialogPageComponent,
     LocationPageComponent,
     DragAndDropDirective,
-    ExcelVisualizationComponent
+    ExcelVisualizationComponent,
+    ConfirmationPageComponent
   ],
   imports: [
     MatSortModule,
