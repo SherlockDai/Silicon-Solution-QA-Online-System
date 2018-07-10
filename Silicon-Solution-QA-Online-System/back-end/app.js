@@ -184,12 +184,13 @@ app.post('/addOne', function(request, response, next){
         for (let doc of result){
           //first time, the doc url might be null
           doc.url = serverUrl
-          //filename must be the same so we just update the size
+          //filename must be the same so we just update the size and last modified time
           doc.size = file.size
+          doc.lastModified = file.lastModified;
         }
       }
       else
-        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size})
+        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size, lastModified: file.lastModified})
     }
     else{
       record[name] = {url: serverUrl, fileName: newFileName};
@@ -349,13 +350,14 @@ app.post('/updateOne', function(request, response, next){
       if (result.length > 0){
         for (let doc of result){
           //first time, the doc url might be the local url
-          doc.url = serverUrl
-          //filename must be the same so we just update the size
-          doc.size = file.size
+          doc.url = serverUrl;
+          //filename must be the same so we just update the size and modified time
+          doc.size = file.size;
+          doc.lastModified = file.lastModified;
         }
       }
       else
-        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size})
+        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size, lastModified: file.lastModified})
     }
     else{
       record[name] = {url: serverUrl, fileName: newFileName};
@@ -386,7 +388,7 @@ app.post('/updateOne', function(request, response, next){
     //remove deleted files from file system
     while(record.deleted.length > 0){
       let file = record.deleted.pop()
-      rimraf( __dirname + '/uploads/' + prevId + '/' + file.name, function(error){
+      rimraf( __dirname + '/uploads/' + prevId + '/' + file.fileName, function(error){
         if (error){
           throw error;
         }

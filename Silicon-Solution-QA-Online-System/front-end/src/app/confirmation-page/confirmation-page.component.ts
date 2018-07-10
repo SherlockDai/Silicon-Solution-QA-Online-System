@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from "@angular/material";
 
 @Component({
   selector: 'app-confirmation-page',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfirmationPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<ConfirmationPageComponent>) {
+    dialogRef.disableClose = true;
+  }
 
   ngOnInit() {
+  }
+
+  onAction(action): void {
+    this.dialogRef.close(action);
   }
 
 }

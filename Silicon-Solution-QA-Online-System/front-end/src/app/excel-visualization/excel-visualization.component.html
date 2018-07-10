@@ -31,36 +31,39 @@
       <mat-slide-toggle class="col" (change)="showDeletes = !showDeletes">deletes</mat-slide-toggle>
       <mat-slide-toggle class="col" (change)="showUnchanged = !showUnchanged">unchanged</mat-slide-toggle>
     </div>   
-    <table mat-table [dataSource] = "currentSheet" class="col">
-        <ng-container matColumnDef="Brand">
-          <th mat-header-cell *matHeaderCellDef> Brand </th>
+    <table mat-table [dataSource] = "AnalysisDataSource" matSort class="col">
+        <ng-container matColumnDef="brand">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Brand </th>
           <td mat-cell *matCellDef="let element "><span>{{element.brand}}</span></td>
         </ng-container>
   
         <!-- Position Column -->
-        <ng-container matColumnDef="CM">
-          <th mat-header-cell *matHeaderCellDef>CM</th>
+        <ng-container matColumnDef="cm">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>CM</th>
           <td mat-cell *matCellDef="let element"><span>{{element.cm}}</span></td>
         </ng-container>
 
         <!-- Position Column -->
-        <ng-container matColumnDef="Chipset">
-          <th mat-header-cell *matHeaderCellDef>Chipset</th>
+        <ng-container matColumnDef="chipset">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Chipset</th>
           <td mat-cell *matCellDef="let element"><span>{{element.chipset}}</span></td>
         </ng-container>
 
-        <ng-container matColumnDef="MP">
-          <th mat-header-cell *matHeaderCellDef> MP </th>
+        <ng-container matColumnDef="mp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> MP </th>
           <td mat-cell *matCellDef="let element "><span [ngClass] = "{'updated' : showUpdates && updates[element.id] && updates[element.id].mp == 1}">{{element.mp}}</span></td>
         </ng-container>
     
         <!-- Position Column -->
-        <ng-container matColumnDef="Notes">
-          <th mat-header-cell *matHeaderCellDef>Notes</th>
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Notes</th>
           <td mat-cell *matCellDef="let element"><span [ngClass] = "{'updated' : showUpdates && updates[element.id] && updates[element.id].notes == 1}">{{element.notes}}</span></td>
         </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="resultColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: resultColumns" 
           [ngClass] = "(showDeletes && deletes.includes(row)) ? 'deleted' : ((showInserts && inserts.includes(row)) ? 'inserted' : ((showUnchanged && unchanged.includes(row)) ? 'unchanged' : ''))"></tr>
     </table>
+    <a pageScroll href="#charts"><button type="button" class="btn btn-primary" style="display: flex; align-items: flex-end; justify-content: flex-end" (click)="charts()"><i-trending-up></i-trending-up>Charts</button></a>
+    <div [chart]="chart" id="charts"></div>
 </div>

@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <p>Do you <b>confirm</b> this action?</p>
   <mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-button (click)="onConfirmClick()" cdkFocusInitial>Confirm</button>
+    <button mat-button (click)="onAction(false)">Cancel</button>
+    <button mat-button (click)="onAction(true)" cdkFocusInitial>Confirm</button>
 </mat-dialog-actions>
 </mat-dialog-content>

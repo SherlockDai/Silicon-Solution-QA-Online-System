@@ -9,7 +9,7 @@ import { Observable, of, throwError  } from 'rxjs';
 })
 export class QaSysService {
   //the login api url
-  private server = "http://localhost:3000/"
+  private server = "http://192.168.13.189:3000/"
   private loginUrl = this.server + "login"
   private registerUrl = this.server + "register"
   private retrieveUrl = this.server + "retrievePassword"

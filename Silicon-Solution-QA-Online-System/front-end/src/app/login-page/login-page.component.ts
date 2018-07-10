@@ -151,7 +151,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   validateEmailFormat(email: string): Boolean{
     if(!email.includes('@litepoint.com')){
-      this.registEmailFormControl.setErrors({'email-format': true});
+      if(!this.toggle){
+        this.registEmailFormControl.setErrors({'email-format': true});
+      }
+      else{
+        this.loginEmailFormControl.setErrors({'email-format': true});
+      }
       return false;
     }
     return true

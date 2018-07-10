@@ -25,6 +25,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import { DragAndDropDirective } from './drag-and-drop.directive';
 import { ExcelVisualizationComponent } from './excel-visualization/excel-visualization.component';
 import { ConfirmationPageComponent } from './confirmation-page/confirmation-page.component';
+import { ChartModule } from 'angular-highcharts';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { ConfirmationPageComponent } from './confirmation-page/confirmation-page
     ConfirmationPageComponent
   ],
   imports: [
+    ChartModule,
     MatSortModule,
     MatIconModule,
     CdkTableModule,
@@ -71,7 +73,7 @@ import { ConfirmationPageComponent } from './confirmation-page/confirmation-page
     IconsModule,
     HttpClientModule,
   ],
-  entryComponents:[BottomSheetComponent, DialogPageComponent],
+  entryComponents:[BottomSheetComponent, DialogPageComponent, ConfirmationPageComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

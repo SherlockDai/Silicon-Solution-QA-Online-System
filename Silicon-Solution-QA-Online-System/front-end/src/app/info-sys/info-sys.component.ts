@@ -186,26 +186,33 @@ export class InfoSysComponent implements OnInit, OnDestroy {
   }
 
   deleteFromTable(record: any):void {
-    this.qaSysService.deleteOne(record, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-      result => {
-        if (result){
-          //remove the record from the list
-          let newData = this.fullDataSource.data;
-          let index = newData.indexOf(record);
-          if(index > -1)
-            newData.splice(index, 1);
-          this.fullDataSource.data = newData;
-          //remove it from favorite if applied
-          if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(record) != -1){
-            this.deleteFromFavorite(record);
-          }
-          this.snackBar.open("Record is deleted!", "Dismiss", {
-            duration: 2000
-          });
-          this.updatePage();
-        }
+    let dialogRef = this.dialog.open(ConfirmationPageComponent);
+    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+      if (!result){
+        return;  
       }
-    )
+      //if the user confirm the action, then delete the record from database, remove related files from file system
+      this.qaSysService.deleteOne(record, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+        result => {
+          if (result){
+            //remove the record from the list
+            let newData = this.fullDataSource.data;
+            let index = newData.indexOf(record);
+            if(index > -1)
+              newData.splice(index, 1);
+            this.fullDataSource.data = newData;
+            //remove it from favorite if applied
+            if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(record) != -1){
+              this.deleteFromFavorite(record);
+            }
+            this.snackBar.open("Record is deleted!", "Dismiss", {
+              duration: 2000
+            });
+            this.updatePage();
+          }
+        }
+      )
+    })
   }
 
   showFullList():void{

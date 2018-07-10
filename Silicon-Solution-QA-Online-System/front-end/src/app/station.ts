@@ -84,12 +84,14 @@ export class Tester{
 export class Documnetation{
   fileName: string;
   size: number;
+  lastModified: number;
   url: any;
 
   constructor(){
     this.fileName = "";
     this.size = 0;
     this.url = "";
+    this.lastModified = 0;
   }
 
 }

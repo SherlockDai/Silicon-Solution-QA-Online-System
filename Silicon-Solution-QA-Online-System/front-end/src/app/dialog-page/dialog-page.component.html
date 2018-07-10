@@ -197,7 +197,23 @@
           </div>
           <input type="file" style="display:none;" id="document_upload" name="file" #document_upload (change)="onFileSelect($event)" (click)="document_upload.value = null" multiple/>
 
-          <table mat-table [dataSource]="documentSource" matSort class="col mat-elevation-z8">
+          <table mat-table [dataSource]="documentSource" matSort class="col">
+            
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
             <ng-container matColumnDef="fileName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortDocuments($event)"> Document </th>
               <td mat-cell *matCellDef="let element "> 
@@ -208,18 +224,25 @@
             </ng-container>
 
             <ng-container matColumnDef="size">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Document Size </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortDocuments($event)"> Document Size </th>
               <td mat-cell *matCellDef="let element"> {{element.size / 1000}} KB</td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastModified">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortDocuments($event)"> Last Modified </th>
+              <td mat-cell *matCellDef="let element"> {{element.lastModified | date:"MM/dd/yy HH:mm"}}</td>
             </ng-container>
     
             <ng-container matColumnDef="Remove">
-              <th mat-header-cell *matHeaderCellDef> Remove </th>
+              <th mat-header-cell *matHeaderCellDef (click)="sortDocuments($event)"> Remove </th>
               <td mat-cell *matCellDef="let element"> <button mat-icon-button (click)="removeDocument(element)" *ngIf="!readOnly"><i-x-circle></i-x-circle></button></td>
             </ng-container>
     
             <tr mat-header-row *matHeaderRowDef="readOnly ? documentViewColumns : documentColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: documentColumns"></tr>
           </table>
+          <button type="button" class="btn btn-primary" (click)="downloadSelections($event)">Download</button>
+          <button type="button" class="btn btn-primary" (click)="deleteSelections($event)">Delete</button>
         </div>
       </div>
       

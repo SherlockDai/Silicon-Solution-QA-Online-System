@@ -23,6 +23,11 @@ file-drop{
     margin-bottom: 1em;
 }
 
+td.mat-cell:first-child, td.mat-footer-cell:first-child, th.mat-header-cell:first-child {
+    padding-left: 24px;
+    padding-right: 15px;
+}
+
 .dropzone {
     min-height: 200px;
     min-width: 400px;

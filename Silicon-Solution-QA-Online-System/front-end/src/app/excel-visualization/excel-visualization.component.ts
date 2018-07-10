@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material'
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatSort } from '@angular/material'
 import * as XLSX from 'xlsx';
+import { Chart } from "angular-highcharts";
+
 type AOA = any[][];
 @Component({
   selector: 'app-excel-visualization',
@@ -10,6 +12,7 @@ type AOA = any[][];
 export class ExcelVisualizationComponent implements OnInit {
   private files: Array<File> = new Array();
   private tableDataSource: MatTableDataSource<File> = new MatTableDataSource();
+  private AnalysisDataSource: MatTableDataSource<File> = new MatTableDataSource();
   private tableColumns: Array<String> = [];
   private resultColumns: Array<String> = [];
   private data: Array<AOA> = [];
@@ -25,13 +28,18 @@ export class ExcelVisualizationComponent implements OnInit {
   private showDeletes = false;
   private showInserts = false;
   private showUnchanged = false;
+  private dates = [];
+  private chart: Chart = null;
+
+  @ViewChild(MatSort) sort: MatSort;
+
   constructor() { 
     this.tableColumns = ["File", "Last Modified"]
-    this.resultColumns = ["Brand", "CM", "Chipset", "MP", "Notes"]
+    this.resultColumns = ["brand", "cm", "chipset", "mp", "notes"]
   }
 
   ngOnInit() {
-    
+    this.AnalysisDataSource.sort = this.sort;
   }
 
   onFileChange(evt: any) {
@@ -68,6 +76,19 @@ export class ExcelVisualizationComponent implements OnInit {
     let data = this.tableDataSource.data;
     this.tableDataSource.data = [];
     this.files = [];
+    this.data = [];
+    this.data_account = [];
+    this.data_dicts = [];
+    this.currentSheet = [];
+    this.updates = [];
+    this.deletes = [];
+    this.inserts = [];
+    this.unchanged = [];
+    //store the last modified dates in this.dates varialbe, for charts
+    for (let index = 0; index < data.length; index++){
+      this.dates.push(data[index].lastModified);
+    }
+
     //table data is sorted, use it
     for (let file of data){
       const reader: FileReader = new FileReader();
@@ -109,6 +130,7 @@ export class ExcelVisualizationComponent implements OnInit {
     this.currentSheet = this.data_account[this.data_account.length - 1];
     this.checkLatestUpdate()
     this.checkUnchanged()
+    this.AnalysisDataSource.data = this.currentSheet;
   }
 
   checkLatestUpdate():void {
@@ -154,7 +176,7 @@ export class ExcelVisualizationComponent implements OnInit {
           this.unchanged.push(account)
         }
         let prevAccount = this.data_dicts[index][account.id]
-        if (prevAccount.mp == account.mp && prevAccount.notes == account.notes){
+        if (prevAccount && prevAccount.mp == account.mp && prevAccount.notes == account.notes){
           count --;
         }
         else{
@@ -162,6 +184,89 @@ export class ExcelVisualizationComponent implements OnInit {
         }
       }
     }
+  }
+
+  charts(): void{
+    let len = this.data_account.length;
+    if (len < 2) return;
+    let num_updates = [0]
+    let num_inserts = [0]
+    let num_deletes = [0]
+    for (let index = 0; index < len - 1; index++){
+      let lastSheet = this.data_account[index];
+      let currentSheet = this.data_account[index + 1];
+      let visited = new Set()
+      let numu = 0;
+      let numi = 0;
+      let numd = 0;
+      for (let record of currentSheet){
+        visited.add(record.id)
+        let filter_result = lastSheet.filter(function(acc){
+          return acc.id == record.id
+        })
+        if (filter_result.length > 0){
+          //check updates
+          //there should be only one previous data
+          let prev_record: Account = filter_result[0];
+          if (prev_record.mp != record.mp || prev_record.notes != record.notes){
+            numu++;
+          }
+        }
+        else{
+          numi++;
+        }
+      }
+
+      for (let record of lastSheet){
+        if(!visited.has(record.id)){
+          numd++;
+        }
+      }
+
+      num_updates.push(numu);
+      num_inserts.push(numi);
+      num_deletes.push(numd);
+    }
+    let xAxisLabels = this.dates;
+    this.chart = new Chart({
+      chart: {
+        type: 'line'
+      },
+      title: {
+        text: 'Historial Actions'
+      },
+      yAxis: {
+        title: {
+            text: 'Number of Actions'
+        }
+      },
+      legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+      },
+      xAxis:{
+        labels: {
+          enabled: true,
+          formatter: function() { return (new Date(parseInt(xAxisLabels[this.value]))).toDateString()}
+        }
+      },
+      series:[
+        {
+          name: 'Updates',
+          data: num_updates
+        },
+        {
+          name: 'Insertions',
+          data: num_inserts
+        },
+        {
+          name: 'Deletes',
+          data: num_deletes
+        }
+      ]
+    })
+    
   }
 
 

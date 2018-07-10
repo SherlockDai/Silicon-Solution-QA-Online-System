@@ -8,6 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QaSysService } from "../qa-sys.service";
 import { StationInfoBrief } from "../brief-station";
 import { Router }                 from '@angular/router';
+import { SelectionModel } from "@angular/cdk/collections";
 @Component({
   selector: 'app-dialog-page',
   templateUrl: './dialog-page.component.html',
@@ -51,6 +52,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
     @ViewChild(MatSort) sort: MatSort;
 
+    //store the selections
+    private selection = new SelectionModel<Documnetation>(true, []);
+
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
         private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
@@ -64,8 +68,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           if(this.station.station_picture)
             this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + this.station.station_picture.fileName);
           this.testerColumns = ["Model", "IP", "FirmwareVersion"];
-          this.documentColumns = ["fileName", "size", "Remove"];
-          this.documentViewColumns = ["fileName", "size"] 
+          this.documentColumns = ["select", "fileName", "size", "lastModified", "Remove"];
+          this.documentViewColumns = ["select", "fileName", "size", "lastModified"] 
           this.current_station_id = this.station.id;
       }
 
@@ -211,11 +215,12 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           doc.url = null;
           //filename must be the same so we just update the size
           doc.size = file.size;
+          doc.lastModified = file.lastModified;
         }
       }
       else
         //add the new file info to the document field
-        this.station.documents.push({url: null, fileName: file.name, size: file.size})
+        this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified})
     }
     //update table data source, since the table data just copy data from the document, does not use reference
     this.documentSource.data = this.station.documents;
@@ -234,10 +239,11 @@ export class DialogPageComponent implements OnInit, OnDestroy {
             doc.url = null;
             //filename must be the same so we just update the size
             doc.size = file.size;
+            doc.lastModified = file.lastModified
           }
         }
         else
-          this.station.documents.push({url: null, fileName: file.name, size: file.size})
+          this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified})
       }
       this.documentSource.data = this.station.documents;
     }
@@ -278,8 +284,36 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   }
 
   sortDocuments(event): void{
+    //we only set the sort once, since we use ngswitch in the dilaog, the viewChild cannot fetch the matsort at the begining
+    //we now set the sort attribute once the user click on one of the sort headers
     if (!this.documentSource.sort){
       this.documentSource.sort = this.sort;
+    }
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.documentSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.documentSource.data.forEach(row => this.selection.select(row));
+  }
+
+  downloadSelections(event): void{
+    for (let file of this.selection.selected){
+      window.open(file.url + this.station.id + '/' + file.fileName, "_blank");
+    }
+  }
+
+  deleteSelections(event): void{
+    for (let file of this.selection.selected){     
+      this.removeDocument(file)
     }
   }
 
