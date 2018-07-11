@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const rimraf = require('rimraf');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken')
 
 const transporter = nodemailer.createTransport({
   service: 'outlook',
@@ -71,7 +72,9 @@ app.post("/login", function(request, response, next){
     }
     //check if the password is the same
     else if(request.body["password"] === result["password"]){
-      response.send({result: true, user: result});
+      //create JWT and send the result back
+      const token = jwt.sign({ }, 'shhhhh', {expiresIn: '8h'});
+      response.send({result: true, user: result, token: token});
     }
     else{
       response.send({result: false, reason: "password"});

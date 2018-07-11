@@ -11,6 +11,8 @@ import { Station } from "./station";
 import { DialogPageComponent } from "./dialog-page/dialog-page.component";
 import { MatTableDataSource } from "@angular/material";
 import { ExcelVisualizationComponent } from "./excel-visualization/excel-visualization.component";
+import { AuthGuard } from "./qa-sys.service";
+
 const stationInfoConfig = {
   briefInfo: StationInfoBrief,
   fullInfo: Station,
@@ -33,10 +35,10 @@ const stationInfoConfig = {
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
   { path: 'login', component: LoginPageComponent},
-  { path: 'home', component: HomePageComponent},
-  { path: 'station-info-sys', component: InfoSysComponent, data:stationInfoConfig},
-  { path: 'location', component: LocationPageComponent},
-  { path: 'xlsx', component: ExcelVisualizationComponent},
+  { path: 'home', component: HomePageComponent, canActivate: [AuthGuard]},
+  { path: 'station-info-sys', component: InfoSysComponent, data:stationInfoConfig, canActivate: [AuthGuard]},
+  { path: 'location', component: LocationPageComponent, canActivate: [AuthGuard]},
+  { path: 'xlsx', component: ExcelVisualizationComponent, canActivate: [AuthGuard]},
   { path: '**', component: NotFoundPageComponent}
 ];
 

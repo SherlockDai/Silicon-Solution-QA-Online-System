@@ -7,6 +7,8 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import { QaSysService } from "../qa-sys.service";
+
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
@@ -32,7 +34,7 @@ export class HomePageComponent implements OnInit {
   //declare state to store the state of the team info
   state:String;
 
-  constructor() { 
+  constructor(private qaSysService: QaSysService) { 
     //initialize the state to down in order to hide the team info at the begining 
     this.state = 'down';
   }

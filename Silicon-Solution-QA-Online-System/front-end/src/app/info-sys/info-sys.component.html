@@ -4,7 +4,7 @@
     <div class="navbar-btn-group">
       <a class="nav-link" href="javascript:void(0)" (click)="showFullList()">Full list</a>
       <a class="nav-link" href="javascript:void(0)" (click)="showFavoriteList()">Favorites</a>
-      <a class="nav-link" href="javascript:void(0)" routerLink="/login">Logout</a>
+      <a class="nav-link" href="javascript:void(0)" routerLink="/login" (click)="this.qaSysService.logout()">Logout</a>
     </div>
 </div>
 

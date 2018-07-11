@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { User } from "./user";
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from './message.service';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Observable, of, throwError  } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '../../node_modules/@angular/router';
+import { JwtHelperService } from "@auth0/angular-jwt";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,17 +28,33 @@ export class QaSysService {
       'Content-Type':  'application/json',
     })
   };
+  //indicate whether the user is logged in or not
+  isLoggedIn = false;
+  //store the URL so we can redicrect after logging in
+  redirectUrl: string = '\home'
+  //jwt decoder
+  private jwtHelper = new JwtHelperService();
 
-  constructor(
-    private http:HttpClient,
-    private messageService: MessageService) { }
+  constructor(private http:HttpClient) { 
+    let token = window.localStorage.getItem('token');
+    if (token != null && !this.jwtHelper.isTokenExpired(token)){
+      this.isLoggedIn = true;
+    }
+  }
 
   login(email:string, password:string): Observable<JSON>{
     let data = {
       email: email,
       password: password
     }
-    return this.http.post<JSON>(this.loginUrl, data, this.httpOptions);
+    return this.http.post<JSON>(this.loginUrl, data, this.httpOptions).pipe(tap(val => {
+      this.isLoggedIn = val['result'];
+      window.localStorage.setItem('token', val['token']);
+    }))
+  }
+
+  logout(): void {
+    this.isLoggedIn = false;
   }
 
   register(email:string, password: string): Observable<Boolean>{
@@ -160,3 +179,30 @@ export class QaSysService {
     return this.http.post<Boolean>(this.checkExistingUrl, data, this.httpOptions);
   }
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+
+  constructor(private qaSysService: QaSysService, private router: Router) { }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean{
+    let url:string = state.url;
+
+    return this.checkLogin(url);
+  }
+
+  checkLogin(url: string): boolean{
+    if (this.qaSysService.isLoggedIn) return true;
+
+    //not logged in
+    //store the attempted URL for redirecting
+    this.qaSysService.redirectUrl = url;
+
+    //navigate to the login page 
+    this.router.navigate(['/login']);
+  }
+
+}
+

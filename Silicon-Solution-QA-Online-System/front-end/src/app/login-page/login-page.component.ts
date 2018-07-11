@@ -88,7 +88,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   checkInfo(result: JSON){
     if(result["result"] == true){
       this.user = result["user"];
-      this.router.navigate(['/home']);
+      this.router.navigate([this.qaSysService.redirectUrl]);
     }
     else{
       if(result["reason"] == "email"){

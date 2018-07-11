@@ -89,7 +89,6 @@ export class ExcelVisualizationComponent implements OnInit {
       this.dates.push(data[index].lastModified);
     }
 
-    //table data is sorted, use it
     for (let file of data){
       const reader: FileReader = new FileReader();
       reader.onload = (e: any) => {
@@ -102,7 +101,9 @@ export class ExcelVisualizationComponent implements OnInit {
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
         /* save data */
-        this.data.push((<AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}))));
+        let temp_data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}));
+        temp_data['lastModified'] = file.lastModified;
+        this.data.push(temp_data);
         if (!--this.count) this.convertData();
       };
       reader.readAsBinaryString(file);
@@ -110,11 +111,14 @@ export class ExcelVisualizationComponent implements OnInit {
   }
 
   convertData(): void{
+    //sort the data, since the file reader is async, the data might mess up, although it is sorted at the beginging
+    this.data.sort(this.dynamicSort("lastModified"))
     for(let record of this.data){
       let metadata = record[1];
       let account_arr = [];
       let dict = {};
-      for (let row = 2; row < record.length; row++){
+      for (let row = 0; row < record.length; row++){
+        if (record[row].length == 0 || record[row - 1].length == 0) continue;
         let account: Account = new Account();
         for (let column = 0; column < record[1].length; column++){
           if(metadata[column])
