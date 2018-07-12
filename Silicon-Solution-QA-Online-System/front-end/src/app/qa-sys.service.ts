@@ -19,6 +19,7 @@ export class QaSysService {
   private getAllUrl = this.server + "getAll"
   private addOneUrl = this.server + "addOne"
   private getOneUrl = this.server + "getOne"
+  private getManyUrl = this.server + "getMany"
   private deleteOneUrl = this.server + "deleteOne"
   private updateOneUrl = this.server + "updateOne"
   private getSuggestionUrl = this.server + "getSuggestion"
@@ -81,12 +82,19 @@ export class QaSysService {
     }, this.httpOptions);
   }
 
+  getMany(fields: any, collection: string): Observable<any>{
+    return this.http.post<any>(this.getManyUrl, {
+      collection: collection,
+      fields: fields
+    }, this.httpOptions);
+  }
+
   getOne(record: any, collection: string): Observable<any>{
     return this.http.post<any>(this.getOneUrl, {
         collection: collection,
         fields: {id: record.id},
       }, this.httpOptions).pipe(map(response => {
-        //since formdata can only pass string, we have stringfy the tester array, now we need to convert it back
+        //since formdata can only pass string, we have stringfy arrays, now we need to convert it back
         for(let property in response){
             try {
               response[property] = JSON.parse(response[property])

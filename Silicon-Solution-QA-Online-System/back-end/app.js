@@ -155,6 +155,26 @@ app.post('/getAll',  function(request, response, next){
   })
 })
 
+app.post('/getMany', function(request, response, next){
+  if (request.body['collection']){
+    var coll = request.body['collection']
+  }
+  else{
+    response.status(400).send({
+      message: 'Must input collection!'
+    })
+    return next();
+  }
+  let fields = {};
+  if (request.body['fields']){
+    fields = request.body.fields;
+  }
+  dbo.collection(coll).find(fields).toArray(function(err, result){
+    if (err) throw err;
+    response.send(result);
+  })
+})
+
 app.post('/addOne', function(request, response, next){
   let form = new multiparty.Form();
   let record = {};

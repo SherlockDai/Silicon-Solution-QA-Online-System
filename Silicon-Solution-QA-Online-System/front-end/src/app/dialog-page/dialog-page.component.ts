@@ -1,12 +1,11 @@
 import { Component, OnInit, Inject, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, 
   MatTableDataSource, MatSnackBar, MatSort} from '@angular/material';
-import { Station, FileLocation, Tester, Documnetation } from "../station";
+import { StationInfoBrief, Station, FileLocation, Tester, Documnetation } from "../station";
 import { Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { QaSysService } from "../qa-sys.service";
-import { StationInfoBrief } from "../brief-station";
 import { Router }                 from '@angular/router';
 import { SelectionModel } from "@angular/cdk/collections";
 @Component({
@@ -94,6 +93,8 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     onSubmit(event):void {
       //show uploading progress bar
       this.uploading = true;
+      //store vender in lower case
+      this.station.vender = this.station.vender.toLowerCase();
       //have to update the station id here, otherwise if the user choose the suggestion we cannot update the id
       this.station.id = this.station.vender + '-' + this.station.chipset + '-' + this.station.device + 'UP'
       //update the update date
@@ -196,10 +197,6 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
   onChangeView(descision){
     this.readOnly = descision;
-  }
-
-  openLocation(url): void{
-    this.router.navigate(['/location', {url: url}]);
   }
 
   onFileDrop(files): void{

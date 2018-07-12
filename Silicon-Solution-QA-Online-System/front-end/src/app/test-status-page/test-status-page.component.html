@@ -1,0 +1,50 @@
+
+  <mat-dialog-content>
+    <table mat-table [dataSource]="dataSource" matSort class="col">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> JIRA ID </th>
+        <td mat-cell *matCellDef="let test "> 
+          <input *ngIf="!test.readOnly" matInput [(ngModel)]="test.id" placeholder="Test Model" [readonly]="test.readOnly">
+          <a *ngIf="test.readOnly" [href]="test.url" target="_blank">{{test.id}}</a>
+        </td>
+      </ng-container>
+
+      <!-- Subject Column -->
+      <ng-container matColumnDef="subject">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject </th>
+        <td mat-cell *matCellDef="let test"> <input matInput [(ngModel)]="test.subject" placeholder="Test Subjet" [readonly]="test.readOnly"> </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <td mat-cell *matCellDef="let test">
+            <mat-form-field>
+              <input matInput [matDatepicker]="datepicker" [value] = "getDate(test.date)" (change)="test.date = value.getMilliseconds()" [readonly]="test.readOnly">
+              <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+              <mat-datepicker #datepicker></mat-datepicker> 
+            </mat-form-field>
+          </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+          <td mat-cell *matCellDef="let test "> <input matInput [(ngModel)]="test.status" placeholder="Test Status" [readonly]="test.readOnly"> </td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+          <td mat-cell *matCellDef="let test "> <button mat-icon-button (click)="editTest(test, $event)"><i-edit></i-edit></button></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="viewColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: viewColumns"></tr>
+    </table>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+      <button mat-button (click)="dialogRef.close()">Close</button>
+  </mat-dialog-actions>

@@ -26,6 +26,7 @@ import { DragAndDropDirective } from './drag-and-drop.directive';
 import { ExcelVisualizationComponent } from './excel-visualization/excel-visualization.component';
 import { ConfirmationPageComponent } from './confirmation-page/confirmation-page.component';
 import { ChartModule } from 'angular-highcharts';
+import { TestStatusPageComponent } from './test-status-page/test-status-page.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ChartModule } from 'angular-highcharts';
     LocationPageComponent,
     DragAndDropDirective,
     ExcelVisualizationComponent,
-    ConfirmationPageComponent
+    ConfirmationPageComponent,
+    TestStatusPageComponent
   ],
   imports: [
     ChartModule,
@@ -73,7 +75,7 @@ import { ChartModule } from 'angular-highcharts';
     IconsModule,
     HttpClientModule,
   ],
-  entryComponents:[BottomSheetComponent, DialogPageComponent, ConfirmationPageComponent],
+  entryComponents:[BottomSheetComponent, DialogPageComponent, ConfirmationPageComponent, TestStatusPageComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

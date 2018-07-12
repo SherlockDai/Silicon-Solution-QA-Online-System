@@ -6,8 +6,7 @@ import { NotFoundPageComponent } from "./not-found-page/not-found-page.component
 import { InfoSysComponent } from "./info-sys/info-sys.component";
 import { LocationPageComponent } from "./location-page/location-page.component";
 import { BottomSheetComponent } from "./bottom-sheet/bottom-sheet.component";
-import { StationInfoBrief } from "./brief-station";
-import { Station } from "./station";
+import { Station, StationInfoBrief } from "./station";
 import { DialogPageComponent } from "./dialog-page/dialog-page.component";
 import { MatTableDataSource } from "@angular/material";
 import { ExcelVisualizationComponent } from "./excel-visualization/excel-visualization.component";

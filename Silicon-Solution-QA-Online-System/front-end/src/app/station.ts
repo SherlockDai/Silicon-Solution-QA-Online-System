@@ -1,3 +1,12 @@
+export class StationInfoBrief {
+  id: string;
+  vender: string;
+  chipset: string;
+  device: string;
+  status: string;
+  update_time: number;
+}
+
 export class Station {
     id: string;
     vender: string;
@@ -34,8 +43,8 @@ export class Station {
       this.chipset = "";
       this.device = "";
       this.status = "";
-      this.creation_time = 0;
-      this.update_time = 0;
+      this.creation_time = null;
+      this.update_time = null;
       this.DUT_name = "";
       this.DUT_HW_version = "";
       this.DUT_WIFI_FW_version = [];
@@ -89,9 +98,29 @@ export class Documnetation{
 
   constructor(){
     this.fileName = "";
-    this.size = 0;
+    this.size = null;
     this.url = "";
-    this.lastModified = 0;
+    this.lastModified = null;
   }
 
+}
+
+export class Test{
+  id: string;
+  url: string;
+  subject: string;
+  date: number;
+  status: string;
+  station_id: string;
+  readOnly: boolean;
+
+  constructor(){
+    this.id = "";
+    this.url = "https://jira.litepoint.internal:8443/browse/";
+    this.subject = "";
+    this.date = (new Date()).getMilliseconds();
+    this.status = "";
+    this.station_id = "";
+    this.readOnly = true;
+  }
 }

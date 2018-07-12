@@ -1,0 +1,11 @@
+::ng-deep .mat-sort-header-container {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center !important;
+}
+
+table.mat-table {
+    border-spacing: 0;
+    text-align: center;
+}

@@ -17,7 +17,7 @@
             <mat-form-field appearance="outline" class="col">
               <mat-label [ngClass]="idError ? 'text-danger' : ''">Station Name</mat-label>
               <input matInput [ngClass]="idError ? 'text-danger' : ''" placeholder="Station Name" 
-                value="{{station.vender + '-' + station.chipset + '-' + station.device + 'UP'}}" id="id" #station_id [readonly] = "true" disabled>
+                value="{{station.vender + '-' + station.chipset + '-' + station.device | lowercase}}UP" id="id" #station_id [readonly] = "true" disabled>
             </mat-form-field>
             <mat-form-field appearance="outline" class="col">
               <mat-label>Vender Name</mat-label>
@@ -26,14 +26,14 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="col">
               <mat-label>Chipset Number</mat-label>
-              <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" id="chipset" [readonly] = "readOnly" (blur) = "checkExisting(station_id)" 
+              <input matInput placeholder="Chipset Number" [(ngModel)]="station['chipset']" id="chipset" [readonly] = "readOnly" (blur) = "checkExisting(station_id, $event)" 
                   [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
             </mat-form-field>
           </p>
           <p class="row">
             <mat-form-field appearance="outline" class="col">
               <mat-label>Number of Device</mat-label>
-              <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" id="device" [readonly] = "readOnly" (blur) = "checkExisting(station_id)" 
+              <input matInput placeholder="Number of Device"  [(ngModel)]="station['device']" id="device" [readonly] = "readOnly" (blur) = "checkExisting(station_id, $event)" 
                   [matAutocomplete]="auto" (focus)="giveSuggestion($event)">
             </mat-form-field>
             <mat-form-field appearance="outline" class="col">
@@ -241,8 +241,8 @@
             <tr mat-header-row *matHeaderRowDef="readOnly ? documentViewColumns : documentColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: documentColumns"></tr>
           </table>
-          <button type="button" class="btn btn-primary" (click)="downloadSelections($event)">Download</button>
-          <button type="button" class="btn btn-primary" (click)="deleteSelections($event)">Delete</button>
+          <button type="button" class="btn btn-primary" (click)="downloadSelections($event)" style="margin-top: 1em; margin-bottom: 1em;">Download</button>
+          <button *ngIf="!readOnly" type="button" class="btn btn-primary" (click)="deleteSelections($event)" style="margin-top: 1em; margin-bottom: 1em; margin-left: 0.5em">Delete</button>
         </div>
       </div>
       
@@ -254,7 +254,7 @@
   <mat-dialog-actions>
       <button mat-raised-button	(click)="onChangeView(false)" *ngIf="readOnly">Update</button>
       <button mat-raised-button	(click)="onChangeView(true)" *ngIf="!readOnly">View</button>
-      <button mat-raised-button	(click)="onSubmit($event)" *ngIf="!readOnly">Save</button>
+      <button mat-raised-button	(click)="onSubmit($event)" *ngIf="!readOnly" [disabled] = "idError">Save</button>
       <button mat-button (click)="dialogRef.close()">Close</button>
   </mat-dialog-actions>
 </div>
