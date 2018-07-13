@@ -252,7 +252,7 @@
     
   </mat-dialog-content>
   <mat-dialog-actions>
-      <button mat-raised-button	(click)="onChangeView(false)" *ngIf="readOnly">Update</button>
+      <button mat-raised-button *ngIf="qaSysService.user.role != 'visitor' && readOnly"	(click)="onChangeView(false)">Update</button>
       <button mat-raised-button	(click)="onChangeView(true)" *ngIf="!readOnly">View</button>
       <button mat-raised-button	(click)="onSubmit($event)" *ngIf="!readOnly" [disabled] = "idError">Save</button>
       <button mat-button (click)="dialogRef.close()">Close</button>

@@ -17,7 +17,7 @@
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
           </mat-form-field>
           <div class="btn-group">
-              <button mat-button (click)="onInsertion(event)"><i-plus-square></i-plus-square>Add</button>
+              <button mat-button *ngIf="qaSysService.user.role != 'visitor'" (click)="onInsertion(event)"><i-plus-square></i-plus-square>Add</button>
               <button mat-icon-button (click)="onRefresh()"><i-refresh-ccw></i-refresh-ccw></button>
               <mat-slide-toggle (change)="onAutoFreshChange($event)" >Auto refresh</mat-slide-toggle>
           </div>

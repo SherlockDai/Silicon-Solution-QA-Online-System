@@ -46,11 +46,11 @@
           </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="viewColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: viewColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef=" qaSysService.user.role != 'visitor' ? updateColumns : viewColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: qaSysService.user.role != 'visitor' ? updateColumns : viewColumns"></tr>
     </table>
   </mat-dialog-content>
   <mat-dialog-actions>
-      <button mat-button (click)="addTest()">Add</button>
+      <button mat-button *ngIf="qaSysService.user.role != 'visitor'" (click)="addTest()">Add</button>
       <button mat-button (click)="dialogRef.close()">Close</button>
   </mat-dialog-actions>

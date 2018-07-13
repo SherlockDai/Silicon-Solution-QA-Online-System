@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const rimraf = require('rimraf');
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const ldap = require('ldapjs');
 
 const transporter = nodemailer.createTransport({
   service: 'outlook',
@@ -64,25 +65,37 @@ app.get('/', function (req, res) {
 
 
 app.post("/login", function(request, response, next){
-  var query = {email: request.body["email"]};
-  dbo.collection(userCollection).findOne(query, function(err, result){
-    if(err) throw err;
-    if(result == null){
-      response.send({result: false, reason: "email"});
-    }
-    //check if the password is the same
-    else if(request.body["password"] === result["password"]){
-      //create JWT and send the result back
-      const token = jwt.sign({ }, 'shhhhh', {expiresIn: '8h'});
-      response.send({result: true, user: result, token: token});
+  const query = {username: request.body["username"]};
+
+  const client = ldap.createClient({
+    url: 'ldap://192.168.3.84'
+  });
+  client.bind(request.body["username"] + "@litepoint.internal", request.body['password'], function(err){
+    client.unbind();
+    if (err == null){
+      //find out the role of user
+      dbo.collection(userCollection).findOne(query, function(err, result){
+        if(err) throw err;
+        //create JWT and send the result back
+        const token = jwt.sign({ }, 'shhhhh', {expiresIn: '8h'});
+        if(result == null){
+          response.send({result: true, role: "visitor", token: token});
+        }
+        //check if the password is the same
+        else{
+          response.send({result: true, role: result.role, token: token});
+        }
+      })
     }
     else{
-      response.send({result: false, reason: "password"});
+        response.send({result: false});
     }
   })
 })
 
-app.post('/register', function(request, resposne){
+//we now use Litepoint credential, the registration and password retrieving temporarily abandoned
+
+/* app.post('/register', function(request, resposne){
   let query = {email: request.body.email, password: request.body.password};
   dbo.collection(userCollection).insertOne(query, function(err, result){
     if (err) throw err
@@ -135,7 +148,7 @@ app.post('/retrievePassword', function(request, resposne){
       resposne.send(false);
     }
   })
-})
+}) */
 
 app.post('/getAll',  function(request, response, next){
   if (request.body['collection']){

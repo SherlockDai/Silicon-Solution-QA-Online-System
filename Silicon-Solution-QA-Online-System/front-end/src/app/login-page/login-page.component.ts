@@ -38,12 +38,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   //decalre loading which controls the loading spinner
   loading: boolean;
   //decalre user to store the user's information
-  user: User;
+  user: User = new User();
   //form control for registration
   registEmailFormControl: FormControl;
   registPasswordFormControl: FormControl;
   //form control for login
-  loginEmailFormControl: FormControl;
+  loginUsernameFormControl: FormControl;
   loginPasswordFormControl: FormControl
   //store the collection for user info
   collection = "userInfo"
@@ -69,7 +69,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     //initializing form controls
     this.registEmailFormControl = new FormControl();
     this.registPasswordFormControl = new FormControl();
-    this.loginEmailFormControl = new FormControl();
+    this.loginUsernameFormControl = new FormControl();
     this.loginPasswordFormControl = new FormControl();
   }
 
@@ -77,31 +77,32 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.state = "out";
   }
 
-  login(email: string, password:string):void{
-    email = email.toLowerCase();
-    if(this.validateEmailFormat(email) == false) return;
+  login(username: string, password:string):void{
+    username = username.toLowerCase();
     this.loading = true;
-    this.qaSysService.login(email, password).pipe(takeUntil(this.ngUnsubscribe))
+    this.user.username = username;
+    this.user.password = password;
+    this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => this.checkInfo(result));
   }
 
   checkInfo(result: JSON){
     if(result["result"] == true){
-      this.user = result["user"];
+      this.user.role = result['role'];
+      this.qaSysService.user = this.user;
+      window.localStorage.setItem('user', JSON.stringify(this.user));
       this.router.navigate([this.qaSysService.redirectUrl]);
     }
     else{
-      if(result["reason"] == "email"){
-        this.loginEmailFormControl.setErrors({'email': true})
-      }
-      else if(result["reason"] == "password"){
+        this.loginUsernameFormControl.setErrors({'username': true})
         this.loginPasswordFormControl.setErrors({'password': true})
-      }
     }
     this.loading = false;
   }
 
-  confirmPassword(password: string, confirm_password: string){
+//the below section is self-implemented login and registration logic, since we use Litepoint credential instead, this part is temporarily abandonded
+
+/*confirmPassword(password: string, confirm_password: string){
     if (password !== confirm_password){
       this.registPasswordFormControl.setErrors({'password-different': true})
       this.registPasswordChecked = false;
@@ -182,7 +183,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         this.loading = false;
       })
     }
-  }
+  } */
 
   ngOnDestroy(){
     this.ngUnsubscribe.next();

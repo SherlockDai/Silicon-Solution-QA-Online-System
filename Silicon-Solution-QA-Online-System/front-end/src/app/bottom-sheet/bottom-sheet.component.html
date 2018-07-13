@@ -9,7 +9,7 @@
       <span mat-line>Check the real-time test status of this station</span>
     </a>
 
-    <a href="javascript:void(0)" mat-list-item (click)="openLink('update')">
+    <a href="javascript:void(0)" mat-list-item *ngIf="qaSysService.user.role != 'visitor'" (click)="openLink('update')">
       <span mat-line><i-edit class="icon"></i-edit> Update</span>
       <span mat-line>Update the detailed information of this station</span>
     </a>

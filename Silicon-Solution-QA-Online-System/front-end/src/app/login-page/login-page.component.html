@@ -2,7 +2,7 @@
   <div class="form-container">
     <div class="form" [@expandOut]= "state">
       <img src="../../assets/images/logo.PNG" class="logo">
-      <form *ngIf = "!toggle">
+      <!-- <form *ngIf = "!toggle">
         <mat-form-field class="col">
           <input matInput type="email" placeholder="email address" [formControl]="registEmailFormControl" #email_regist 
             (blur)="checkEmail(email_regist.value)" (focus)="registEmailChecked = false" required/>
@@ -43,24 +43,21 @@
         <button type="sumbit" (click)="register(email_regist, password_regist)">create</button>
         <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
         <p class="message">Already registered? <a href="javascript:void(0)" (click)="changeForm()">Sign In</a></p>
-      </form>
+      </form> -->
       <form *ngIf = "toggle">
         <mat-form-field class="col">
-          <input matInput name="email" type="email" placeholder="email" #email [formControl]="loginEmailFormControl" required/>
-          <mat-error *ngIf="loginEmailFormControl.hasError('email-format') && !loginEmailFormControl.hasError('required')">
-            Please enter <strong>litepoint</strong> email address
+          <input matInput name="username" placeholder="username" #email [formControl]="loginUsernameFormControl" required/>
+          <mat-error *ngIf="loginUsernameFormControl.hasError('username') && !loginUsernameFormControl.hasError('required')">
+            This combination  is invalid!
           </mat-error>
-          <mat-error *ngIf="loginEmailFormControl.hasError('email') && !loginEmailFormControl.hasError('required')">
-            The email address is not registered!
-          </mat-error>
-          <mat-error *ngIf="loginEmailFormControl.hasError('required')">
-            Email is <strong>required</strong>
+          <mat-error *ngIf="loginUsernameFormControl.hasError('required')">
+            Username is <strong>required</strong>
           </mat-error>
         </mat-form-field>
         <mat-form-field class="col">
           <input matInput name="password" type="password" placeholder="password" #password [formControl]="loginPasswordFormControl" required/>
           <mat-error *ngIf="loginPasswordFormControl.hasError('password') && !loginPasswordFormControl.hasError('required')">
-              Please enter a valid password!
+            This combination  is invalid!
           </mat-error>
           <mat-error *ngIf="loginPasswordFormControl.hasError('required')">
               Password is <strong>required</strong>
@@ -68,8 +65,8 @@
         </mat-form-field>
         <button type="submit" (click)="login(email.value, password.value)" class="btn" [disabled] = "loading">login</button> 
         <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-        <p class="message">Not registered? <a href="javascript:void(0)" (click)="changeForm()">Create an account</a></p>
-        <p class="message">Forget password? <a href="javascript:void(0)" (click)="retrievePassword(email)">Find password</a></p>
+        <!-- <p class="message">Not registered? <a href="javascript:void(0)" (click)="changeForm()">Create an account</a></p>
+        <p class="message">Forget password? <a href="javascript:void(0)" (click)="retrievePassword(email)">Find password</a></p> -->
       </form>
     </div>
   </div>

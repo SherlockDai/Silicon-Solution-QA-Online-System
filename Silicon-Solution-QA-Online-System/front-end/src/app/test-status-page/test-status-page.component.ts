@@ -21,7 +21,8 @@ export class TestStatusPageComponent implements OnInit {
   ]
 
   //control the columns in view model
-  private viewColumns = ["id", "subject", "date", "status", "actions"];
+  private viewColumns = ["id", "subject", "date", "status"];
+  private updateColumns = ["id", "subject", "date", "status", "actions"];
 
   //control the model
   private readOnly = true;

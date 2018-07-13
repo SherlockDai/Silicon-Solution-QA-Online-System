@@ -29,28 +29,38 @@ export class QaSysService {
       'Content-Type':  'application/json',
     })
   };
+
   //indicate whether the user is logged in or not
   isLoggedIn = false;
+  
   //store the URL so we can redicrect after logging in
   redirectUrl: string = '\home'
+  
   //jwt decoder
   private jwtHelper = new JwtHelperService();
+  
+  //the current user
+  public user: User = null;
 
   constructor(private http:HttpClient) { 
     let token = window.localStorage.getItem('token');
     if (token != null && !this.jwtHelper.isTokenExpired(token)){
       this.isLoggedIn = true;
     }
+    let user = window.localStorage.getItem('user');
+    if (user != null) this.user = JSON.parse(user);
   }
 
-  login(email:string, password:string): Observable<JSON>{
+  login(username:string, password:string): Observable<JSON>{
     let data = {
-      email: email,
+      username: username,
       password: password
     }
     return this.http.post<JSON>(this.loginUrl, data, this.httpOptions).pipe(tap(val => {
       this.isLoggedIn = val['result'];
-      window.localStorage.setItem('token', val['token']);
+      if (this.isLoggedIn){
+        window.localStorage.setItem('token', val['token']);
+      }
     }))
   }
 
@@ -58,7 +68,7 @@ export class QaSysService {
     this.isLoggedIn = false;
   }
 
-  register(email:string, password: string): Observable<Boolean>{
+  /* register(email:string, password: string): Observable<Boolean>{
     let data = {
       email: email,
       password: password
@@ -71,7 +81,7 @@ export class QaSysService {
       email: email
     }
     return this.http.post<Boolean>(this.retrieveUrl, data, this.httpOptions);
-  }
+  } */
 
   getAll(option: any, collection: string): Observable<any[]>{
     return this.http.post<any[]>(this.getAllUrl, {
