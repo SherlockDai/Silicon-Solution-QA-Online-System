@@ -192,7 +192,7 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         return;  
       }
       //if the user confirm the action, then delete the record from database, remove related files from file system
-      this.qaSysService.deleteOne(record, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      this.qaSysService.deleteOne(record.id, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         result => {
           if (result){
             //remove the record from the list
@@ -233,7 +233,7 @@ export class InfoSysComponent implements OnInit, OnDestroy {
 
   onRefresh():void {
     this.loadingInfo = true;
-    this.qaSysService.getAll(this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getAll({_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1}, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
         //update the full table is easy
         this.fullDataSource = new MatTableDataSource(data)
@@ -296,7 +296,7 @@ export class InfoSysComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //ngOnInit is a better place to fetch data rather than constructor https://angular.io/guide/lifecycle-hooks
-    this.qaSysService.getAll(this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getAll({_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1}, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       data => {
         this.fullDataSource.data = data;
         let favoriteData = this.localStorage.getItem('favoriteStation') || "[]";

@@ -12,7 +12,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 })
 export class QaSysService {
   //the login api url
-  private server = "http://192.168.13.189:3000/"
+  public server = "http://192.168.13.189:3000/"
   private loginUrl = this.server + "login"
   private registerUrl = this.server + "register"
   private retrieveUrl = this.server + "retrievePassword"
@@ -73,19 +73,18 @@ export class QaSysService {
     return this.http.post<Boolean>(this.retrieveUrl, data, this.httpOptions);
   }
 
-  getAll(collection: string): Observable<any[]>{
+  getAll(option: any, collection: string): Observable<any[]>{
     return this.http.post<any[]>(this.getAllUrl, {
       collection: collection,
-      option: {
-        _id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1
-      }
+      option: option
     }, this.httpOptions);
   }
 
-  getMany(fields: any, collection: string): Observable<any>{
+  getMany(option: any, fields: any, collection: string): Observable<any>{
     return this.http.post<any>(this.getManyUrl, {
       collection: collection,
-      fields: fields
+      fields: fields,
+      option: option
     }, this.httpOptions);
   }
 
@@ -106,10 +105,10 @@ export class QaSysService {
       }));
   }
 
-  deleteOne(record: any, collection: String): Observable<Boolean>{
+  deleteOne(id: any, collection: String): Observable<Boolean>{
     return this.http.post<Boolean>(this.deleteOneUrl, {
       collection: collection,
-      fields: {id: record.id}
+      fields: {id: id}
     }, this.httpOptions);
   }
 
@@ -125,7 +124,7 @@ export class QaSysService {
         }
         //stringify all property and parse them on backend
         //exlcude File object
-        if (typeof record[property].name == 'string'){
+        if (record[property] && typeof record[property].name == 'string'){
           formData.append(property, record[property]);
         }
         else
@@ -139,9 +138,9 @@ export class QaSysService {
       catchError(this.errorHandler));
   }
 
-  updateOne(prevInfo: any, record: any, collection: string): Observable<JSON>{
+  updateOne(prevId: any, record: any, collection: string): Observable<JSON>{
     let formData = new FormData();
-    formData.append("prevId", prevInfo.id);
+    formData.append("prevId", prevId);
     formData.append("collection", collection);
     for(let property in record){
       if (record.hasOwnProperty(property)) {

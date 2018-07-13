@@ -169,7 +169,9 @@ app.post('/getMany', function(request, response, next){
   if (request.body['fields']){
     fields = request.body.fields;
   }
-  dbo.collection(coll).find(fields).toArray(function(err, result){
+  if (request.body['option'])
+    var option = request.body['option']
+  dbo.collection(coll).find(fields, {fields: option}).toArray(function(err, result){
     if (err) throw err;
     response.send(result);
   })
@@ -409,7 +411,7 @@ app.post('/updateOne', function(request, response, next){
     //now store all the info in database
     let query = {id: prevId}
     //remove deleted files from file system
-    while(record.deleted.length > 0){
+    while(record.deleted && record.deleted.length > 0){
       let file = record.deleted.pop()
       rimraf( __dirname + '/uploads/' + prevId + '/' + file.fileName, function(error){
         if (error){

@@ -107,6 +107,7 @@ export class Documnetation{
 
 export class Test{
   id: string;
+  prev_id: string;
   url: string;
   subject: string;
   date: number;
@@ -114,13 +115,13 @@ export class Test{
   station_id: string;
   readOnly: boolean;
 
-  constructor(){
+  constructor(station_id){
     this.id = "";
-    this.url = "https://jira.litepoint.internal:8443/browse/";
+    this.prev_id = null;
     this.subject = "";
-    this.date = (new Date()).getMilliseconds();
+    this.date = Date.now();
     this.status = "";
-    this.station_id = "";
-    this.readOnly = true;
+    this.station_id = station_id;
+    this.readOnly = false;
   }
 }

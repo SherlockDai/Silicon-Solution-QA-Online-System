@@ -34,11 +34,14 @@ export class BottomSheetComponent implements OnInit {
 
   //customized actions happened in this component
   openTestStatus():void {
-    this.qaSysService.getMany({station_id: this.data.record.id}, "testStatus").pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+    this.qaSysService.getMany({_id: 0}, {station_id: this.data.record.id}, "testStatus").pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       response => {
         if (response){
           this.dialog.open(TestStatusPageComponent, {
-            data: response,
+            data: {
+              station_id: this.data.record.id,
+              data: response
+            },
             autoFocus: false
           })
         }
