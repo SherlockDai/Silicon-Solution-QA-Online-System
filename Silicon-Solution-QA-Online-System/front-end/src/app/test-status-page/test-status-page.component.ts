@@ -14,12 +14,6 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class TestStatusPageComponent implements OnInit {
 
-  private mockdata: Array<Test> = [
-    {id: "SYSTEMTEST-4013", prev_id: null, url: "https://jira.litepoint.internal:8443/browse/SYSTEMTEST-4013", subject: "task", date: 1531415857000, status: "resolved", station_id: "brcm-4357-8UP", readOnly: true},
-    {id: "SYSTEMTEST-4012", prev_id: null, url: "https://jira.litepoint.internal:8443/browse/SYSTEMTEST-4012", subject: "task", date: 1531343857000, status: "resolved", station_id: "brcm-4357-8UP", readOnly: true},
-    {id: "SYSTEMTEST-4011", prev_id: null, url: "https://jira.litepoint.internal:8443/browse/SYSTEMTEST-4011", subject: "task", date: 1531178257000, status: "open", station_id: "brcm-4357-8UP", readOnly: true}
-  ]
-
   //control the columns in view model
   private viewColumns = ["id", "subject", "date", "status"];
   private updateColumns = ["id", "subject", "date", "status", "actions"];

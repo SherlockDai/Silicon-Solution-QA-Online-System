@@ -27,6 +27,7 @@ import { ExcelVisualizationComponent } from './excel-visualization/excel-visuali
 import { ConfirmationPageComponent } from './confirmation-page/confirmation-page.component';
 import { ChartModule } from 'angular-highcharts';
 import { TestStatusPageComponent } from './test-status-page/test-status-page.component';
+import { AdminPageComponent } from './admin-page/admin-page.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { TestStatusPageComponent } from './test-status-page/test-status-page.com
     DragAndDropDirective,
     ExcelVisualizationComponent,
     ConfirmationPageComponent,
-    TestStatusPageComponent
+    TestStatusPageComponent,
+    AdminPageComponent
   ],
   imports: [
     ChartModule,
