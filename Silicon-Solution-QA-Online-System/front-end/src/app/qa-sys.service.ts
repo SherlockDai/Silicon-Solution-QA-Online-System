@@ -12,7 +12,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 })
 export class QaSysService {
   //the login api url
-  public server = "http://192.168.13.189:3000/"
+  public server = "http://localhost:3000/"
   private loginUrl = this.server + "login"
   private registerUrl = this.server + "register"
   private retrieveUrl = this.server + "retrievePassword"
