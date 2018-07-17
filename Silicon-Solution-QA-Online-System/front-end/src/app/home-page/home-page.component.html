@@ -1,6 +1,6 @@
 <div class="home-page">
   <div class="landing-page-box">
-    <div class="navi-container"  [@flyInOut]="'in'" (@flyInOut.done)="showUp($event)">
+    <div class="navi-container"  [@flyInOut]="'in'" (@flyInOut.done)="showUp()">
         <img class="logo-home" src="../../assets/images/logo-home.png"/>
         <div class="btn-group">
           <a href="javascript:void(0)" routerLink="/login"><button (click)="this.qaSysService.logout()">Logout</button></a>
