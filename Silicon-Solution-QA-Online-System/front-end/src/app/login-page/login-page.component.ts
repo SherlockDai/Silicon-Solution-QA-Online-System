@@ -81,7 +81,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   login(username: string, password:string):void{
     username = username.toLowerCase();
     this.loading = true;
-    this.user.username = username;
+    this.user.id = username;
     this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => this.checkInfo(result));
   }
