@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from "./user";
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { MessageService } from './message.service';
+import { MatSnackBar } from '@angular/material'
 import { map, catchError, tap } from 'rxjs/operators';
 import { Observable, of, throwError  } from 'rxjs';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '../../node_modules/@angular/router';
@@ -219,6 +219,29 @@ export class AuthGuard implements CanActivate {
 
     //navigate to the login page 
     this.router.navigate(['/login']);
+  }
+
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RoleGuard implements CanActivate {
+
+  constructor(private qaSysService: QaSysService, private router: Router, private snackBar: MatSnackBar) { }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean{
+
+    return this.checkRole();
+  }
+
+  checkRole(): boolean{
+    if (this.qaSysService.user.role == 'admin') return true;
+
+    //not admin]
+    //navigate to the hone page 
+    this.router.navigate(['/home']);
+    this.snackBar.open("Sorry, you do not have access toward Admin Page! Please contact administrators!", "Dismiss");
   }
 
 }
