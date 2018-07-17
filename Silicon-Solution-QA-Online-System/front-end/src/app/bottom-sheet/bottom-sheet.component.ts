@@ -13,12 +13,12 @@ import { TestStatusPageComponent } from "../test-status-page/test-status-page.co
 export class BottomSheetComponent implements OnInit {
 
   //boolean that indicates whether the current table is full table or favorite table
-  private isFullList: boolean = true;
+  public isFullList: boolean = true;
   //declare a subject to handle the unsubscription of all subscriptions
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any, private qaSysService: QaSysService, public dialog: MatDialog) {
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any, public qaSysService: QaSysService, public dialog: MatDialog) {
       this.isFullList = data['isFullList'];
     }
 

@@ -53,7 +53,7 @@ export class QaSysService {
 
   login(username:string, password:string): Observable<JSON>{
     let data = {
-      username: username,
+      id: username,
       password: password
     }
     return this.http.post<JSON>(this.loginUrl, data, this.httpOptions).pipe(tap(val => {

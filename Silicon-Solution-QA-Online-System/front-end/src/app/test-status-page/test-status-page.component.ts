@@ -15,14 +15,14 @@ import { takeUntil } from 'rxjs/operators';
 export class TestStatusPageComponent implements OnInit {
 
   //control the columns in view model
-  private viewColumns = ["id", "subject", "date", "status"];
-  private updateColumns = ["id", "subject", "date", "status", "actions"];
+  public viewColumns = ["id", "subject", "date", "status"];
+  public updateColumns = ["id", "subject", "date", "status", "actions"];
 
   //control the model
-  private readOnly = true;
+  public readOnly = true;
 
   //store table data
-  private dataSource: MatTableDataSource<Test> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<Test> = new MatTableDataSource();
 
   //store previous rows
   private prevRowTable = {}
@@ -40,9 +40,8 @@ export class TestStatusPageComponent implements OnInit {
   private station_id = null;
 
   constructor(public dialogRef: MatDialogRef<TestStatusPageComponent>,
-    @Inject(MAT_DIALOG_DATA) public input: any, 
-    private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
-    private router: Router, public snackBar: MatSnackBar) {
+    @Inject(MAT_DIALOG_DATA) public input: any, public qaSysService:QaSysService,
+      public snackBar: MatSnackBar) {
       this.data = input.data;
       this.station_id = input.station_id;
     }

@@ -34,7 +34,7 @@ export class HomePageComponent implements OnInit {
   //declare state to store the state of the team info
   state:String;
 
-  constructor(private qaSysService: QaSysService) { 
+  constructor(public qaSysService: QaSysService) { 
     //initialize the state to down in order to hide the team info at the begining 
     this.state = 'down';
   }

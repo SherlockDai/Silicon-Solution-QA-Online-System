@@ -17,9 +17,9 @@ export class AdminPageComponent implements OnInit {
   //control un-subscription
   private ngUnsubscribe: Subject<any> = new Subject();
   //table data source
-  private dataSource: MatTableDataSource<User> = new MatTableDataSource
+  public dataSource: MatTableDataSource<User> = new MatTableDataSource
   //data source for the current page
-  private pageDataSource: MatTableDataSource<User> = new MatTableDataSource
+  public pageDataSource: MatTableDataSource<User> = new MatTableDataSource
   //stored data
   private data = null;
   //store the page index
@@ -29,11 +29,11 @@ export class AdminPageComponent implements OnInit {
   //matsort
   @ViewChild(MatSort) sort: MatSort;
   //control table columns
-  private tableColumns = ["username", "email", "role", "actions"]
+  public tableColumns = ["username", "email", "role", "actions"]
   //store previous rows
   private prevRowTable = {}
 
-  constructor(private qaSysService: QaSysService, private snackBar: MatSnackBar) { }
+  constructor(public qaSysService: QaSysService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.qaSysService.getAll({_id: 0}, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(

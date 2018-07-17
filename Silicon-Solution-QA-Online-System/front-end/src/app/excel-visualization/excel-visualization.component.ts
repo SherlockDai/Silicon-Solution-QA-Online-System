@@ -11,10 +11,10 @@ type AOA = any[][];
 })
 export class ExcelVisualizationComponent implements OnInit {
   private files: Array<File> = new Array();
-  private tableDataSource: MatTableDataSource<File> = new MatTableDataSource();
-  private AnalysisDataSource: MatTableDataSource<File> = new MatTableDataSource();
-  private tableColumns: Array<String> = [];
-  private resultColumns: Array<String> = [];
+  public tableDataSource: MatTableDataSource<File> = new MatTableDataSource();
+  public AnalysisDataSource: MatTableDataSource<File> = new MatTableDataSource();
+  public tableColumns: Array<String> = [];
+  public resultColumns: Array<String> = [];
   private data: Array<AOA> = [];
   private data_account: Array<Array<Account>> = [];
   private data_dicts: Array<Object> = []
@@ -24,12 +24,12 @@ export class ExcelVisualizationComponent implements OnInit {
   private inserts = [];
   private currentSheet = [];
   private unchanged = [];
-  private showUpdates = false;
-  private showDeletes = false;
-  private showInserts = false;
-  private showUnchanged = false;
+  public showUpdates = false;
+  public showDeletes = false;
+  public showInserts = false;
+  public showUnchanged = false;
   private dates = [];
-  private chart: Chart = null;
+  public chart: Chart = null;
 
   @ViewChild(MatSort) sort: MatSort;
 

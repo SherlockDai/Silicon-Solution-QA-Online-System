@@ -19,10 +19,10 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     station: Station;
     readOnly: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
-    private selectedSheet = "general"; 
+    public selectedSheet = "general"; 
     //initialize the status list
     private stationStatus = ["inactive", "active", "idle"];
-    private options: Array<String>;
+    public options: Array<String>;
 
     //store the new DUT_WIFI_FW_version
     private newDutWifiFwVersion: FileLocation = new FileLocation();
@@ -47,7 +47,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     private current_station_id;
 
     //control the uploading progress bar
-    private uploading = false;
+    public uploading = false;
 
     @ViewChild(MatSort) sort: MatSort;
 
@@ -56,7 +56,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
-        private _sanitizer: DomSanitizer, private qaSysService:QaSysService,
+        private _sanitizer: DomSanitizer, public qaSysService:QaSysService,
         private router: Router, public snackBar: MatSnackBar) {
           dialogRef.disableClose = true;
           this.station = data["record"];

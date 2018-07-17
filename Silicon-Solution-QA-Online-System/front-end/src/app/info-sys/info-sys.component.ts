@@ -46,7 +46,7 @@ export class InfoSysComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private bottomSheet: MatBottomSheet, public dialog: MatDialog, 
-    private qaSysService:QaSysService, public snackBar: MatSnackBar, route:ActivatedRoute) { 
+    public qaSysService:QaSysService, public snackBar: MatSnackBar, route:ActivatedRoute) { 
     this.configuration = route.snapshot.data
     this.columns = this.configuration.tableColumns;
     this.displayedColumns = this.columns.map(c => c.columnDef);

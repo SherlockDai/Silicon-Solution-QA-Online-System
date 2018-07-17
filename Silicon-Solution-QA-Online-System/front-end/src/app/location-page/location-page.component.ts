@@ -10,7 +10,7 @@ import {MatSnackBar} from '@angular/material';
 export class LocationPageComponent implements OnInit, OnDestroy {
 
   private route$: Subscription;
-  private url: String;
+  public url: String;
 
   constructor(private route: ActivatedRoute, public snakeBar: MatSnackBar) { }
 
