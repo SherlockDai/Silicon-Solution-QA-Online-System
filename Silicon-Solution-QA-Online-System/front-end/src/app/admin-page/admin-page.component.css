@@ -1,0 +1,118 @@
+/*
+ * Navbar
+ */
+
+ .navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    font-size: 1vw;
+    background-color: rgba(0, 0, 0, .25);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+    display:flex;
+    align-items: baseline;
+  }
+  
+  .navbar{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .navbar-btn-group{
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    
+  
+  }
+  
+  .nav-link{
+    color: white;
+  }
+  
+  i-home{
+    position: relative;
+    top:2px;
+    right: 1px;
+  }
+  
+  
+  /*
+   * Utilities
+   */
+  
+  .border-top { border-top: 1px solid #e5e5e5; }
+  .border-bottom { border-bottom: 1px solid #e5e5e5; }
+  /*
+   * Table
+   */
+  .table-container{
+    width: 100%;
+    height: 100%;
+    background-color: #ff8f3f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card{
+    z-index: 1;
+    min-height: 50%;
+    height: 85%;
+    background: rgba(255, 255, 255);
+    margin: auto;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center; 
+  }
+  
+  .card::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+  } 
+  
+  .card::-webkit-scrollbar-thumb {
+    background-color: #F90;	
+      background-image: -webkit-linear-gradient(45deg,rgba(255, 255, 255, .2) 25%,
+                                                transparent 25%,
+                                                transparent 50%,
+                                                rgba(255, 255, 255, .2) 50%,
+                                                rgba(255, 255, 255, .2) 75%,
+                                                transparent 75%,
+                                                transparent)
+  }
+  
+  .card::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+      background-color: #F5F5F5;
+  }
+
+  ::ng-deep .mat-sort-header-container {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center !important;
+}
+
+table.mat-table {
+    border-spacing: 0;
+    text-align: center;
+}
+
+.mat-select-value {
+  display: table-cell;
+  max-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+  

@@ -4,9 +4,9 @@ import { FormControl } from "@angular/forms";
 import { MatSnackBar } from "@angular/material";
 
 import { QaSysService } from "../qa-sys.service";
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { User } from "../user";
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-login-page',
@@ -50,8 +50,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   //control registration checked icon
   registEmailChecked = false;
   registPasswordChecked = false;
-
+  //control un-subscription
   private ngUnsubscribe: Subject<any> = new Subject();
+
   changeForm(){
     this.toggle = !this.toggle;
   }
@@ -81,7 +82,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     username = username.toLowerCase();
     this.loading = true;
     this.user.username = username;
-    this.user.password = password;
     this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => this.checkInfo(result));
   }

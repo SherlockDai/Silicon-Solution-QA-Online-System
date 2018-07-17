@@ -5,7 +5,7 @@
         <div class="btn-group">
           <a href="javascript:void(0)" routerLink="/login"><button (click)="this.qaSysService.logout()">Logout</button></a>
           <a pageScroll href="#document-manuals"><button>Document Analysis</button></a>
-          <a pageScroll href="#bookkeeping-info"><button>Bookkeeping</button></a>
+          <a pageScroll href="#admin-page"><button>Admin Page</button></a>
           <a pageScroll href="#test-status"><button>Test Status</button></a>
           <a pageScroll href="#station-info"><button>Station Info</button></a>
         </div>
@@ -54,16 +54,16 @@
           </div>
         </div>
   </div>
-  <div class="bookkeeping-info" id="bookkeeping-info">
+  <div class="bookkeeping-info" id="admin-page">
       <div class="bookkeeping-info-text-wrap">
         <div class="bookkeeping-info-text">
             <p class="title" >
-              BOOKKEEPING SYSTEM
+              Admin Page
             </p>
             <p class="description">
-              Management of all compoenents in lab 
+              Management of all privileged users
             </p>
-            <input type="button" value="Go To System"/>
+            <input type="button" value="Go To System" routerLink="/admin/"/>
         </div>
       </div>
       <div class="parallax bookkeeping-info-img"></div>

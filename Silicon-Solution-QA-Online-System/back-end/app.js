@@ -65,12 +65,12 @@ app.get('/', function (req, res) {
 
 
 app.post("/login", function(request, response, next){
-  const query = {username: request.body["username"]};
+  const query = {id: request.body["id"]};
 
   const client = ldap.createClient({
     url: 'ldap://192.168.3.84'
   });
-  client.bind(request.body["username"] + "@litepoint.internal", request.body['password'], function(err){
+  client.bind(request.body["id"] + "@litepoint.internal", request.body['password'], function(err){
     client.unbind();
     if (err == null){
       //find out the role of user
