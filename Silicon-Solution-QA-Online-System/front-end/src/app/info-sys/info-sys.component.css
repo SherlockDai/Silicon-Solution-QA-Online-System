@@ -176,3 +176,13 @@ mat-cell, mat-footer-cell, mat-header-cell {
   word-wrap: break-word;
   min-height: inherit;
 }
+
+::ng-deep .mat-select-value {
+  display: table-cell;
+  max-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center !important;
+}
