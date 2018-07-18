@@ -142,7 +142,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         )
       }
       else{
-        this.qaSysService.updateOne(this.data.prevInfo, this.station, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+        this.qaSysService.updateOne(this.data.prevInfo.id, this.station, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
           response => {
             if(response){
               let newBriefStation: StationInfoBrief = {
