@@ -73,26 +73,31 @@ export class InfoSysComponent implements OnInit, OnDestroy {
       }
     });
 
-    bottomSHeetRef.afterDismissed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
-      if(result){
-        //open dialog if the user press update or detail info button
-        if(result['action'] == "update" || result['action'] == "detail"){
-          this.loadingInfo = true;
-          this.openDialog(result['action'], result['row']);
+    bottomSHeetRef.afterDismissed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      result => {
+        if(result){
+          //open dialog if the user press update or detail info button
+          if(result['action'] == "update" || result['action'] == "detail"){
+            this.loadingInfo = true;
+            this.openDialog(result['action'], result['row']);
+          }
+          //add the corresponding record into the favorite list
+          else if(result['action'] == "favorite"){
+            this.addToFavorite(result['row']);
+          }
+          else if(result['action'] == "unfavorite"){
+            this.deleteFromFavorite(result['row']);
+          }
+          //todo delete the corresponding record if the user press the delete button
+          else if(result['action'] == "delete"){
+            this.deleteFromTable(result['row']);
+          }
         }
-        //add the corresponding record into the favorite list
-        else if(result['action'] == "favorite"){
-          this.addToFavorite(result['row']);
-        }
-        else if(result['action'] == "unfavorite"){
-          this.deleteFromFavorite(result['row']);
-        }
-        //todo delete the corresponding record if the user press the delete button
-        else if(result['action'] == "delete"){
-          this.deleteFromTable(result['row']);
-        }
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
-    })
+    )
   }
 
   //bottom sheet click listener, open dialog
@@ -109,28 +114,36 @@ export class InfoSysComponent implements OnInit, OnDestroy {
           },
           autoFocus: false
         })
-        dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
-          //only update action return result
-          if(result){
-            let newData = this.fullDataSource.data;
-            let index = newData.indexOf(result.prevInfo);
-            newData[index] = result.newInfo;
-            this.fullDataSource.data = newData;
-            //update the favorite as well if applied
-            if(this.favoriateDataSource){
-              newData = this.favoriateDataSource.data;
-              index = newData.indexOf(result.prevInfo);
-              if(index > -1){
-                newData[index] = result.newInfo;
-                this.favoriateDataSource.data = newData;
+        dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+          result => {
+            //only update action returns result
+            if(result){
+              let newData = this.fullDataSource.data;
+              let index = newData.indexOf(result.prevInfo);
+              newData[index] = result.newInfo;
+              this.fullDataSource.data = newData;
+              //update the favorite as well if applied
+              if(this.favoriateDataSource){
+                newData = this.favoriateDataSource.data;
+                index = newData.indexOf(result.prevInfo);
+                if(index > -1){
+                  newData[index] = result.newInfo;
+                  this.favoriateDataSource.data = newData;
+                }
               }
+              this.updatePage();
+              this.snackBar.open("Record is updated!", "Dismiss", {
+                duration: 2000
+              });
             }
-            this.updatePage();
-            this.snackBar.open("Record is updated!", "Dismiss", {
-              duration: 2000
-            });
+          },
+          err => {
+            this.snackBar.open(err, "Dismiss");
           }
-        })
+        )
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
     )
   }
@@ -146,7 +159,8 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         }
       }
     );
-    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      result => {
         if(result){
           //add the returned new record to the record list
           let newData = this.fullDataSource.data;
@@ -157,6 +171,9 @@ export class InfoSysComponent implements OnInit, OnDestroy {
           });
           this.updatePage();
         }
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
     )
   }
@@ -187,32 +204,37 @@ export class InfoSysComponent implements OnInit, OnDestroy {
 
   deleteFromTable(record: any):void {
     let dialogRef = this.dialog.open(ConfirmationPageComponent);
-    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
-      if (!result){
-        return;  
-      }
-      //if the user confirm the action, then delete the record from database, remove related files from file system
-      this.qaSysService.deleteOne(record.id, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-        result => {
-          if (result){
-            //remove the record from the list
-            let newData = this.fullDataSource.data;
-            let index = newData.indexOf(record);
-            if(index > -1)
-              newData.splice(index, 1);
-            this.fullDataSource.data = newData;
-            //remove it from favorite if applied
-            if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(record) != -1){
-              this.deleteFromFavorite(record);
-            }
-            this.snackBar.open("Record is deleted!", "Dismiss", {
-              duration: 2000
-            });
-            this.updatePage();
-          }
+    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      result => {
+        if (!result){
+          return;  
         }
-      )
-    })
+        //if the user confirm the action, then delete the record from database, remove related files from file system
+        this.qaSysService.deleteOne(record.id, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+          result => {
+            if (result){
+              //remove the record from the list
+              let newData = this.fullDataSource.data;
+              let index = newData.indexOf(record);
+              if(index > -1)
+                newData.splice(index, 1);
+              this.fullDataSource.data = newData;
+              //remove it from favorite if applied
+              if(this.favoriateDataSource && this.favoriateDataSource.data.indexOf(record) != -1){
+                this.deleteFromFavorite(record);
+              }
+              this.snackBar.open("Record is deleted!", "Dismiss", {
+                duration: 2000
+              });
+              this.updatePage();
+            }
+          }
+        )
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
+      }
+    )
   }
 
   showFullList():void{
@@ -296,16 +318,20 @@ export class InfoSysComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //ngOnInit is a better place to fetch data rather than constructor https://angular.io/guide/lifecycle-hooks
-    this.qaSysService.getAll({_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1}, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-      data => {
-        this.fullDataSource.data = data;
-        let favoriteData = this.localStorage.getItem('favoriteStation') || "[]";
-        this.favoriateDataSource.data = JSON.parse(favoriteData);
-        this.dataSource = this.fullDataSource;
-        this.pageLength = this.dataSource.data.length;
-        this.updatePage();
-        this.pageDataSource.sort = this.sort;
-      }
+    this.qaSysService.getAll({_id: 0, id: 1, vender: 1, chipset: 1, device: 1, status: 1, update_time: 1}, this.configuration.collection).
+      pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+        data => {
+          this.fullDataSource.data = data;
+          let favoriteData = this.localStorage.getItem('favoriteStation') || "[]";
+          this.favoriateDataSource.data = JSON.parse(favoriteData);
+          this.dataSource = this.fullDataSource;
+          this.pageLength = this.dataSource.data.length;
+          this.updatePage();
+          this.pageDataSource.sort = this.sort;
+        },
+        err => {
+          this.snackBar.open(err, "Dismiss");
+        }
     )
   }
 

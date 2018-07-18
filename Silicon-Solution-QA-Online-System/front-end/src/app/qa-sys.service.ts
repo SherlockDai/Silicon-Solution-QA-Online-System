@@ -12,7 +12,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 })
 export class QaSysService {
   //the login api url
-  public server = "http://192.168.0.65:3000/"
+  public server = "http://localhost:3000/"
   private loginUrl = this.server + "login"
   private registerUrl = this.server + "register"
   private retrieveUrl = this.server + "retrievePassword"
@@ -42,7 +42,7 @@ export class QaSysService {
   //the current user
   public user: User = null;
 
-  constructor(private http:HttpClient) { 
+  constructor(private http:HttpClient, private snackBar: MatSnackBar) { 
     let token = window.localStorage.getItem('token');
     if (token != null && !this.jwtHelper.isTokenExpired(token)){
       this.isLoggedIn = true;
@@ -83,11 +83,11 @@ export class QaSysService {
     return this.http.post<Boolean>(this.retrieveUrl, data, this.httpOptions);
   } */
 
-  getAll(option: any, collection: string): Observable<any[]>{
+  getAll(option: any, collection: string): Observable<any>{
     return this.http.post<any[]>(this.getAllUrl, {
       collection: collection,
       option: option
-    }, this.httpOptions);
+    }, this.httpOptions).pipe(catchError(this.errorHandler));
   }
 
   getMany(option: any, fields: any, collection: string): Observable<any>{
@@ -95,7 +95,7 @@ export class QaSysService {
       collection: collection,
       fields: fields,
       option: option
-    }, this.httpOptions);
+    }, this.httpOptions).pipe(catchError(this.errorHandler));
   }
 
   getOne(record: any, collection: string): Observable<any>{
@@ -112,14 +112,15 @@ export class QaSysService {
             }
           }
         return response;
-      }));
+      })).pipe(catchError(this.errorHandler));
   }
 
-  deleteOne(id: any, collection: String): Observable<Boolean>{
+  deleteOne(id: any, collection: String): Observable<any>{
     return this.http.post<Boolean>(this.deleteOneUrl, {
       collection: collection,
       fields: {id: id}
-    }, this.httpOptions);
+    }, this.httpOptions).pipe(
+      catchError(this.errorHandler));;
   }
 
   addOne(record: any, collection: string): Observable<JSON>{
@@ -148,7 +149,7 @@ export class QaSysService {
       catchError(this.errorHandler));
   }
 
-  updateOne(prevId: any, record: any, collection: string): Observable<JSON>{
+  updateOne(prevId: any, record: any, collection: string): Observable<any>{
     let formData = new FormData();
     formData.append("prevId", prevId);
     formData.append("collection", collection);
@@ -171,7 +172,8 @@ export class QaSysService {
     let headers = new HttpHeaders();
     headers.delete('Content-Type');
     let options = { headers: headers };
-    return this.http.post<JSON>(this.updateOneUrl, formData, options);
+    return this.http.post<JSON>(this.updateOneUrl, formData, options).pipe(
+      catchError(this.errorHandler));
   }
 
   //get the distinct values in certain field
@@ -183,7 +185,7 @@ export class QaSysService {
     return this.http.post<Array<String>>(this.getSuggestionUrl, data, this.httpOptions);
   }
 
-  private errorHandler(response: HttpErrorResponse){
+  errorHandler(response: HttpErrorResponse){
     return throwError(response.error)
   }
 

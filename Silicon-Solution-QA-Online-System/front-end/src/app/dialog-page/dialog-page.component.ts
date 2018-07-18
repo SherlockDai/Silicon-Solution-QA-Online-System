@@ -155,6 +155,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
               };
               this.dialogRef.close({prevInfo: this.data.prevInfo, newInfo: newBriefStation})
             }
+          },
+          err => {
+            this.snackBar.open(err, "Dismiss");
           }
         )
       }
@@ -187,7 +190,10 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     }
     else
       this.qaSysService.getSuggestion(event.target.id, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-        response => this.options = response
+        response => this.options = response,
+        err => {
+          this.snackBar.open(err, "Dismiss");
+        }
       )
   }
 
@@ -265,19 +271,25 @@ export class DialogPageComponent implements OnInit, OnDestroy {
   }
 
   checkExisting(target, event): void{
+    //if user change it back to previous one no actions!
     if (this.readOnly || this.current_station_id == target.value){
       return;
     }
-    this.qaSysService.checkExisting(target.id, target.value, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(function (i, result) {
-      if(!result){
-        this.idError = false;
+    this.qaSysService.checkExisting(target.id, target.value, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      response => {
+        if(!response){
+          this.idError = false;
+        }
+        else{
+          this.idError = true;
+          target.focus();
+          this.snackBar.open('This Station Name is in use!', 'dismiss');
+        }
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
-      else{
-        this.idError = true;
-        target.focus();
-        this.snackBar.open('This Station Name is in use!', 'dismiss');
-      }
-    }.bind(this, target))
+    )
   }
 
   sortDocuments(event): void{

@@ -44,6 +44,9 @@ export class AdminPageComponent implements OnInit {
         this.pageLength = this.dataSource.data.length;
         this.updatePage();
         this.pageDataSource.sort = this.sort;
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
     );
   }
@@ -80,11 +83,16 @@ export class AdminPageComponent implements OnInit {
         response => {
           if (response){
             this.snackBar.open("Insertion successed!", "Dismiss")
+            this.updatePage();
           }
           else{
             row.readOnly = false;
             this.snackBar.open("Insertion failed! Please verify your input!", "Dismiss");
           }
+        },
+        err => {
+          this.snackBar.open(err, "Dismiss");
+          row.readOnly = false;
         }
       )
     }
@@ -97,11 +105,16 @@ export class AdminPageComponent implements OnInit {
             this.snackBar.open("Update successed!", "Dismiss")
             //remove the previous data
             delete this.prevRowTable[row.prev_id]
+            this.updatePage();
           }
           else{
             row.readOnly = false;
-            this.snackBar.open("Update failed! Please verify your input!", "Dismiss");
+            this.snackBar.open("Update faled! Please try again later!", "Dismiss")
           }
+        },
+        err => {
+          this.snackBar.open(err, "Dismiss");
+          row.readOnly = false;
         }
       )
     }
@@ -114,6 +127,7 @@ export class AdminPageComponent implements OnInit {
       let index = this.data.indexOf(row);
       this.data.splice(index, 1);
       this.dataSource.data = this.data;
+      this.updatePage();
     }
     //else we are updating the row
     else{
@@ -124,6 +138,7 @@ export class AdminPageComponent implements OnInit {
       delete this.prevRowTable[row.prev_id]
       //change back to view model
       row.readOnly = true;
+      this.updatePage();
     }
 
   }
@@ -136,10 +151,14 @@ export class AdminPageComponent implements OnInit {
           this.data.splice(index, 1);
           this.dataSource.data = this.data;
           this.snackBar.open("Deletion successed!", "Dismiss");
+          this.updatePage();
         }
         else{
           this.snackBar.open("Deletion failed! Please try again later!", "Dismiss");
         }
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
     )
     

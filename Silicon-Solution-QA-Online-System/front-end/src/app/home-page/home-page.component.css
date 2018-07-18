@@ -174,12 +174,12 @@ input{
     background-image: url("../../assets/images/img-3-main.jpg")
 }
 
-.bookkeeping-info{
+.admin-page{
     height: 400px;
     width: 100%;
 }
 
-.bookkeeping-info-text-wrap{
+.admin-page-text-wrap{
     float: left;
     width: 40%;
     height: 100%;
@@ -188,19 +188,19 @@ input{
     justify-content: center;
 }
 
-.bookkeeping-info-img{
+.admin-page-img{
     float:right;
     width: 60%;
     height: 100%;
     background-image: url("../../assets/images/img-4-main.jpg")
 }
 
-.document-manuals{
+.document-analysis{
     height: 500px;
     width: 100%;
 }
 
-.document-manuals-text-wrap{
+.document-analysis-text-wrap{
     float: right;
     width: 40%;
     height: 100%;
@@ -210,7 +210,7 @@ input{
 
 }
 
-.document-manuals-img{
+.document-analysis-img{
     float:left;
     width: 60%;
     height: 100%;

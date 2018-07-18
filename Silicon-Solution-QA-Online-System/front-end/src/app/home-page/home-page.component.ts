@@ -8,6 +8,7 @@ import {
   transition
 } from '@angular/animations';
 import { QaSysService } from "../qa-sys.service";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
   selector: 'app-home-page',
@@ -34,7 +35,7 @@ export class HomePageComponent implements OnInit {
   //declare state to store the state of the team info
   state:String;
 
-  constructor(public qaSysService: QaSysService) { 
+  constructor(public qaSysService: QaSysService, public snackBar: MatSnackBar) { 
     //initialize the state to down in order to hide the team info at the begining 
     this.state = 'down';
   }

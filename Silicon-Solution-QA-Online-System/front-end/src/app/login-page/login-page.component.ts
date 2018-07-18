@@ -83,7 +83,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.user.id = username;
     this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(result => this.checkInfo(result));
+      .subscribe(
+        result => this.checkInfo(result),
+        err => this.snackBar.open(err, "Dismiss")
+      );
   }
 
   checkInfo(result: JSON){

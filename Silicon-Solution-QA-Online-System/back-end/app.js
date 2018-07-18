@@ -21,7 +21,7 @@ const multiparty = require('multiparty');
 const fs = require("fs")
 
 const port = 3000;
-const serverUrl =" http://192.168.0.65:3000/";
+const serverUrl =" http://localhost:3000/";
 const MongoClient = require('mongodb').MongoClient;
 const dbUrl = "mongodb://localhost:27017/Silicon-Solution-Online-System-DB";
 
@@ -53,7 +53,10 @@ app.use(function (req, res, next) {
 });
 
 MongoClient.connect(dbUrl,  { useNewUrlParser: true },  function(err, db) {
-  if (err) throw err;
+  if (err){
+    console.log(err.message);
+    response.status(400).send(err.message);
+  }
   dbo = db.db("Silicon-Solution-Online-System-DB");
   console.log("MongoDB connect success!");
   
@@ -75,7 +78,10 @@ app.post("/login", function(request, response, next){
     if (err == null){
       //find out the role of user
       dbo.collection(userCollection).findOne(query, function(err, result){
-        if(err) throw err;
+        if (err){
+          console.log(err.message);
+          response.status(400).send(err.message);
+        }
         //create JWT and send the result back
         const token = jwt.sign({ }, 'shhhhh', {expiresIn: '8h'});
         if(result == null){
@@ -155,15 +161,16 @@ app.post('/getAll',  function(request, response, next){
     var coll = request.body['collection']
   }
   else{
-    response.status(400).send({
-      message: 'Must input collection!'
-    })
+    response.status(400).send('Must input collection!')
     return next();
   }
   if (request.body['option'])
     var option = request.body['option']
   dbo.collection(coll).find({},{fields:option}).toArray(function(err, result){
-    if(err) throw err;
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
+    }
     response.send(result);
   })
 })
@@ -173,9 +180,7 @@ app.post('/getMany', function(request, response, next){
     var coll = request.body['collection']
   }
   else{
-    response.status(400).send({
-      message: 'Must input collection!'
-    })
+    response.status(400).send('Must input collection!')
     return next();
   }
   let fields = {};
@@ -185,7 +190,10 @@ app.post('/getMany', function(request, response, next){
   if (request.body['option'])
     var option = request.body['option']
   dbo.collection(coll).find(fields, {fields: option}).toArray(function(err, result){
-    if (err) throw err;
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
+    }
     response.send(result);
   })
 })
@@ -196,7 +204,10 @@ app.post('/addOne', function(request, response, next){
   let collection = null;
 
   form.on('error', function(err){
-    console.log("Error parsing form" + err.stack);
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
+    }
   });
 
   form.on('file', function(name, file){
@@ -235,7 +246,10 @@ app.post('/addOne', function(request, response, next){
     }
     
     fs.rename(temp_path, new_path, (err) => {
-      if (err) throw err;
+      if (err){
+        console.log(err.message);
+        response.status(400).send(err.message);
+      }
     })
   });
 
@@ -257,9 +271,7 @@ app.post('/addOne', function(request, response, next){
     //handle the final record info when every thing is loaded especially the picture
     //now store all the info in database
     if(collection == null){
-      response.send({
-        error: 'Must input collection!'
-      })
+      response.status(400).send('Must input collection!')
       return next();
     }
     dbo.collection(collection).insertOne(record, function(err, result){
@@ -267,7 +279,9 @@ app.post('/addOne', function(request, response, next){
         const regex = /^E\d+/;
         err_code = err.errmsg.match(regex);
         if (err_code == "E11000")
-          response.status(400).send("Insertion failed! Duplicated Station ID! Please change station's name");
+          response.status(400).send("Insertion failed! Duplicated ID! Please modify your input!");
+        else
+          response.status(400).send(err.message);
         return next();
       }
       if (result.result.ok && result.result.ok == 1)
@@ -286,23 +300,21 @@ app.post('/getOne', function(request, response, next){
     var coll = request.body['collection']
   }
   else{
-    response.status(400).send({
-      message: 'Must input collection!'
-    })
+    response.status(400).send('Must input collection!')
     return next();
   }
   if (request.body['fields']){
     var query = request.body['fields'];
   }
   else{
-    response.status(400).send({
-      message: 'Must input fields!'
-    })
+    response.status(400).send('Must input fields!')
     return next();
   }
   dbo.collection(coll).findOne(query, {fields:{_id: 0}}, function(err, result){
-    if (err) throw err;
-    //TODO what if this one is already delete by another user?
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
+    }
     response.send(result);
   })
 });
@@ -312,30 +324,29 @@ app.post('/deleteOne', function(request, response, next){
     var collection = request.body['collection']
   }
   else{
-    response.status(400).send({ 
-      message: 'Must input collection!'
-    })
+    response.status(400).send('Must input collection!')
     return next();
   }
   if (request.body['fields']){
     var query = request.body['fields'];
   }
   else{
-    response.status(400).send({
-      message: 'Must input fields!'
-    })
+    response.status(400).send('Must input fields!')
     return next();
   }
-  //remove files
-  rimraf( __dirname + '/uploads/' + request.body['fields']['id'], function(error){
-    if (error){
-      throw error;
-    }
-  });
+  if(fs.existsSync(__dirname + '/uploads/' + request.body['fields']['id'])){
+    //remove files
+    rimraf( __dirname + '/uploads/' + request.body['fields']['id'], function(error){
+      if (err){
+        console.log(err.message);
+        response.status(400).send(err.message);
+      }
+    });
+  }
   dbo.collection(collection).remove(query, {justOne: true}, function(err, result){
-    if (err) {
-      response.send(false);
-      throw err;
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
     }
     if (result.result.ok && result.result.ok == 1)
         response.send(true);
@@ -350,20 +361,19 @@ app.post('/updateOne', function(request, response, next){
   let prevId = null
   let collection = null;
   form.on('error', function(err){
-    console.log("Error parsing form" + err.stack);
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
+    }
   });
 
   form.on('file', function(name, file){
     if(collection == null){
-      response.status(400).send({
-        message: 'Must input collection!'
-      })
+      response.status(400).send('Must input collection!')
       return next();
     }
     if(prevId == null){
-      response.status(400).send({
-        message: 'Must input previous record id!'
-      })
+      response.status(400).send('Must input previous record id!')
       return next();
     }
     //move the file to our upload folder
@@ -427,21 +437,27 @@ app.post('/updateOne', function(request, response, next){
     while(record.deleted && record.deleted.length > 0){
       let file = record.deleted.pop()
       rimraf( __dirname + '/uploads/' + prevId + '/' + file.fileName, function(error){
-        if (error){
-          throw error;
+        if (err){
+          console.log(err.message);
+          response.status(400).send(err.message);
         }
       });
     }
     dbo.collection(collection).updateOne(query, {$set:record}, function(err, result){
-      if (err) {
-        throw err;
+      if (err){
+        console.log(err.message);
+        response.status(400).send(err.message);
       }
+      //if the record has files
       //change the folder's name if the user changed the id, hopefully they don't
-      if(prevId != record['id']){
+      if(fs.existsSync(uploadPath + prevId + "/") && prevId != record['id']){
         const old_path = uploadPath + prevId + "/";
         const new_path = uploadPath + record['id'] + "/";
         fs.rename(old_path, new_path, (err) => {
-          if (err) throw err
+          if (err){
+            console.log(err.message);
+            response.status(400).send(err.message);
+          }
         })
       }
       if (result.result.ok && result.result.ok == 1)
@@ -459,24 +475,20 @@ app.post('/getSuggestion', function(request, response){
     var collection = request.body['collection']
   }
   else{
-    response.status(400).send({
-      message: 'Must input collection!'
-    })
+    response.status(400).send('Must input collection!')
     return next();
   }
   if (request.body['field']){
     var query = request.body['field'];
   }
   else{
-    response.status(400).send({
-      message: 'Must input field!'
-    })
+    response.status(400).send('Must input field!')
     return next();
   }
   dbo.collection(collection).distinct(query, function(err, result){
-    if (err) {
-      response.send([]);
-      throw err;
+    if (err){
+      console.log(err.message);
+      response.status(400).send(err.message);
     }
     response.send(result);
   })
@@ -487,24 +499,20 @@ app.post('/checkExisting', function(request, response){
     var collection = request.body['collection']
   }
   else{
-    response.status(400).send({
-      message: 'Must input collection!'
-    })
+    response.status(400).send('Must input collection!')
     return next();
   }
   if (request.body['field']){
     var query = request.body['field'];
   }
   else{
-    response.status(400).send({
-      message: 'Must input field!'
-    })
+    response.status(400).send('Must input field!')
     return next();
   }
   dbo.collection(collection).findOne(query, function(err, result){
     if (err){
-      response.send(false)
-      throw err
+      console.log(err.message);
+      response.status(400).send(err.message);
     }
     if(result){
       response.send(true);

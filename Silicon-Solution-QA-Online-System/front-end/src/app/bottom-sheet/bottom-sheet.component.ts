@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatDialog } from '@angular/material';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatDialog, MatSnackBar } from '@angular/material';
 import { QaSysService } from "../qa-sys.service";
 import { takeUntil } from '../../../node_modules/rxjs/operators';
 import { Subject } from 'rxjs';
@@ -18,7 +18,8 @@ export class BottomSheetComponent implements OnInit {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any, public qaSysService: QaSysService, public dialog: MatDialog) {
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any, public qaSysService: QaSysService, 
+    private snackBar: MatSnackBar ,public dialog: MatDialog) {
       this.isFullList = data['isFullList'];
     }
 
@@ -45,6 +46,9 @@ export class BottomSheetComponent implements OnInit {
             autoFocus: false
           })
         }
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
       }
     )
   }
