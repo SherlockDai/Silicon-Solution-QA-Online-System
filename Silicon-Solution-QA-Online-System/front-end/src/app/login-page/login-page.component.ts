@@ -79,6 +79,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   login(username: string, password:string):void{
+    if(username === ""){
+      this.loginUsernameFormControl.setErrors({'required': true});
+      return;
+    }
+    if(password === ""){
+      this.loginPasswordFormControl.setErrors({'required': true});
+    }
     username = username.toLowerCase();
     this.loading = true;
     this.user.id = username;
