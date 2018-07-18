@@ -4,6 +4,7 @@ import { MatTableDataSource, MatSort, MatSnackBar } from "@angular/material";
 import { User } from "../user";
 import { Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
+import { nearer } from '../../../node_modules/@types/q';
 
 @Component({
   selector: 'app-admin-page',
@@ -29,7 +30,7 @@ export class AdminPageComponent implements OnInit {
   //matsort
   @ViewChild(MatSort) sort: MatSort;
   //control table columns
-  public tableColumns = ["username", "email", "role", "actions"]
+  public tableColumns = ["id", "email", "role", "actions"]
   //store previous rows
   private prevRowTable = {}
 
@@ -142,6 +143,13 @@ export class AdminPageComponent implements OnInit {
       }
     )
     
+  }
+
+  addUser(event): void{
+    let newUser = new User();
+    this.data.unshift(newUser)
+    this.dataSource.data = this.data
+    this.updatePage();
   }
 
 }

@@ -23,6 +23,8 @@ export class TestStatusPageComponent implements OnInit {
 
   //store table data
   public dataSource: MatTableDataSource<Test> = new MatTableDataSource();
+  //data source for the current page
+  public pageDataSource: MatTableDataSource<Test> = new MatTableDataSource
 
   //store previous rows
   private prevRowTable = {}
@@ -38,6 +40,11 @@ export class TestStatusPageComponent implements OnInit {
   //store the input data and station_id
   private data = null;
   private station_id = null;
+
+  //store the page index
+  private currentPage = 0;
+  private pageSize = 5;
+  private pageLength = 0;
 
   constructor(public dialogRef: MatDialogRef<TestStatusPageComponent>,
     @Inject(MAT_DIALOG_DATA) public input: any, public qaSysService:QaSysService,
@@ -140,12 +147,29 @@ export class TestStatusPageComponent implements OnInit {
 
   addTest(){
     let newTest = new Test(this.station_id);
-    this.data.push(newTest)
+    this.data.unshift(newTest)
     this.dataSource.data = this.data
+    this.updatePage();
+  }
+
+  public handlePage(e: any) {
+    this.currentPage = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.updatePage();
+  }
+
+  private updatePage() {
+    const end = (this.currentPage + 1) * this.pageSize;
+    const start = this.currentPage * this.pageSize;
+    const part = this.dataSource.data.slice(start, end);
+    this.pageDataSource.data = part;
   }
 
   ngOnInit() {
     this.dataSource.data = this.data;
+    this.pageLength = this.dataSource.data.length;
+    this.updatePage();
+    this.pageDataSource.sort = this.sort;
     this.dataSource.sort = this.sort;
   }
 

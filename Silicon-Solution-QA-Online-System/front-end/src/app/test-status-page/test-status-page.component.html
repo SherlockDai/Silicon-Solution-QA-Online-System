@@ -1,6 +1,6 @@
 
   <mat-dialog-content>
-    <table mat-table [dataSource]="dataSource" matSort class="col">
+    <table mat-table [dataSource]="pageDataSource" matSort class="col">
 
       <!-- ID Column -->
       <ng-container matColumnDef="id">
@@ -21,9 +21,11 @@
       <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
           <td mat-cell *matCellDef="let test">
-            <input matInput [matDatepicker]="datepicker" [value] = "getDate(test.date)" (change)="test.date = value.getTime()" [readonly]="test.readOnly">
-            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-            <mat-datepicker #datepicker></mat-datepicker> 
+            <mat-form-field>
+              <input matInput [matDatepicker]="datepicker" [value] = "getDate(test.date)" (change)="test.date = value.getTime()"    [readonly]="test.readOnly">
+              <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+              <mat-datepicker #datepicker></mat-datepicker> 
+            </mat-form-field>
           </td>
       </ng-container>
 
@@ -47,6 +49,8 @@
       <tr mat-header-row *matHeaderRowDef=" qaSysService.user.role != 'visitor' ? updateColumns : viewColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: qaSysService.user.role != 'visitor' ? updateColumns : viewColumns"></tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="dataSource.data.length" 
+      [pageSize]="5" (page)="handlePage($event)" showFirstLastButtons class="col"></mat-paginator>
   </mat-dialog-content>
   <mat-dialog-actions>
       <button mat-button *ngIf="qaSysService.user.role != 'visitor'" (click)="addTest()">Add</button>

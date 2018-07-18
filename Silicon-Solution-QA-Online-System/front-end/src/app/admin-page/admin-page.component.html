@@ -8,9 +8,12 @@
 <div class="table-container">
   <mat-progress-bar mode="indeterminate" *ngIf="!dataSource"></mat-progress-bar>
   <div class="card w-75 p-0 mat-elevation-z8">
+    <div class="table-nav">
+        <button mat-button (click)="addUser($event)"><i-plus-square></i-plus-square>Add</button>
+    </div>
     <table mat-table [dataSource]="pageDataSource" matSort class="col">
        <!-- username Column -->
-       <ng-container matColumnDef="username">
+       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
         <td mat-cell *matCellDef="let user"> 
           <input matInput [(ngModel)]="user.id" placeholder="username" [readonly]="user.readOnly">

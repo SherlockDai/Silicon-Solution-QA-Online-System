@@ -13,7 +13,6 @@ export class Station {
     chipset: string;
     device: string;
     status: string;
-    creation_time: number;
     update_time: number;
     station_picture: any
     DUT_name: string;
@@ -43,7 +42,6 @@ export class Station {
       this.chipset = "";
       this.device = "";
       this.status = "";
-      this.creation_time = null;
       this.update_time = null;
       this.DUT_name = "";
       this.DUT_HW_version = "";

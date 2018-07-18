@@ -9,3 +9,8 @@ table.mat-table {
     border-spacing: 0;
     text-align: center;
 }
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-infix {
+    padding: .4375em 0;
+    text-align: center;
+}

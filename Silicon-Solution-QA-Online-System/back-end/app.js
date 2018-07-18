@@ -21,7 +21,7 @@ const multiparty = require('multiparty');
 const fs = require("fs")
 
 const port = 3000;
-const serverUrl =" http://localhost:3000/";
+const serverUrl =" http://192.168.0.65:3000/";
 const MongoClient = require('mongodb').MongoClient;
 const dbUrl = "mongodb://localhost:27017/Silicon-Solution-Online-System-DB";
 

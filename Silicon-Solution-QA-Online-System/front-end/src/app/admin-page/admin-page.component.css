@@ -116,3 +116,9 @@ table.mat-table {
   text-align: center;
 }
   
+.table-nav{
+  width: 100%;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
