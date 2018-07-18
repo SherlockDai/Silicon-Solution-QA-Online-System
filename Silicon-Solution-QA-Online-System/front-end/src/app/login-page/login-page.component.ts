@@ -85,6 +85,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     }
     if(password === ""){
       this.loginPasswordFormControl.setErrors({'required': true});
+      return;
     }
     username = username.toLowerCase();
     this.loading = true;
