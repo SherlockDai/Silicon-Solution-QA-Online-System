@@ -63,9 +63,12 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           this.readOnly = data["action"] == "detail" ? true : false;
           if(this.station.DUT_connection_picture)
             //now the picture attr stores base64 we will convert it to File object in onInit
-            this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture.url + this.station.id + '/' + this.station.DUT_connection_picture.fileName);
+            //add current time after the url to avoid caching, since we won't change the url
+            this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture.url + this.station.id + '/' + 
+              this.station.DUT_connection_picture.fileName + "#" + new Date().getTime());
           if(this.station.station_picture)
-            this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + this.station.station_picture.fileName);
+            this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + 
+              this.station.station_picture.fileName + "#" + new Date().getTime());
           this.testerColumns = ["Model", "IP", "FirmwareVersion"];
           this.documentColumns = ["select", "fileName", "size", "lastModified", "Remove"];
           this.documentViewColumns = ["select", "fileName", "size", "lastModified"] 
