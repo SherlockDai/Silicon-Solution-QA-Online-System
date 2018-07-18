@@ -337,9 +337,9 @@ app.post('/deleteOne', function(request, response, next){
   if(fs.existsSync(__dirname + '/uploads/' + request.body['fields']['id'])){
     //remove files
     rimraf( __dirname + '/uploads/' + request.body['fields']['id'], function(error){
-      if (err){
-        console.log(err.message);
-        response.status(400).send(err.message);
+      if (error){
+        console.log(error.message);
+        response.status(400).send(error.message);
       }
     });
   }
@@ -349,7 +349,19 @@ app.post('/deleteOne', function(request, response, next){
       response.status(400).send(err.message);
     }
     if (result.result.ok && result.result.ok == 1)
-        response.send(true);
+        //remove all test status
+        dbo.collection(collection).remove({station_id: request.body['fields']['id']}, function(err, result){
+          if (err){
+            console.log(err.message);
+            response.status(400).send(err.message);
+          }
+          if (result.result.ok && result.result.ok == 1){
+            response.send(true);
+          }
+          else{
+            response.send(false);
+          }
+        })
       else 
       response.send(false);
   })
