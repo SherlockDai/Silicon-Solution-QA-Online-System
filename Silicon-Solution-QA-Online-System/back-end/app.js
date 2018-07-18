@@ -350,7 +350,7 @@ app.post('/deleteOne', function(request, response, next){
     }
     if (result.result.ok && result.result.ok == 1)
         //remove all test status
-        dbo.collection(collection).remove({station_id: request.body['fields']['station_id']}, function(err, result){
+        dbo.collection(collection).remove({station_id: request.body['fields']['id']}, function(err, result){
           if (err){
             console.log(err.message);
             response.status(400).send(err.message);
