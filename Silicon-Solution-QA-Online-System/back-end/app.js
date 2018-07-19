@@ -23,7 +23,7 @@ const fs = require("fs")
 const port = 3000;
 const serverUrl =" http://192.168.0.65:3000/";
 const MongoClient = require('mongodb').MongoClient;
-const dbUrl = "mongodb://192.168.0.65:27017/Silicon-Solution-Online-System-DB";
+const dbUrl = "mongodb://localhost:27017/Silicon-Solution-Online-System-DB";
 
 const userCollection = "userInfo"
 
@@ -55,7 +55,6 @@ app.use(function (req, res, next) {
 MongoClient.connect(dbUrl,  { useNewUrlParser: true },  function(err, db) {
   if (err){
     console.log(err.message);
-    response.status(400).send(err.message);
   }
   dbo = db.db("Silicon-Solution-Online-System-DB");
   console.log("MongoDB connect success!");
