@@ -18,8 +18,7 @@ export class BottomSheetComponent implements OnInit {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private bottomSheetRef: MatBottomSheetRef<BottomSheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any, public qaSysService: QaSysService, 
-    private snackBar: MatSnackBar ,public dialog: MatDialog) {
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any, public qaSysService: QaSysService, public dialog: MatDialog) {
       this.isFullList = data['isFullList'];
     }
 
@@ -35,22 +34,12 @@ export class BottomSheetComponent implements OnInit {
 
   //customized actions happened in this component
   openTestStatus():void {
-    this.qaSysService.getMany({_id: 0}, {station_id: this.data.record.id}, "testStatus").pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-      response => {
-        if (response){
-          this.dialog.open(TestStatusPageComponent, {
-            data: {
-              station_id: this.data.record.id,
-              data: response
-            },
-            autoFocus: false
-          })
-        }
+    this.dialog.open(TestStatusPageComponent, {
+      data: {
+        station_id: this.data.record.id,
       },
-      err => {
-        this.snackBar.open(err, "Dismiss");
-      }
-    )
+      autoFocus: false
+    })
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { QaSysService } from "../qa-sys.service";
 import { MatTableDataSource, MatSort, MatSnackBar } from "@angular/material";
 import { User } from "../user";
@@ -11,7 +11,7 @@ import { nearer } from '../../../node_modules/@types/q';
   templateUrl: './admin-page.component.html',
   styleUrls: ['./admin-page.component.css']
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent implements OnInit, OnDestroy {
 
   //collection name
   private collection = "userInfo"
@@ -169,6 +169,11 @@ export class AdminPageComponent implements OnInit {
     this.data.unshift(newUser)
     this.dataSource.data = this.data
     this.updatePage();
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
 }

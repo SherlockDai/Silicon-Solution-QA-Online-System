@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject} from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { Test } from "../station";
 import { MatSort, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatTableDataSource } from "@angular/material";
@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './test-status-page.component.html',
   styleUrls: ['./test-status-page.component.css']
 })
-export class TestStatusPageComponent implements OnInit {
+export class TestStatusPageComponent implements OnInit, OnDestroy {
 
   //control the columns in view model
   public viewColumns = ["id", "subject", "date", "status"];
@@ -49,7 +49,6 @@ export class TestStatusPageComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<TestStatusPageComponent>,
     @Inject(MAT_DIALOG_DATA) public input: any, public qaSysService:QaSysService,
       public snackBar: MatSnackBar) {
-      this.data = input.data;
       this.station_id = input.station_id;
     }
 
@@ -183,11 +182,29 @@ export class TestStatusPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataSource.data = this.data;
-    this.pageLength = this.dataSource.data.length;
-    this.updatePage();
-    this.pageDataSource.sort = this.sort;
-    this.dataSource.sort = this.sort;
+    this.qaSysService.getMany({_id: 0}, {station_id: this.station_id}, "testStatus").pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      response => {
+        if (response){
+          this.data = response;
+          this.dataSource.data = this.data;
+          this.pageLength = this.dataSource.data.length;
+          this.updatePage();
+          this.pageDataSource.sort = this.sort;
+          this.dataSource.sort = this.sort;
+        }
+      },
+      err => {
+        this.snackBar.open(err, "Dismiss");
+      }
+    )
+    
   }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+
 
 }
