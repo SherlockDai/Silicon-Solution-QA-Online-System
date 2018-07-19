@@ -348,22 +348,28 @@ app.post('/deleteOne', function(request, response, next){
       console.log(err.message);
       response.status(400).send(err.message);
     }
-    if (result.result.ok && result.result.ok == 1)
-        //remove all test status
-        dbo.collection(collection).remove({station_id: request.body['fields']['id']}, function(err, result){
-          if (err){
-            console.log(err.message);
-            response.status(400).send(err.message);
-          }
-          if (result.result.ok && result.result.ok == 1){
-            response.send(true);
-          }
-          else{
-            response.send(false);
-          }
-        })
-      else 
-      response.send(false);
+    if (result.result.ok && result.result.ok == 1){
+        if(collection == "stationInfo"){
+          //remove all related test status
+          dbo.collection("testStatus").remove({station_id: request.body['fields']['id']}, function(err, result){
+            if (err){
+              console.log(err.message);
+              response.status(400).send(err.message);
+            }
+            if (result.result.ok && result.result.ok == 1){
+              response.send(true);
+            }
+            else{
+              response.send(false);
+            }
+          })
+        }
+        else{
+          response.send(true);
+        }
+      }
+    else 
+    response.send(false);
   })
 })
 
