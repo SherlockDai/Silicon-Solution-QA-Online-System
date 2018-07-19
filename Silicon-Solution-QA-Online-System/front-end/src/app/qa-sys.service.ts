@@ -60,12 +60,16 @@ export class QaSysService {
       this.isLoggedIn = val['result'];
       if (this.isLoggedIn){
         window.localStorage.setItem('token', val['token']);
+        this.user = val['user'];
+        window.localStorage.setItem('user', JSON.stringify(this.user));
       }
     }))
   }
 
   logout(): void {
     this.isLoggedIn = false;
+    window.localStorage.removeItem('user');
+    window.localStorage.removeItem('token');
   }
 
   /* register(email:string, password: string): Observable<Boolean>{

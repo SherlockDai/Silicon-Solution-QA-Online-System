@@ -84,11 +84,11 @@ app.post("/login", function(request, response, next){
         //create JWT and send the result back
         const token = jwt.sign({ }, 'shhhhh', {expiresIn: '8h'});
         if(result == null){
-          response.send({result: true, role: "visitor", token: token});
+          response.send({result: true, user: {id: request.body['id'], role: "visitor", email: "", readOnly: true, prev_id: ""}, token: token});
         }
         //check if the password is the same
         else{
-          response.send({result: true, role: result.role, token: token});
+          response.send({result: true, user: result, token: token});
         }
       })
     }

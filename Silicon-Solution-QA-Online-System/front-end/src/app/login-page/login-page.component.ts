@@ -99,9 +99,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   checkInfo(result: JSON){
     if(result["result"] == true){
-      this.user.role = result['role'];
-      this.qaSysService.user = this.user;
-      window.localStorage.setItem('user', JSON.stringify(this.user));
       this.router.navigate([this.qaSysService.redirectUrl]);
     }
     else{
