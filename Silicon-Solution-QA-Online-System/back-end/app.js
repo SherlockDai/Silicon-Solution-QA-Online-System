@@ -299,7 +299,7 @@ app.post('/addOne', function(request, response, next){
 
 })
 
-app.post('/getOne', function(request, response, next)
+app.post('/getOne', function(request, response, next){
   if (request.body['collection']){
     var coll = request.body['collection']
   }
@@ -500,7 +500,7 @@ app.post('/updateOne', function(request, response, next){
   form.parse(request);
 })
 
-app.post('/getSuggestion', function(request, response){
+app.post('/getSuggestion', function(request, response, next){
   if (request.body['collection']){
     var collection = request.body['collection']
   }
@@ -526,7 +526,7 @@ app.post('/getSuggestion', function(request, response){
   })
 })
 
-app.post('/checkExisting', function(request, response){
+app.post('/checkExisting', function(request, response, next){
   if (request.body['collection']){
     var collection = request.body['collection']
   }
