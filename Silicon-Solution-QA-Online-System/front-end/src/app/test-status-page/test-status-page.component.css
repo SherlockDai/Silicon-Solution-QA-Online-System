@@ -14,3 +14,8 @@ table.mat-table {
     padding: .4375em 0;
     text-align: center;
 }
+
+td.mat-cell:first-child, td.mat-footer-cell:first-child, th.mat-header-cell:first-child {
+    padding-left: 24px;
+    padding-right: 24px;
+}

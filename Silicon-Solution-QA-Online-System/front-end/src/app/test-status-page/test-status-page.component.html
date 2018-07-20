@@ -22,9 +22,9 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
           <td mat-cell *matCellDef="let test">
             <mat-form-field>
-              <input matInput [matDatepicker]="datepicker" [value] = "getDate(test.date)" (change)="test.date = value.getTime()"    [readonly]="test.readOnly">
+              <input matInput [matDatepicker]="datepicker" [value]="getDate(test.date)" (dateInput)="testDerek($event, test)" (dateChange)="testDerek($event,test)" [disabled]="test.readOnly">
               <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-              <mat-datepicker #datepicker></mat-datepicker> 
+              <mat-datepicker #datepicker [disabled]="test.readOnly"></mat-datepicker> 
             </mat-form-field>
           </td>
       </ng-container>

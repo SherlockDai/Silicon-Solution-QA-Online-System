@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Inject, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { Test } from "../station";
-import { MatSort, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatTableDataSource } from "@angular/material";
+import { MatSort, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatTableDataSource, MatDatepickerInputEvent } from "@angular/material";
 import { QaSysService } from "../qa-sys.service";
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from "rxjs";
@@ -203,6 +203,10 @@ export class TestStatusPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  testDerek(event: MatDatepickerInputEvent<Date>, test: Test):void{
+    test.date = event.value.getTime();
   }
 
 
