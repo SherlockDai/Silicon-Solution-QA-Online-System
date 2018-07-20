@@ -190,7 +190,10 @@ export class QaSysService {
   }
 
   errorHandler(response: HttpErrorResponse){
-    return throwError(response.error)
+    if(response.status == 400)
+      return throwError(response.error)
+    else
+      return "Sorry, the server is temporarily down! Please try again later or contact the administrator. "
   }
 
   checkExisting(fieldName: string, fieldValue: string , collection: string): Observable<Boolean>{

@@ -80,6 +80,7 @@ app.post("/login", function(request, response, next){
         if (err){
           console.log(err.message);
           response.status(400).send(err.message);
+          return next();
         }
         //create JWT and send the result back
         const token = jwt.sign({ }, 'shhhhh', {expiresIn: '8h'});
@@ -169,6 +170,7 @@ app.post('/getAll',  function(request, response, next){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
     response.send(result);
   })
@@ -192,6 +194,7 @@ app.post('/getMany', function(request, response, next){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
     response.send(result);
   })
@@ -206,6 +209,7 @@ app.post('/addOne', function(request, response, next){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
   });
 
@@ -248,6 +252,7 @@ app.post('/addOne', function(request, response, next){
       if (err){
         console.log(err.message);
         response.status(400).send(err.message);
+        return next();
       }
     })
   });
@@ -294,7 +299,7 @@ app.post('/addOne', function(request, response, next){
 
 })
 
-app.post('/getOne', function(request, response, next){
+app.post('/getOne', function(request, response, next)
   if (request.body['collection']){
     var coll = request.body['collection']
   }
@@ -313,6 +318,7 @@ app.post('/getOne', function(request, response, next){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
     response.send(result);
   })
@@ -339,6 +345,7 @@ app.post('/deleteOne', function(request, response, next){
       if (error){
         console.log(error.message);
         response.status(400).send(error.message);
+        return next();
       }
     });
   }
@@ -346,6 +353,7 @@ app.post('/deleteOne', function(request, response, next){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
     if (result.result.ok && result.result.ok == 1){
         if(collection == "stationInfo"){
@@ -354,6 +362,7 @@ app.post('/deleteOne', function(request, response, next){
             if (err){
               console.log(err.message);
               response.status(400).send(err.message);
+              return next();
             }
             if (result.result.ok && result.result.ok == 1){
               response.send(true);
@@ -381,6 +390,7 @@ app.post('/updateOne', function(request, response, next){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
   });
 
@@ -457,6 +467,7 @@ app.post('/updateOne', function(request, response, next){
         if (err){
           console.log(err.message);
           response.status(400).send(err.message);
+          return next();
         }
       });
     }
@@ -464,6 +475,7 @@ app.post('/updateOne', function(request, response, next){
       if (err){
         console.log(err.message);
         response.status(400).send(err.message);
+        return next();
       }
       //if the record has files
       //change the folder's name if the user changed the id, hopefully they don't
@@ -474,13 +486,14 @@ app.post('/updateOne', function(request, response, next){
           if (err){
             console.log(err.message);
             response.status(400).send(err.message);
+            return next();
           }
         })
       }
-      if (result.result.ok && result.result.ok == 1)
+      if (result && result.result.ok && result.result.ok == 1)
         response.send(true);
       else 
-      response.send(false);
+        response.send(false);
     })
   })
 
@@ -506,8 +519,10 @@ app.post('/getSuggestion', function(request, response){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
     response.send(result);
+    return next();
   })
 })
 
@@ -530,12 +545,15 @@ app.post('/checkExisting', function(request, response){
     if (err){
       console.log(err.message);
       response.status(400).send(err.message);
+      return next();
     }
     if(result){
       response.send(true);
+      return next();
     }
     else{
       response.send(false);
+      return next();
     }
   })
 })
