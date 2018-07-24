@@ -43,7 +43,6 @@ export class ExcelVisualizationComponent implements OnInit {
   }
 
   onFileChange(evt: any) {
-    /* wire up file reader */
     for(let file of evt.target.files){
       this.files.push(file) ;
     }

@@ -42,7 +42,7 @@ export class QaSysService {
   //the current user
   public user: User = null;
 
-  constructor(private http:HttpClient, private snackBar: MatSnackBar) { 
+  constructor(private http:HttpClient) { 
     let token = window.localStorage.getItem('token');
     if (token != null && !this.jwtHelper.isTokenExpired(token)){
       this.isLoggedIn = true;
