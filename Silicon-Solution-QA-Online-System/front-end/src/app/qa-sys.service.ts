@@ -31,10 +31,24 @@ export class QaSysService {
   };
 
   //indicate whether the user is logged in or not
-  isLoggedIn = false;
+  private isLoggedIn = false;
+
+  //getter function for isLoggedIn
+  public getLoginState(){
+    return this.isLoggedIn;
+  }
   
   //store the URL so we can redicrect after logging in
-  redirectUrl: string = '\home'
+  private redirectUrl: string = '\home'
+  
+  //getter function for redirectURL
+  public getRedirectUrl(): string{
+    return this.redirectUrl;
+  }
+  //setter function for redirectURL
+  public setRedirectUrl(url: string): void {
+    this.redirectUrl = url;
+  }
   
   //jwt decoder
   private jwtHelper = new JwtHelperService();
@@ -220,11 +234,11 @@ export class AuthGuard implements CanActivate {
   }
 
   checkLogin(url: string): boolean{
-    if (this.qaSysService.isLoggedIn) return true;
+    if (this.qaSysService.getLoginState()) return true;
 
     //not logged in
     //store the attempted URL for redirecting
-    this.qaSysService.redirectUrl = url;
+    this.qaSysService.setRedirectUrl(url);
 
     //navigate to the login page 
     this.router.navigate(['/login']);

@@ -92,14 +92,16 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.user.id = username;
     this.qaSysService.login(username, password).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
-        result => this.checkInfo(result),
+        result => {
+          this.checkInfo(result)
+        },
         err => this.snackBar.open(err, "Dismiss")
       );
   }
 
   checkInfo(result: JSON){
     if(result["result"] == true){
-      this.router.navigate([this.qaSysService.redirectUrl]);
+      this.router.navigate([this.qaSysService.getRedirectUrl()]);
     }
     else{
         this.loginUsernameFormControl.setErrors({'username': true})

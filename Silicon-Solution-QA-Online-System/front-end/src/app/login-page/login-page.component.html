@@ -48,7 +48,7 @@
         <mat-form-field class="col">
           <input matInput name="username" placeholder="username" #email [formControl]="loginUsernameFormControl" required/>
           <mat-error *ngIf="loginUsernameFormControl.hasError('username') && !loginUsernameFormControl.hasError('required')">
-            This combination  is invalid!
+            <span class="errMsg">This combination  is invalid!</span>
           </mat-error>
           <mat-error *ngIf="loginUsernameFormControl.hasError('required')">
             Username is <strong>required</strong>
@@ -57,7 +57,7 @@
         <mat-form-field class="col">
           <input matInput name="password" type="password" placeholder="password" #password [formControl]="loginPasswordFormControl" required/>
           <mat-error *ngIf="loginPasswordFormControl.hasError('password') && !loginPasswordFormControl.hasError('required')">
-            This combination  is invalid!
+            <span class="errMsg">This combination  is invalid!</span>
           </mat-error>
           <mat-error *ngIf="loginPasswordFormControl.hasError('required')">
               Password is <strong>required</strong>

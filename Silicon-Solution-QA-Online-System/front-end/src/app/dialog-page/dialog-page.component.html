@@ -92,7 +92,7 @@
                   {{ version.description }}
                 </mat-option>
               </mat-select>
-            <a class="location_btn" matSuffix [routerLink] = "['location', {url: newDutWifiFwVersion.location}]" target="_blank"><i-arrow-right></i-arrow-right></a>
+            <a class="location_btn" matSuffix [routerLink] = "['location']" [queryParams] = "{url: newDutWifiFwVersion.location}" target="_blank"><i-arrow-right></i-arrow-right></a>
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="col">
@@ -102,7 +102,7 @@
                   {{ file.description }}
                 </mat-option>
               </mat-select>
-              <a class="location_btn" matSuffix [routerLink] = "['location', {url: newDutBtHcdFile['location']}]" target="_blank"><i-arrow-right></i-arrow-right></a>
+              <a class="location_btn" matSuffix [routerLink] = "['location']" [queryParams] = "{url: newDutBtHcdFile['location']}" target="_blank"><i-arrow-right></i-arrow-right></a>
             </mat-form-field>
           </p>
           <p class="row" *ngIf = "!readOnly">

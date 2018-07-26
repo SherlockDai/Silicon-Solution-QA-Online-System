@@ -20,7 +20,7 @@ export class LocationPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.route.params.subscribe(
+    this.route.queryParams.subscribe(
       (params : Params) => {
          this.url = params["url"]; 
       }
