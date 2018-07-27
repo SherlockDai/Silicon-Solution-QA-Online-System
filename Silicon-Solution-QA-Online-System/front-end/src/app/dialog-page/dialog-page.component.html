@@ -46,11 +46,13 @@
           </p>
           <p class="row">
               <mat-label for="station_picture">Station Picture</mat-label>
-              <input type="file" class="col form-control-file" *ngIf="!readOnly" id="station_picture" (change)="onFileChange($event)" accept="image/*" title="Please upload station picture">
+              <input type="file" class="col form-control-file" *ngIf="!readOnly" id="station_picture" #station_picture (change)="onFileSelect($event, 'station_picture')" (click)="station_picture.value = null" accept="image/*" title="Please upload station picture">
           </p>
-          <p class="row">
-              <img class="row" *ngIf="stationImagePath" [src]="stationImagePath">
-          </p>
+          <div *ngFor="let pic of stationPics">
+            <div class="row">
+                <img [src]="pic.url"/><button mat-icon-button><i-x-circle></i-x-circle></button>
+            </div>
+          </div>
           
         </div>
         <div *ngSwitchCase="'pc'">
@@ -149,10 +151,10 @@
           </p>
           <p class="row">
               <mat-label for="DUT_connection_picture">DUT Connection Picture</mat-label>
-              <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" (change)="onFileChange($event)" accept="image/*" title="Please upload DUT connection picture">
+              <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" (change)="onFileSelect($event, 'DUT_connection_picture')" accept="image/*" title="Please upload DUT connection picture">
           </p>
-          <p class="row">
-              <img class="row" *ngIf="DUTImagePath" [src]="DUTImagePath">
+          <p *ngFor="let pic of DUTConnectPics">
+            <img class="row" [src]="pic.url">
           </p>
         </div>
         <div *ngSwitchCase="'tester'">
@@ -195,7 +197,7 @@
               <div class="centered"><i-upload-cloud></i-upload-cloud>Drop your file here or Click to select file!</div>
             </div>
           </div>
-          <input type="file" style="display:none;" id="document_upload" name="file" #document_upload (change)="onFileSelect($event)" (click)="document_upload.value = null" multiple/>
+          <input type="file" style="display:none;" id="document_upload" name="file" #document_upload (change)="onFileSelect($event, null)" (click)="document_upload.value = null" multiple/>
 
           <table mat-table [dataSource]="documentSource" matSort class="col">
             

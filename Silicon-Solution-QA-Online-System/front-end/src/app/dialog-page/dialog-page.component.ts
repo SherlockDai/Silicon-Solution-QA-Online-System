@@ -14,8 +14,8 @@ import { SelectionModel } from "@angular/cdk/collections";
   styleUrls: ['./dialog-page.component.css']
 })
 export class DialogPageComponent implements OnInit, OnDestroy {
-    stationImagePath: SafeResourceUrl;
-    DUTImagePath: SafeResourceUrl;
+    stationPics: Array<SafeResourceUrl> = [];
+    DUTConnectPics: Array<SafeResourceUrl> = [];
     station: Station;
     readOnly: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -61,37 +61,27 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           dialogRef.disableClose = true;
           this.station = data["record"];
           this.readOnly = data["action"] == "detail" ? true : false;
-          if(this.station.DUT_connection_picture)
-            //now the picture attr stores base64 we will convert it to File object in onInit
-            //add current time after the url to avoid caching, since we won't change the url
-            this.DUTImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.DUT_connection_picture.url + this.station.id + '/' + 
-              this.station.DUT_connection_picture.fileName + "?" + new Date().getTime());
-          if(this.station.station_picture)
-            this.stationImagePath = this._sanitizer.bypassSecurityTrustUrl(this.station.station_picture.url + this.station.id + '/' + 
-              this.station.station_picture.fileName + "?" + new Date().getTime());
+          //extract all station pictures
+          for (let doc of this.station.documents){
+            if (doc.isImage == 'station_picture'){
+              //now the picture attr stores base64 we will convert it to File object in onInit
+              //add current time after the url to avoid caching, since we won't change the url
+              this.stationPics.push({url: this._sanitizer.bypassSecurityTrustUrl(doc.url + this.station.id + '/' + doc.fileName + "?" + new Date().getTime()), record: doc});
+            }
+          }
+          //extract all DUT connection pictures
+          for (let doc of this.station.documents){
+            if (doc.isImage == 'DUT_connection_picture'){
+              //now the picture attr stores base64 we will convert it to File object in onInit
+              //add current time after the url to avoid caching, since we won't change the url
+              this.DUTConnectPics.push({url: this._sanitizer.bypassSecurityTrustUrl(doc.url + this.station.id + '/' + doc.fileName + "?" + new Date().getTime()), record: doc});
+            }
+          }
           this.testerColumns = ["Model", "IP", "FirmwareVersion"];
           this.documentColumns = ["select", "fileName", "size", "lastModified", "Remove"];
           this.documentViewColumns = ["select", "fileName", "size", "lastModified"] 
           this.current_station_id = this.station.id;
       }
-
-    onFileChange(event):void {
-      let reader = new FileReader()
-      if(event.target.files && event.target.files.length) {
-        let file = event.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          if(this.selectedSheet == "general"){
-            this.stationImagePath = reader.result
-            this.station.station_picture = file;
-          }
-          else if (this.selectedSheet == "dut"){
-            this.DUTImagePath = reader.result;
-            this.station.DUT_connection_picture = file;
-          }
-        };
-      }
-    }
 
     onSubmit(event):void {
       //show uploading progress bar
@@ -226,22 +216,27 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       }
       else
         //add the new file info to the document field
-        this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified})
+        this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified, isImage: null})
     }
     //update table data source, since the table data just copy data from the document, does not use reference
     this.documentSource.data = this.station.documents;
   }
 
-  onFileSelect(event): void {
+  onFileSelect(event, image): void {
+    let reader = new FileReader()
+  if(event.target.files && event.target.files.length) {
+    let file = event.target.files[0];
+    
+  }
     if(event.target.files && event.target.files.length) {
       for (let file of event.target.files){
         this.station.uploads.push(file)
-        const result = this.station.documents.filter(function(doc) {
+        const updateFiles = this.station.documents.filter(function(doc) {
           return doc.fileName == file.name;
         });
-        if (result.length > 0){
-          for (let doc of result){
-            //first time, the url is null
+        if (updateFiles.length > 0){
+          for (let doc of updateFiles){
+            //file not uploaded yet, the url is null
             doc.url = null;
             //filename must be the same so we just update the size
             doc.size = file.size;
@@ -249,7 +244,18 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           }
         }
         else
-          this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified})
+          this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified, isImage: image});
+        if (image){
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            if(image == "station_picture"){
+              this.stationPics.push(reader.result);
+            }
+            else if (image == "DUT_connection_picture"){
+              this.DUTConnectPics.push(reader.result);
+            }
+          };
+        }
       }
       this.documentSource.data = this.station.documents;
     }

@@ -106,6 +106,10 @@ export class InfoSysComponent implements OnInit, OnDestroy {
     this.qaSysService.getOne(selectedRecord, this.configuration.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
       response => {
         this.loadingInfo = false;
+        if(!response){
+          this.snackBar.open("Station not found! Table might be outdate, please fresh the table!", "Dimiss");
+          return;
+        }
         dialogRef = this.dialog.open(this.configuration.dialog, {
           data: {
             record: response,

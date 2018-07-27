@@ -14,7 +14,6 @@ export class Station {
     device: string;
     status: string;
     update_time: number;
-    station_picture: any
     DUT_name: string;
     DUT_HW_version: string;
     DUT_WIFI_FW_version: Array<FileLocation>;
@@ -22,7 +21,6 @@ export class Station {
     DUT_username: string;
     DUT_password: string;
     external_power_supply: string;
-    DUT_connection_picture: any;
     additional_comments: string;
     computer_IP: string;
     computer_username: string;
@@ -93,12 +91,14 @@ export class Documnetation{
   size: number;
   lastModified: number;
   url: any;
+  isImage: string;
 
   constructor(){
     this.fileName = "";
     this.size = null;
     this.url = "";
     this.lastModified = null;
+    this.isImage = null;
   }
 
 }

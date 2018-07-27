@@ -464,9 +464,9 @@ app.post('/updateOne', function(request, response, next){
     while(record.deleted && record.deleted.length > 0){
       let file = record.deleted.pop()
       rimraf( __dirname + '/uploads/' + prevId + '/' + file.fileName, function(error){
-        if (err){
-          console.log(err.message);
-          response.status(400).send(err.message);
+        if (error){
+          console.log(error.message);
+          response.status(400).send(error.message);
           return next();
         }
       });
