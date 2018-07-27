@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material'
 import * as XLSX from 'xlsx';
 import { Chart } from "angular-highcharts";
+import { QaSysService } from "../qa-sys.service";
 
 type AOA = any[][];
 @Component({
@@ -33,7 +34,7 @@ export class ExcelVisualizationComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { 
+  constructor(public qaSysService: QaSysService) { 
     this.tableColumns = ["File", "Last Modified"]
     this.resultColumns = ["brand", "cm", "chipset", "mp", "notes"]
   }
@@ -113,11 +114,17 @@ export class ExcelVisualizationComponent implements OnInit {
     //sort the data, since the file reader is async, the data might mess up, although it is sorted at the beginging
     this.data.sort(this.dynamicSort("lastModified"))
     for(let record of this.data){
-      let metadata = record[1];
+      //first get rid of all empty rows before the headers
+      let index = 0;
+      while (record[index].length == 0){
+        index++;
+      }
+      //the first row is always the header
+      let metadata = record[index++];
       let account_arr = [];
       let dict = {};
-      for (let row = 0; row < record.length; row++){
-        if (record[row].length == 0 || record[row - 1].length == 0) continue;
+      for (let row = index; row < record.length; row++){
+        if (!record[row]) continue;
         let account: Account = new Account();
         for (let column = 0; column < record[1].length; column++){
           if(metadata[column])

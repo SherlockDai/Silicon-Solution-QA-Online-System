@@ -1,3 +1,9 @@
+<div class="navbar navbar-dark bg-dark p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" routerLink="/home"><i-home></i-home>Silicon Solution QA Team</a>
+    <div class="navbar-btn-group">
+      <a class="nav-link" href="javascript:void(0)" routerLink="/login" (click)="this.qaSysService.logout()">Logout</a>
+    </div>
+  </div>
 <div style="padding: 1em">
     <div class="dropzone col" appDragAndDrop (fileDropped)="onFileDrop($event)" (click)="document_upload.click()">
       <div class="text-wrapper">

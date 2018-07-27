@@ -1,3 +1,42 @@
+/*
+ * Navbar
+ */
+
+ .navbar-brand {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  font-size: 1vw;
+  background-color: rgba(0, 0, 0, .25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+  display:flex;
+  align-items: baseline;
+}
+
+.navbar{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar-btn-group{
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  
+
+}
+
+.nav-link{
+  color: white;
+}
+
+i-home{
+  position: relative;
+  top:2px;
+  right: 1px;
+}
+
 file-drop{
     margin-bottom: 1em;
 }
