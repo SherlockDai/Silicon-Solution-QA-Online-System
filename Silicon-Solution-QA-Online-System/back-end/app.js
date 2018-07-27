@@ -241,8 +241,6 @@ app.post('/addOne', function(request, response, next){
           doc.lastModified = file.lastModified;
         }
       }
-      else
-        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size, lastModified: file.lastModified})
     }
     else{
       record[name] = {url: serverUrl, fileName: newFileName};
@@ -429,10 +427,9 @@ app.post('/updateOne', function(request, response, next){
           //filename must be the same so we just update the size and modified time
           doc.size = file.size;
           doc.lastModified = file.lastModified;
+
         }
       }
-      else
-        record.documents.push({url: serverUrl, fileName: file.originalFilename, size: file.size, lastModified: file.lastModified})
     }
     else{
       record[name] = {url: serverUrl, fileName: newFileName};

@@ -64,7 +64,6 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           //extract all station pictures
           for (let doc of this.station.documents){
             if (doc.isImage == 'station_picture'){
-              //now the picture attr stores base64 we will convert it to File object in onInit
               //add current time after the url to avoid caching, since we won't change the url
               this.stationPics.push({url: this._sanitizer.bypassSecurityTrustUrl(doc.url + this.station.id + '/' + doc.fileName + "?" + new Date().getTime()), record: doc});
             }
@@ -224,12 +223,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
   onFileSelect(event, image): void {
     let reader = new FileReader()
-  if(event.target.files && event.target.files.length) {
-    let file = event.target.files[0];
-    
-  }
     if(event.target.files && event.target.files.length) {
       for (let file of event.target.files){
+        let record = new Documnetation();
         this.station.uploads.push(file)
         const updateFiles = this.station.documents.filter(function(doc) {
           return doc.fileName == file.name;
@@ -241,24 +237,37 @@ export class DialogPageComponent implements OnInit, OnDestroy {
             //filename must be the same so we just update the size
             doc.size = file.size;
             doc.lastModified = file.lastModified
+            doc.isImage = image;
+            record = doc;
           }
         }
-        else
-          this.station.documents.push({url: null, fileName: file.name, size: file.size, lastModified: file.lastModified, isImage: image});
+        else{
+          record = {url: null, fileName: file.name, size: file.size, lastModified: file.lastModified, isImage: image}
+          this.station.documents.push(record);
+          
+        }
         if (image){
           reader.readAsDataURL(file);
           reader.onload = () => {
             if(image == "station_picture"){
-              this.stationPics.push(reader.result);
+              this.stationPics.push({url: reader.result, record: record});
             }
             else if (image == "DUT_connection_picture"){
-              this.DUTConnectPics.push(reader.result);
+              this.DUTConnectPics.push({url: reader.result, record: record});
             }
           };
         }
       }
       this.documentSource.data = this.station.documents;
     }
+  }
+
+  removePic(pic, collection): void{
+    let index = collection.indexOf(pic)
+    if(index > -1){
+      collection.splice(index, 1)
+    }
+    this.removeDocument(pic.record);
   }
 
   removeDocument(target): void{

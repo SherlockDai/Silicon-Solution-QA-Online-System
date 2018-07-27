@@ -50,7 +50,7 @@
           </p>
           <div *ngFor="let pic of stationPics">
             <div class="row">
-                <img [src]="pic.url"/><button mat-icon-button><i-x-circle></i-x-circle></button>
+                <img [src]="pic.url"/><button mat-icon-button (click)="removePic(pic, stationPics)"><i-x-circle></i-x-circle></button>
             </div>
           </div>
           
@@ -151,7 +151,8 @@
           </p>
           <p class="row">
               <mat-label for="DUT_connection_picture">DUT Connection Picture</mat-label>
-              <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" (change)="onFileSelect($event, 'DUT_connection_picture')" accept="image/*" title="Please upload DUT connection picture">
+              <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" #DUT_connection_picture (change)="onFileSelect($event, 'DUT_connection_picture')" 
+                 accept="image/*" (click)="DUT_connection_picture.value = null" title="Please upload DUT connection picture">
           </p>
           <p *ngFor="let pic of DUTConnectPics">
             <img class="row" [src]="pic.url">
