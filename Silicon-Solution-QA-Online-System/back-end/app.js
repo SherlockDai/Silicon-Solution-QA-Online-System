@@ -99,63 +99,6 @@ app.post("/login", function(request, response, next){
   })
 })
 
-//we now use Litepoint credential, the registration and password retrieving temporarily abandoned
-
-/* app.post('/register', function(request, resposne){
-  let query = {email: request.body.email, password: request.body.password};
-  dbo.collection(userCollection).insertOne(query, function(err, result){
-    if (err) throw err
-    if (result.result.ok && result.result.ok == 1){
-        const mailOptions = {
-          from: 'litepoint-qateam@outlook.com',
-          to: request.body.email,
-          subject: 'Silicon Solution Online System Registration Confirmation',
-          text: `Hello! \nThanks for using our QA Team\'s online system. Your registered email address is ${request.body.email} and your password is ${request.body.password}.
-                \nCheers!\nSilicon Solution QA Team\nLitepoint - A Teradyne Company`
-        };
-        
-        transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        });
-        resposne.send(true);
-      }
-      else 
-        response.send(false);
-  })
-})
-
-app.post('/retrievePassword', function(request, resposne){
-  let query = {email: request.body.email};
-  dbo.collection(userCollection).findOne(query, function(err, result){
-    if (err) throw err
-    if (result){
-      const mailOptions = {
-        from: 'litepoint-qateam@outlook.com',
-        to: request.body.email,
-        subject: 'Silicon Solution Online System retrieve password',
-        text: `Hello! \nThanks for using our QA Team\'s online system. Your registered email address is ${request.body.email} and your password is ${result.password}.
-        \nCheers!\nSilicon Solution QA Team\nLitepoint - A Teradyne Company`
-      }
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-          resposne.send(false);
-        } else {
-          console.log('Email sent: ' + info.response);
-          resposne.send(true);
-        }
-      });
-    }
-    else{
-      resposne.send(false);
-    }
-  })
-}) */
-
 app.post('/getAll',  function(request, response, next){
   if (request.body['collection']){
     var coll = request.body['collection']
@@ -221,9 +164,6 @@ app.post('/addOne', function(request, response, next){
     if (name == 'uploads[]'){
       var newFileName = file.originalFilename;
     }
-    else{
-      var newFileName = name + '.' + image_type;
-    }
     if (!fs.existsSync(uploadPath + record['id'] + "\\")){
       fs.mkdirSync(uploadPath + record['id'] + "\\");
     }
@@ -234,16 +174,10 @@ app.post('/addOne', function(request, response, next){
       });
       if (result.length > 0){
         for (let doc of result){
-          //first time, the doc url might be null
+          //update the url
           doc.url = serverUrl + '/' + record.id + '/' + doc.fileName
-          //filename must be the same so we just update the size and last modified time
-          doc.size = file.size
-          doc.lastModified = file.lastModified;
         }
       }
-    }
-    else{
-      record[name] = {url: serverUrl + '/' + record.id + '/' + doc.fileName, fileName: newFileName};
     }
     
     fs.rename(temp_path, new_path, (err) => {
@@ -408,9 +342,6 @@ app.post('/updateOne', function(request, response, next){
     if (name == 'uploads[]'){
       var newFileName = file.originalFilename;
     }
-    else{
-      var newFileName = name + '.' + image_type;
-    }
     //move the files to the previous id folder first
     if (!fs.existsSync(uploadPath + prevId + "\\")){
       fs.mkdirSync(uploadPath + prevId + "\\");
@@ -422,17 +353,10 @@ app.post('/updateOne', function(request, response, next){
       });
       if (result.length > 0){
         for (let doc of result){
-          //first time, the doc url might be the local url
+          //update the url
           doc.url = serverUrl + '/' + record.id + '/' + doc.fileName;
-          //filename must be the same so we just update the size and modified time
-          doc.size = file.size;
-          doc.lastModified = file.lastModified;
-
         }
       }
-    }
-    else{
-      record[name] = {url: serverUrl + '/' + record.id + '/' + doc.fileName, fileName: newFileName};
     }
     //use sync rename here, since we will rename the folder lately, async rename might cause folder locked
     fs.renameSync(temp_path, new_path);
@@ -561,3 +485,60 @@ var server = app.listen(port, function () {
   
   console.log("Example app listening at http://%s:%s", host, port)
 });
+
+//we now use Litepoint credential, the registration and password retrieving temporarily abandoned
+
+/* app.post('/register', function(request, resposne){
+  let query = {email: request.body.email, password: request.body.password};
+  dbo.collection(userCollection).insertOne(query, function(err, result){
+    if (err) throw err
+    if (result.result.ok && result.result.ok == 1){
+        const mailOptions = {
+          from: 'litepoint-qateam@outlook.com',
+          to: request.body.email,
+          subject: 'Silicon Solution Online System Registration Confirmation',
+          text: `Hello! \nThanks for using our QA Team\'s online system. Your registered email address is ${request.body.email} and your password is ${request.body.password}.
+                \nCheers!\nSilicon Solution QA Team\nLitepoint - A Teradyne Company`
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+        resposne.send(true);
+      }
+      else 
+        response.send(false);
+  })
+})
+
+app.post('/retrievePassword', function(request, resposne){
+  let query = {email: request.body.email};
+  dbo.collection(userCollection).findOne(query, function(err, result){
+    if (err) throw err
+    if (result){
+      const mailOptions = {
+        from: 'litepoint-qateam@outlook.com',
+        to: request.body.email,
+        subject: 'Silicon Solution Online System retrieve password',
+        text: `Hello! \nThanks for using our QA Team\'s online system. Your registered email address is ${request.body.email} and your password is ${result.password}.
+        \nCheers!\nSilicon Solution QA Team\nLitepoint - A Teradyne Company`
+      }
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          resposne.send(false);
+        } else {
+          console.log('Email sent: ' + info.response);
+          resposne.send(true);
+        }
+      });
+    }
+    else{
+      resposne.send(false);
+    }
+  })
+}) */

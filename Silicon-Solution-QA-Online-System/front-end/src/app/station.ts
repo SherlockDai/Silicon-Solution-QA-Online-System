@@ -93,7 +93,7 @@ export class Documnetation{
     this.fileName = "";
     this.size = null;
     this.url = "";
-    this.lastModified = null;
+    this.lastModified = 0;
     this.isImage = null;
   }
 
