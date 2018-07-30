@@ -235,7 +235,7 @@ app.post('/addOne', function(request, response, next){
       if (result.length > 0){
         for (let doc of result){
           //first time, the doc url might be null
-          doc.url = serverUrl
+          doc.url = serverUrl + '/' + record.id + '/' + doc.fileName
           //filename must be the same so we just update the size and last modified time
           doc.size = file.size
           doc.lastModified = file.lastModified;
@@ -243,7 +243,7 @@ app.post('/addOne', function(request, response, next){
       }
     }
     else{
-      record[name] = {url: serverUrl, fileName: newFileName};
+      record[name] = {url: serverUrl + '/' + record.id + '/' + doc.fileName, fileName: newFileName};
     }
     
     fs.rename(temp_path, new_path, (err) => {
@@ -423,7 +423,7 @@ app.post('/updateOne', function(request, response, next){
       if (result.length > 0){
         for (let doc of result){
           //first time, the doc url might be the local url
-          doc.url = serverUrl;
+          doc.url = serverUrl + '/' + record.id + '/' + doc.fileName;
           //filename must be the same so we just update the size and modified time
           doc.size = file.size;
           doc.lastModified = file.lastModified;
@@ -432,7 +432,7 @@ app.post('/updateOne', function(request, response, next){
       }
     }
     else{
-      record[name] = {url: serverUrl, fileName: newFileName};
+      record[name] = {url: serverUrl + '/' + record.id + '/' + doc.fileName;, fileName: newFileName};
     }
     //use sync rename here, since we will rename the folder lately, async rename might cause folder locked
     fs.renameSync(temp_path, new_path);

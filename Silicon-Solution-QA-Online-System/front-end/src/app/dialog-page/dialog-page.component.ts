@@ -56,7 +56,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
-        private _sanitizer: DomSanitizer, public qaSysService:QaSysService,
+        public _sanitizer: DomSanitizer, public qaSysService:QaSysService,
         private router: Router, public snackBar: MatSnackBar) {
           dialogRef.disableClose = true;
           this.station = data["record"];
