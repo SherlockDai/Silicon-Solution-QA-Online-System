@@ -50,7 +50,7 @@
           </p>
           <div *ngFor="let doc of station.documents">
             <div *ngIf="doc.isImage == 'station_picture'" class="row">
-                <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url)"/><button mat-icon-button (click)="removeDocument(doc)"><i-x-circle></i-x-circle></button>
+                <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url)" width="500"/><button class="pic-delete-btn" mat-icon-button (click)="removeDocument(doc)" *ngIf="!readOnly"><i-x-circle></i-x-circle></button>
             </div>
           </div>
           
@@ -138,10 +138,7 @@
               <mat-label>DUT Password</mat-label>
               <input matInput placeholder="DUT Password" id="DUT_password" [(ngModel)]="station['DUT_password']" [readonly] = "readOnly">
             </mat-form-field>
-            <mat-form-field appearance="outline" class="col">
-              <mat-label>External Power Supply</mat-label>
-              <input matInput placeholder="External Power Supply" id="external_power_supply" [(ngModel)]="station['external_power_supply']" [readonly] = "readOnly">
-            </mat-form-field>
+              <mat-checkbox class="col" [(ngModel)] = "station['external_power_supply']" [disabled] = "readOnly">External Power Supply</mat-checkbox>
           </p>
           <p class="row">
             <mat-form-field appearance="outline" class="col">
@@ -156,7 +153,7 @@
           </p>
           <div *ngFor="let doc of station.documents">
             <div *ngIf="doc.isImage == 'DUT_connection_picture'" class="row">
-              <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url)"/><button mat-icon-button (click)="removeDocument(doc)"><i-x-circle></i-x-circle></button>
+              <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url)" width="500"/><button class="pic-delete-btn" mat-icon-button (click)="removeDocument(doc)" *ngIf="!readOnly"><i-x-circle></i-x-circle></button>
             </div>
           </div>
         </div>
