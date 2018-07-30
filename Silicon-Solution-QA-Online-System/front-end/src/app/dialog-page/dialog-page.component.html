@@ -48,9 +48,9 @@
               <mat-label for="station_picture">Station Picture</mat-label>
               <input type="file" class="col form-control-file" *ngIf="!readOnly" id="station_picture" #station_picture (change)="onFileSelect($event, 'station_picture')" (click)="station_picture.value = null" accept="image/*" title="Please upload station picture">
           </p>
-          <div *ngFor="let doc of station.document">
+          <div *ngFor="let doc of station.documents">
             <div *ngIf="doc.isImage == 'station_picture'" class="row">
-                <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url + station.id + '/' + doc.fileName + "?" + new Date().getTime())"/><button mat-icon-button (click)="removeDocument(doc)"><i-x-circle></i-x-circle></button>
+                <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url)"/><button mat-icon-button (click)="removeDocument(doc)"><i-x-circle></i-x-circle></button>
             </div>
           </div>
           
@@ -154,9 +154,11 @@
               <input type="file" class="col" *ngIf="!readOnly" id="DUT_connection_picture" #DUT_connection_picture (change)="onFileSelect($event, 'DUT_connection_picture')" 
                  accept="image/*" (click)="DUT_connection_picture.value = null" title="Please upload DUT connection picture">
           </p>
-          <p *ngFor="let pic of DUTConnectPics">
-            <img class="row" [src]="pic.url">
-          </p>
+          <div *ngFor="let doc of station.documents">
+            <div *ngIf="doc.isImage == 'DUT_connection_picture'" class="row">
+              <img [src]="_sanitizer.bypassSecurityTrustUrl(doc.url)"/><button mat-icon-button (click)="removeDocument(doc)"><i-x-circle></i-x-circle></button>
+            </div>
+          </div>
         </div>
         <div *ngSwitchCase="'tester'">
           

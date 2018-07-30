@@ -432,7 +432,7 @@ app.post('/updateOne', function(request, response, next){
       }
     }
     else{
-      record[name] = {url: serverUrl + '/' + record.id + '/' + doc.fileName;, fileName: newFileName};
+      record[name] = {url: serverUrl + '/' + record.id + '/' + doc.fileName, fileName: newFileName};
     }
     //use sync rename here, since we will rename the folder lately, async rename might cause folder locked
     fs.renameSync(temp_path, new_path);

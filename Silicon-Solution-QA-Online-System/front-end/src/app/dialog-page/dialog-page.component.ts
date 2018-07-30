@@ -14,8 +14,8 @@ import { SelectionModel } from "@angular/cdk/collections";
   styleUrls: ['./dialog-page.component.css']
 })
 export class DialogPageComponent implements OnInit, OnDestroy {
-    stationPics: Array<SafeResourceUrl> = [];
-    DUTConnectPics: Array<SafeResourceUrl> = [];
+    stationPics: Array<Documnetation> = [];
+    DUTConnectPics: Array<Documnetation> = [];
     station: Station;
     readOnly: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -61,21 +61,6 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           dialogRef.disableClose = true;
           this.station = data["record"];
           this.readOnly = data["action"] == "detail" ? true : false;
-          //extract all station pictures
-          for (let doc of this.station.documents){
-            if (doc.isImage == 'station_picture'){
-              //add current time after the url to avoid caching, since we won't change the url
-              this.stationPics.push({url: this._sanitizer.bypassSecurityTrustUrl(doc.url + this.station.id + '/' + doc.fileName + "?" + new Date().getTime()), record: doc});
-            }
-          }
-          //extract all DUT connection pictures
-          for (let doc of this.station.documents){
-            if (doc.isImage == 'DUT_connection_picture'){
-              //now the picture attr stores base64 we will convert it to File object in onInit
-              //add current time after the url to avoid caching, since we won't change the url
-              this.DUTConnectPics.push({url: this._sanitizer.bypassSecurityTrustUrl(doc.url + this.station.id + '/' + doc.fileName + "?" + new Date().getTime()), record: doc});
-            }
-          }
           this.testerColumns = ["Model", "IP", "FirmwareVersion"];
           this.documentColumns = ["select", "fileName", "size", "lastModified", "Remove"];
           this.documentViewColumns = ["select", "fileName", "size", "lastModified"] 
@@ -94,6 +79,13 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       //update the DUT_BT_HCD_file and DUT_WIFI_FW_version
       let histDutWifiVersion = this.station.DUT_WIFI_FW_version.map(version => version.description);
       let hisDutBtHcdFile = this.station.DUT_BT_HCD_file.map(file => file.description);
+      //set all station pics and DUT connection pics' url to null, we don't want to waste our bandwidth sending their base64 to the back-end
+      for(let pic of this.stationPics){
+        pic.url = null
+      }
+      for(let pic of this.DUTConnectPics){
+        pic.url = null
+      }
       if(this.newDutWifiFwVersion){
         let index = histDutWifiVersion.indexOf(this.newDutWifiFwVersion.description)
         if(index > -1){
@@ -249,25 +241,19 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         if (image){
           reader.readAsDataURL(file);
           reader.onload = () => {
+            //we temporarily save the base64 in record's url property, we will erase the base64 before sending it to the back-end
+            record.url = reader.result
             if(image == "station_picture"){
-              this.stationPics.push({url: reader.result, record: record});
+              this.stationPics.push(record);
             }
             else if (image == "DUT_connection_picture"){
-              this.DUTConnectPics.push({url: reader.result, record: record});
+              this.DUTConnectPics.push(record);
             }
           };
         }
       }
       this.documentSource.data = this.station.documents;
     }
-  }
-
-  removePic(pic, collection): void{
-    let index = collection.indexOf(pic)
-    if(index > -1){
-      collection.splice(index, 1)
-    }
-    this.removeDocument(pic.record);
   }
 
   removeDocument(target): void{
