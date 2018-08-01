@@ -15,7 +15,9 @@ export class LocationPageComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, public snakeBar: MatSnackBar) { }
 
   copyToClipboard(): void{
-    let snackBarRef = this.snakeBar.open('URL Copied to Clipboard', 'Dismiss');
+    let snackBarRef = this.snakeBar.open('URL Copied to Clipboard', 'Dismiss', {
+      duration: 3000
+    });
   }
 
   ngOnInit() {

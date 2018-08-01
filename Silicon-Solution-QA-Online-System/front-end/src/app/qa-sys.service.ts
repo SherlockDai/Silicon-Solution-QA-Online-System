@@ -265,7 +265,9 @@ export class RoleGuard implements CanActivate {
     //not admin]
     //navigate to the hone page 
     this.router.navigate(['/home']);
-    this.snackBar.open("Sorry, you do not have access toward Admin Page! Please contact administrators!", "Dismiss");
+    this.snackBar.open("Sorry, you do not have access toward Admin Page! Please contact administrators!", "Dismiss", {
+      duration: 3000
+    });
   }
 
 }

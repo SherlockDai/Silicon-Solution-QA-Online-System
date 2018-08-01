@@ -54,6 +54,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     //store the selections
     private selection = new SelectionModel<Documnetation>(true, []);
 
+    //control the zoom in and zoom out buttons
+    public zoom_state = "out";
+
     constructor(public dialogRef: MatDialogRef<DialogPageComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any, 
         public _sanitizer: DomSanitizer, public qaSysService:QaSysService,
@@ -121,7 +124,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
           },
           err => {
             this.uploading = false;
-            this.snackBar.open(err, "Dismiss");
+            this.snackBar.open(err, "Dismiss", {
+              duration: 3000
+            });
           }
         )
       }
@@ -141,7 +146,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
             }
           },
           err => {
-            this.snackBar.open(err, "Dismiss");
+            this.snackBar.open(err, "Dismiss", {
+              duration: 3000
+            });
           }
         )
       }
@@ -176,7 +183,9 @@ export class DialogPageComponent implements OnInit, OnDestroy {
       this.qaSysService.getSuggestion(event.target.id, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => this.options = response,
         err => {
-          this.snackBar.open(err, "Dismiss");
+          this.snackBar.open(err, "Dismiss", {
+            duration: 3000
+          });
         }
       )
   }
@@ -287,11 +296,15 @@ export class DialogPageComponent implements OnInit, OnDestroy {
         else{
           this.idError = true;
           target.focus();
-          this.snackBar.open('This Station Name is in use!', 'dismiss');
+          this.snackBar.open('This Station Name is in use!', 'dismiss', {
+            duration: 3000
+          });
         }
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
   }
@@ -330,6 +343,15 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  public zoom(action: string): void{
+    if (action == 'in'){
+      this.zoom_state = action;
+    }
+    else if (action == 'out'){
+      this.zoom_state = action;
+    }
+  }
+
   ngOnInit() {
     if(this.station.DUT_BT_HCD_file != null && this.station.DUT_BT_HCD_file.length > 0){
       //deep copy, so that we can bind it to the select element and update it if necessary without affecting the original one
@@ -341,7 +363,6 @@ export class DialogPageComponent implements OnInit, OnDestroy {
     this.testerSource = new MatTableDataSource(this.station.tester);
     this.documentSource = new MatTableDataSource(this.station.documents);
     
-
   }
 
   ngOnDestroy() {

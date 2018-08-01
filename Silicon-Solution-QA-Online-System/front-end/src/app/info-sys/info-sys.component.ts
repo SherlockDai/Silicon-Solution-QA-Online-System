@@ -95,7 +95,9 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
   }
@@ -107,7 +109,9 @@ export class InfoSysComponent implements OnInit, OnDestroy {
       response => {
         this.loadingInfo = false;
         if(!response){
-          this.snackBar.open("Station not found! Table might be outdate, please fresh the table!", "Dimiss");
+          this.snackBar.open("Station not found! Table might be outdate, please fresh the table!", "Dimiss", {
+            duration: 3000
+          });
           return;
         }
         dialogRef = this.dialog.open(this.configuration.dialog, {
@@ -142,12 +146,16 @@ export class InfoSysComponent implements OnInit, OnDestroy {
             }
           },
           err => {
-            this.snackBar.open(err, "Dismiss");
+            this.snackBar.open(err, "Dismiss", {
+              duration: 3000
+            });
           }
         )
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
   }
@@ -177,7 +185,9 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
   }
@@ -236,7 +246,9 @@ export class InfoSysComponent implements OnInit, OnDestroy {
         )
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
   }
@@ -334,7 +346,9 @@ export class InfoSysComponent implements OnInit, OnDestroy {
           this.pageDataSource.sort = this.sort;
         },
         err => {
-          this.snackBar.open(err, "Dismiss");
+          this.snackBar.open(err, "Dismiss", {
+            duration: 3000
+          });
         }
     )
   }

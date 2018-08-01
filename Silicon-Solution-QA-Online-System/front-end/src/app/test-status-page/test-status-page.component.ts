@@ -78,17 +78,23 @@ export class TestStatusPageComponent implements OnInit, OnDestroy {
       this.qaSysService.addOne(row, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => {
           if (response){
-            this.snackBar.open("Insertion successed!", "Dismiss")
+            this.snackBar.open("Insertion successed!", "Dismiss", {
+              duration: 3000
+            })
             this.updatePage();
           }
           else{
             row.readOnly = false;
             this.updatePage();
-            this.snackBar.open("Insertion failed! Please verify your input!", "Dismiss");
+            this.snackBar.open("Insertion failed! Please verify your input!", "Dismiss", {
+              duration: 3000
+            });
           }
         },
         err => {
-          this.snackBar.open(err, "Dismiss");
+          this.snackBar.open(err, "Dismiss", {
+            duration: 3000
+          });
           row.readOnly = false;
         }
       )
@@ -99,18 +105,24 @@ export class TestStatusPageComponent implements OnInit, OnDestroy {
       this.qaSysService.updateOne(row.prev_id, row, this.collection).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
         response => {
           if (response){
-            this.snackBar.open("Update successed!", "Dismiss")
+            this.snackBar.open("Update successed!", "Dismiss", {
+              duration: 3000
+            })
             //remove the previous data
             delete this.prevRowTable[row.prev_id]
             this.updatePage();
           }
           else{
             row.readOnly = false;
-            this.snackBar.open("Update failed! Please verify your input!", "Dismiss");
+            this.snackBar.open("Update failed! Please verify your input!", "Dismiss", {
+              duration: 3000
+            });
           }
         },
         err => {
-          this.snackBar.open(err, "Dismiss");
+          this.snackBar.open(err, "Dismiss", {
+            duration: 3000
+          });
           row.readOnly = false;
         }
       )
@@ -148,14 +160,20 @@ export class TestStatusPageComponent implements OnInit, OnDestroy {
           this.data.splice(index, 1);
           this.dataSource.data = this.data;
           this.updatePage();
-          this.snackBar.open("Deletion successed!", "Dismiss");
+          this.snackBar.open("Deletion successed!", "Dismiss", {
+            duration: 3000
+          });
         }
         else{
-          this.snackBar.open("Deletion failed! Please try again later!", "Dismiss");
+          this.snackBar.open("Deletion failed! Please try again later!", "Dismiss", {
+            duration: 3000
+          });
         }
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
     
@@ -194,7 +212,9 @@ export class TestStatusPageComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        this.snackBar.open(err, "Dismiss");
+        this.snackBar.open(err, "Dismiss", {
+          duration: 3000
+        });
       }
     )
     

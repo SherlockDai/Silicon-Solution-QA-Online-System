@@ -3,6 +3,19 @@ mat-toolbar{
     padding: 0;
 }
 
+.mat-toolbar-row, .mat-toolbar-single-row {
+    display: flex;
+    box-sizing: border-box;
+    padding: 0 16px;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 mat-button-toggle-group{
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2)
 }
@@ -56,4 +69,21 @@ td.mat-cell:first-child, td.mat-footer-cell:first-child, th.mat-header-cell:firs
     margin-left: -15px;
     justify-content: center;
     align-items: center;
+}
+
+.mat-dialog-content-zoom-in {
+    display: block;
+    margin: 0 -24px;
+    padding: 0 24px;
+    max-height: 90vh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mat-dialog-actions {
+    padding: 12px 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: -24px;
+    justify-content: center;
 }

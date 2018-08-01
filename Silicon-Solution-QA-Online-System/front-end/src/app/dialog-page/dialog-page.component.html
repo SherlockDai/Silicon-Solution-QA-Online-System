@@ -1,6 +1,6 @@
-<div>
+<div id="dialog-wrapper">
   <mat-progress-bar mode="indeterminate" *ngIf="uploading"></mat-progress-bar>
-  <mat-dialog-content>
+  <mat-dialog-content [ngClass] = "zoom_state == 'in' ? 'mat-dialog-content-zoom-in' : ''">
       <mat-toolbar>
         <mat-button-toggle-group  (change)="onChangeSheet($event)">
           <mat-button-toggle value="general" [checked]='true'>General Info</mat-button-toggle>
@@ -258,6 +258,8 @@
       <button mat-raised-button	(click)="onChangeView(true)" *ngIf="!readOnly">View</button>
       <button mat-raised-button	(click)="onSubmit($event)" *ngIf="!readOnly" [disabled] = "idError">Save</button>
       <button mat-button (click)="dialogRef.close()">Close</button>
+      <button mat-button *ngIf="zoom_state == 'out'" (click)="zoom('in')">Zoom In</button>
+      <button mat-button *ngIf="zoom_state == 'in'" (click)="zoom('out')">Zoom Out</button>
   </mat-dialog-actions>
 </div>
 
