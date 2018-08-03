@@ -42,14 +42,14 @@ describe('Unit test for qa-sys.service.ts', () => {
                     (qaSysService: QaSysService, http: HttpClient, backend: HttpTestingController) => {
                     // 3. send a simple request
                     qaSysService.login("ddai", "dy12345DY").subscribe(result => {
-                        expect(result).toEqual({ str: "test", arr: [1, 2, 3]});
+                        expect(result).toEqual(JSON.parse(JSON.stringify({ str: "test", arr: [1, 2, 3]})));
                     });
                     // 4. HttpTestingController supersedes `MockBackend` from the "old" Http package
                     // here two, it's significantly less boilerplate code needed to verify an expected request
                     backend.match({
                         url: 'http://192.168.0.65:3000/login',
                         method: 'POST'
-                    })[0].flush({ str: "test", arr: [1, 2 ,3] });
+                    })[0].flush(JSON.parse(JSON.stringify({ str: "test", arr: [1, 2 ,3] })));
                 })
             )
         )

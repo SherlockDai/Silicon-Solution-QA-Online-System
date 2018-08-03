@@ -333,7 +333,7 @@ export class DialogPageComponent implements OnInit, OnDestroy {
 
   downloadSelections(event): void{
     for (let file of this.selection.selected){
-      window.open(file.url + this.station.id + '/' + file.fileName, "_blank");
+      window.open(file.url, "_blank");
     }
   }
 

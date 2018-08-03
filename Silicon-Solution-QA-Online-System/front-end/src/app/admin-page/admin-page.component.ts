@@ -4,7 +4,6 @@ import { MatTableDataSource, MatSort, MatSnackBar } from "@angular/material";
 import { User } from "../user";
 import { Subject } from "rxjs";
 import { takeUntil } from 'rxjs/operators';
-import { nearer } from '../../../node_modules/@types/q';
 
 @Component({
   selector: 'app-admin-page',

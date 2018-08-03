@@ -76,6 +76,7 @@ td.mat-cell:first-child, td.mat-footer-cell:first-child, th.mat-header-cell:firs
     margin: 0 -24px;
     padding: 0 24px;
     max-height: 90vh;
+    max-width: 90vh;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 }
