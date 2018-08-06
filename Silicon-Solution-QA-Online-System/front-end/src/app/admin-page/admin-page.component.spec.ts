@@ -19,7 +19,7 @@ describe('Unit test for admin page component', () => {
     let component: AdminPageComponent;
 
     beforeEach(async(()=>{
-        const spyS = jasmine.createSpyObj('QaSysService', ['login', 'getRedirectUrl']);
+        const spyS = jasmine.createSpyObj('QaSysService', ['getAll', 'addOne', 'updateOne', 'deleteOne']);
         const spyR = jasmine.createSpyObj('Router', ['navigate']);
         const spyB = jasmine.createSpyObj('MatSnackBar', ['open']);
         TestBed.configureTestingModule({
@@ -46,5 +46,13 @@ describe('Unit test for admin page component', () => {
     it('should create', () => {
         expect(component).toBeDefined();
     })
+
+    it('should get data from service', () => {
+         const fakeResult = []
+    })
+
+
+
+
 
 })

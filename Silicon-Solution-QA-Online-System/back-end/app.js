@@ -358,6 +358,7 @@ app.post('/updateOne', function(request, response, next){
         }
       }
     }
+
     //use sync rename here, since we will rename the folder lately, async rename might cause folder locked
     fs.renameSync(temp_path, new_path);
   });
@@ -392,6 +393,15 @@ app.post('/updateOne', function(request, response, next){
         }
       });
     }
+
+    //if the user change the id of the station we need to update all url of documents
+    if (prevId != record.id){
+      for (let doc of record.documents){
+        //update the url
+        doc.url = serverUrl + '/' + record.id + '/' + doc.fileName;
+      }
+    }
+
     dbo.collection(collection).updateOne(query, {$set:record}, function(err, result){
       if (err){
         console.log(err.message);
