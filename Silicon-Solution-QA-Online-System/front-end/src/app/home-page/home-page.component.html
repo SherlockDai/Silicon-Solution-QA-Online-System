@@ -6,7 +6,7 @@
           <a href="javascript:void(0)" routerLink="/login"><button (click)="this.qaSysService.logout()">Logout</button></a>
           <a pageScroll href="#document-analysis"><button>Document Analysis</button></a>
           <a pageScroll href="#admin-page"><button>Admin Page</button></a>
-          <a pageScroll href="#test-status"><button>Test Status</button></a>
+          <a pageScroll href="#station-info"><button>Test Status</button></a>
           <a pageScroll href="#station-info"><button>Station Info</button></a>
         </div>
     </div>
@@ -40,7 +40,7 @@
     </div>
     <div class="parallax station-info-img"></div>
   </div>
-  <div class="test-status" id="test-status">
+ <!--  <div class="test-status" id="test-status">
       <div class="parallax test-status-img"></div>
       <div class="test-status-text-wrap">
           <div class="test-status-text">
@@ -53,6 +53,20 @@
               <a pageScroll href="#station-info"><input type="button" value="Go To System" (click)="this.snackBar.open('The Test Staus System is merged into Station Info System!', 'Dismiss', {duration: 3000})"/></a>
           </div>
         </div>
+  </div> -->
+  <div class="document-analysis" id="document-analysis">
+    <div class="parallax document-analysis-img"></div>
+    <div class="document-analysis-text-wrap">
+        <div class="document-analysis-text">
+            <p class="title" >
+              Online Document Analysis
+            </p>
+            <p class="description">
+              Analysis of the Excel documents
+            </p>
+            <input type="button" value="Go To System" routerLink="/xlsx/"/>
+        </div>
+      </div>
   </div>
   <div class="admin-page" id="admin-page">
       <div class="admin-page-text-wrap">
@@ -68,18 +82,4 @@
       </div>
       <div class="parallax admin-page-img"></div>
     </div>
-  <div class="document-analysis" id="document-analysis">
-    <div class="parallax document-analysis-img"></div>
-    <div class="document-analysis-text-wrap">
-        <div class="document-analysis-text">
-            <p class="title" >
-              Online Document Analysis
-            </p>
-            <p class="description">
-              Analysis of the Excel documents
-            </p>
-            <input type="button" value="Go To System" routerLink="/xlsx/"/>
-        </div>
-      </div>
-  </div>
 </div>
