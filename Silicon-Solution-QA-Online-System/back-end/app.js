@@ -395,7 +395,7 @@ app.post('/updateOne', function(request, response, next){
     }
 
     //if the user change the id of the station we need to update all url of documents
-    if (prevId != record.id && record.document != undefined){
+    if (prevId != record.id && record.documents != undefined){
       for (let doc of record.documents){
         //update the url
         doc.url = serverUrl + '/' + record.id + '/' + doc.fileName;
